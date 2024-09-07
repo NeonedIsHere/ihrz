@@ -79,15 +79,6 @@ export namespace DatabaseStructure {
         admin?: string;
     }
 
-    export interface AllowListData {
-        enable?: boolean;
-        list?: {
-            [x: string]: {
-                allowed: boolean;
-            };
-        };
-    }
-
     export interface SuggestSchema {
         channel: string;
         disable?: boolean;
@@ -266,7 +257,6 @@ export namespace DatabaseStructure {
         TICKET_ALL?: TicketData;
         PROTECTION?: ProtectionData;
         ROLE_SAVER?: RoleSaverData;
-        ALLOWLIST?: AllowListData;
         NOTIFIER?: NotifierSchema
         SUGGEST?: SuggestSchema;
         SUGGESTION?: SuggestionData;
@@ -332,11 +322,6 @@ export namespace DatabaseStructure {
         GHOST_PING: GhostPingData;
     }
 
-    export interface BlockNewAccountSchema {
-        state: boolean;
-        req: number;
-    }
-
     export interface DbGuildBotObject {
         prefix?: string;
         botName?: string;
@@ -395,7 +380,6 @@ export namespace DatabaseStructure {
         REACT_MSG?: {
             [message: string]: string;
         };
-        BLOCK_NEW_ACCOUNT?: BlockNewAccountSchema;
         ANTISPAM?: AntiSpam.AntiSpamOptions;
     }
 

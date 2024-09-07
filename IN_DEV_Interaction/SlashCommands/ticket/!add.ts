@@ -19,25 +19,27 @@
 ・ Copyright © 2020-2024 iHorizon
 */
 
-import { Message } from "discord.js";
-import { QuickDB } from "quick.db";
+import {
+    BaseGuildTextChannel,
+    ChatInputCommandInteraction,
+    Client,
+} from 'discord.js';
 
-export async function coolDown(message: Message, method: string, ms: number) {
-    let tn = Date.now();
-    let table = message.client.db.table("TEMP");
-    var fetch = await table.get(`COOLDOWN.${method}.${message.author.id}`);
-    if (fetch !== null && ms - (tn - fetch) > 0) return true;
+import { TicketAddMember } from '../../../core/modules/ticketsManager.js';
+import { LanguageData } from '../../../../types/languageData.js';
+export default {
+    run: async (client: Client, interaction: ChatInputCommandInteraction, data: LanguageData) => {
+        // Guard's Typing
+        if (!interaction.member || !client.user || !interaction.user || !interaction.guild || !interaction.channel) return;
 
-    await table.set(`COOLDOWN.${method}.${message.author.id}`, tn);
-    return false;
-};
-
-export async function hardCooldown(database: QuickDB<any>, method: string, ms: number) {
-    let tn = Date.now();
-    let table = database.table("TEMP");
-    var fetch = await table.get(`COOLDOWN.${method}`);
-    if (fetch !== null && ms - (tn - fetch) > 0) return true;
-
-    await table.set(`COOLDOWN.${method}`, tn);
-    return false;
+        if (await client.db.get(`${interaction.guildId}.GUILD.TICKET.disable`)) {
+            await interaction.editReply({ content: data.ticket_disabled_command });
+            return;
+        };
+        if (!(interaction.channel as BaseGuildTextChannel).name.includes('ticket-')) {
+            await interaction.editReply({ content: data.close_not_in_ticket });
+            return;
+        };
+        await TicketAddMember(interaction);
+    },
 };

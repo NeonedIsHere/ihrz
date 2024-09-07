@@ -26,7 +26,6 @@ import * as argsHelper from '../src/core/functions/method.js'
 import { GiveawayManager } from "../src/core/modules/giveawaysManager.js";
 import { Collection, Snowflake } from 'discord.js';
 import { LavalinkManager } from "lavalink-client";
-import { QuickDB } from "quick.db";
 
 import { clientFunction } from "./clientFunction";
 import { AnotherCommand } from "./anotherCommand";
@@ -41,8 +40,8 @@ import * as ClientVersion from "../src/version.js";
 import { Assets } from "./assets";
 import { ConfigData } from "./configDatad.js";
 import { BashCommands } from "./bashCommands.js";
-import { SteganoDB } from "stegano.db";
 import { StreamNotifier } from "../src/core/StreamNotifier.js";
+import { models } from "../src/core/newDatabase.js";
 
 declare module 'discord.js' {
     export interface Client {
@@ -55,7 +54,7 @@ declare module 'discord.js' {
         vanityInvites: Collection<Snowflake, VanityInviteData>,
         buttons: Collection<string, Function>,
         selectmenu: Collection<string, Function>,
-        db: QuickDB | SteganoDB,
+        db: typeof models,
         applicationsCommands: Collection<string, AnotherCommand>,
         iHorizon_Emojis: Emojis,
         giveawaysManager: GiveawayManager,
