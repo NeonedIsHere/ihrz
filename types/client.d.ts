@@ -56,7 +56,7 @@ declare module 'discord.js' {
         buttons: Collection<string, Function>,
         selectmenu: Collection<string, Function>,
         db: SteganoDB
-        db: typeof models,
+        db2: typeof models,
         applicationsCommands: Collection<string, AnotherCommand>,
         iHorizon_Emojis: Emojis,
         giveawaysManager: GiveawayManager,

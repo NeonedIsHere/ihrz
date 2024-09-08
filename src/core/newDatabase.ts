@@ -5,11 +5,16 @@ export const sequelize = new Sequelize('ihrz_test', 'ihrz_test', 'MS94yuYb~R}2-9
     host: 'ca1.ihorizon.me',
     port: 25570,
     dialect: 'mysql',  // Ou 'postgres', 'sqlite', etc.
+    logging: false,
 });
 
 class DbBackupsUserObject extends Model { }
 
 DbBackupsUserObject.init({
+    guildId: {
+        type: DataTypes.STRING,
+        primaryKey: false
+    },
     backupId: {
         type: DataTypes.STRING,
         primaryKey: true
@@ -36,6 +41,10 @@ DbBackupsUserObject.init({
 class BlockNewAccountSchema extends Model { }
 
 BlockNewAccountSchema.init({
+    guildId: {
+        type: DataTypes.STRING,
+        primaryKey: false
+    },
     state: {
         type: DataTypes.BOOLEAN,
         allowNull: false
@@ -54,6 +63,10 @@ BlockNewAccountSchema.init({
 class ConfessionSchema extends Model { }
 
 ConfessionSchema.init({
+    guildId: {
+        type: DataTypes.STRING,
+        primaryKey: false
+    },
     panel: {
         type: DataTypes.JSON,
         allowNull: true
@@ -80,6 +93,10 @@ ConfessionSchema.init({
 class DbEmbedObject extends Model { }
 
 DbEmbedObject.init({
+    guildId: {
+        type: DataTypes.STRING,
+        primaryKey: false
+    },
     code: {
         type: DataTypes.STRING,
         primaryKey: true
@@ -102,6 +119,10 @@ DbEmbedObject.init({
 class GhostPingData extends Model { }
 
 GhostPingData.init({
+    guildId: {
+        type: DataTypes.STRING,
+        primaryKey: false
+    },
     channels: {
         type: DataTypes.JSON,
         allowNull: true
@@ -120,6 +141,10 @@ GhostPingData.init({
 class EconomyUserSchema extends Model { }
 
 EconomyUserSchema.init({
+    guildId: {
+        type: DataTypes.STRING,
+        primaryKey: false
+    },
     money: {
         type: DataTypes.INTEGER,
         allowNull: true
@@ -154,6 +179,10 @@ EconomyUserSchema.init({
 class GuildConfigSchema extends Model { }
 
 GuildConfigSchema.init({
+    guildId: {
+        type: DataTypes.STRING,
+        primaryKey: false
+    },
     joinmessage: {
         type: DataTypes.STRING,
         allowNull: true
@@ -220,6 +249,10 @@ GuildConfigSchema.init({
 class GuildStats extends Model { }
 
 GuildStats.init({
+    guildId: {
+        type: DataTypes.STRING,
+        primaryKey: false
+    },
     USER: {
         type: DataTypes.JSON, // Stores user stats as JSON
         allowNull: true
@@ -235,6 +268,10 @@ GuildStats.init({
 class InvitesUserData extends Model { }
 
 InvitesUserData.init({
+    guildId: {
+        type: DataTypes.STRING,
+        primaryKey: false
+    },
     inviter: {
         type: DataTypes.STRING,
         allowNull: true
@@ -269,6 +306,10 @@ InvitesUserData.init({
 class JoinBannerOptions extends Model { }
 
 JoinBannerOptions.init({
+    guildId: {
+        type: DataTypes.STRING,
+        primaryKey: false
+    },
     backgroundURL: {
         type: DataTypes.STRING,
         allowNull: false
@@ -303,6 +344,10 @@ JoinBannerOptions.init({
 class MemberCountSchema extends Model { }
 
 MemberCountSchema.init({
+    guildId: {
+        type: DataTypes.STRING,
+        primaryKey: false
+    },
     member: {
         type: DataTypes.JSON, // Stores member count settings as JSON
         allowNull: true
@@ -333,6 +378,10 @@ MemberCountSchema.init({
 class NotifierLastNotifiedMedias extends Model { }
 
 NotifierLastNotifiedMedias.init({
+    guildId: {
+        type: DataTypes.STRING,
+        primaryKey: false
+    },
     userId: {
         type: DataTypes.STRING,
         allowNull: false
@@ -351,6 +400,10 @@ NotifierLastNotifiedMedias.init({
 class NotifierSchema extends Model { }
 
 NotifierSchema.init({
+    guildId: {
+        type: DataTypes.STRING,
+        primaryKey: false
+    },
     message: {
         type: DataTypes.STRING,
         allowNull: true
@@ -378,6 +431,10 @@ NotifierSchema.init({
 class NotifierUserSchema extends Model { }
 
 NotifierUserSchema.init({
+    guildId: {
+        type: DataTypes.STRING,
+        primaryKey: false
+    },
     id_or_username: {
         type: DataTypes.STRING,
         allowNull: false
@@ -396,6 +453,10 @@ NotifierUserSchema.init({
 class PunishPubSchema extends Model { }
 
 PunishPubSchema.init({
+    guildId: {
+        type: DataTypes.STRING,
+        primaryKey: false
+    },
     amountMax: {
         type: DataTypes.INTEGER,
         allowNull: true
@@ -419,6 +480,10 @@ PunishPubSchema.init({
 class ReactionRolesData extends Model { }
 
 ReactionRolesData.init({
+    guildId: {
+        type: DataTypes.STRING,
+        primaryKey: false
+    },
     messageId: {
         type: DataTypes.STRING,
         primaryKey: false
@@ -437,6 +502,10 @@ ReactionRolesData.init({
 class RoleSaverData extends Model { }
 
 RoleSaverData.init({
+    guildId: {
+        type: DataTypes.STRING,
+        primaryKey: false
+    },
     userId: {
         type: DataTypes.STRING,
         primaryKey: false
@@ -455,6 +524,10 @@ RoleSaverData.init({
 class RoleSaverSchema extends Model { }
 
 RoleSaverSchema.init({
+    guildId: {
+        type: DataTypes.STRING,
+        primaryKey: false
+    },
     enable: {
         type: DataTypes.BOOLEAN,
         allowNull: true
@@ -478,6 +551,10 @@ RoleSaverSchema.init({
 class SecuritySchema extends Model { }
 
 SecuritySchema.init({
+    guildId: {
+        type: DataTypes.STRING,
+        primaryKey: false
+    },
     channel: {
         type: DataTypes.STRING,
         allowNull: true
@@ -500,6 +577,10 @@ SecuritySchema.init({
 class SnipeData extends Model { }
 
 SnipeData.init({
+    guildId: {
+        type: DataTypes.STRING,
+        primaryKey: false
+    },
     channelId: {
         type: DataTypes.STRING,
         primaryKey: false
@@ -530,6 +611,10 @@ SnipeData.init({
 class StatsMessage extends Model { }
 
 StatsMessage.init({
+    guildId: {
+        type: DataTypes.STRING,
+        primaryKey: false
+    },
     sentTimestamp: {
         type: DataTypes.BIGINT,
         allowNull: false
@@ -553,6 +638,10 @@ StatsMessage.init({
 class StatsVoice extends Model { }
 
 StatsVoice.init({
+    guildId: {
+        type: DataTypes.STRING,
+        primaryKey: false
+    },
     startTimestamp: {
         type: DataTypes.BIGINT,
         allowNull: false
@@ -575,6 +664,10 @@ StatsVoice.init({
 class SuggestionData extends Model { }
 
 SuggestionData.init({
+    guildId: {
+        type: DataTypes.STRING,
+        primaryKey: false
+    },
     suggestCode: {
         type: DataTypes.STRING,
         primaryKey: false
@@ -602,6 +695,10 @@ SuggestionData.init({
 class SuggestSchema extends Model { }
 
 SuggestSchema.init({
+    guildId: {
+        type: DataTypes.STRING,
+        primaryKey: false
+    },
     channel: {
         type: DataTypes.STRING,
         allowNull: false
@@ -620,6 +717,10 @@ SuggestSchema.init({
 class TicketUserData extends Model { }
 
 TicketUserData.init({
+    guildId: {
+        type: DataTypes.STRING,
+        primaryKey: false
+    },
     channelId: {
         type: DataTypes.STRING,
         primaryKey: false
@@ -646,6 +747,10 @@ TicketUserData.init({
 class TicketData extends Model { }
 
 TicketData.init({
+    guildId: {
+        type: DataTypes.STRING,
+        primaryKey: false
+    },
     userId: {
         type: DataTypes.STRING,
         primaryKey: false
@@ -664,6 +769,10 @@ TicketUserData.belongsTo(TicketData, { foreignKey: 'userId' });
 class UserStats extends Model { }
 
 UserStats.init({
+    guildId: {
+        type: DataTypes.STRING,
+        primaryKey: false
+    },
     messages: {
         type: DataTypes.JSON, // Stores messages as JSON array
         allowNull: true
@@ -683,6 +792,10 @@ UserStats.init({
 class UtilsData extends Model { }
 
 UtilsData.init({
+    guildId: {
+        type: DataTypes.STRING,
+        primaryKey: false
+    },
     PERMS: {
         type: DataTypes.JSON, // Stores permissions as JSON
         allowNull: true
@@ -701,6 +814,10 @@ UtilsData.init({
 class VoiceData extends Model { }
 
 VoiceData.init({
+    guildId: {
+        type: DataTypes.STRING,
+        primaryKey: false
+    },
     staff_role: {
         type: DataTypes.STRING,
         allowNull: true
@@ -724,6 +841,10 @@ VoiceData.init({
 class XpLevelingUserSchema extends Model { }
 
 XpLevelingUserSchema.init({
+    guildId: {
+        type: DataTypes.STRING,
+        primaryKey: false
+    },
     xp: {
         type: DataTypes.INTEGER,
         allowNull: true
@@ -746,6 +867,10 @@ XpLevelingUserSchema.init({
 class AllowListData extends Model { }
 
 AllowListData.init({
+    guildId: {
+        type: DataTypes.STRING,
+        primaryKey: false
+    },
     enable: {
         type: DataTypes.BOOLEAN,
         allowNull: true
@@ -764,6 +889,10 @@ AllowListData.init({
 class AntiSpam extends Model { }
 
 AntiSpam.init({
+    guildId: {
+        type: DataTypes.STRING,
+        primaryKey: false
+    },
     bypassRoles: {
         type: DataTypes.JSON,
         primaryKey: false
@@ -811,7 +940,7 @@ AntiSpam.init({
 (async () => {
     try {
         // Synchronisation de tous les modèles
-        await sequelize.sync({ force: true });
+        // await sequelize.sync({ force: true, logging: false });
         console.log('Tous les modèles ont été synchronisés avec succès.');
     } catch (error) {
         console.error('Erreur lors de la synchronisation des modèles :', error);
@@ -826,7 +955,7 @@ class DatabaseWrapper {
     }
 
     async get<T extends Model>(model: { new(): T; findOne: any }, key: any, options: object = {}): Promise<T | null> {
-        return await model.findOne({ where: { id: key }, ...options });
+        return await model.findOne({ where: { guildId: key }, ...options });
     }
 
     async delete<T extends Model>(model: { new(): T; findOne: any }, key: any, options: object = {}): Promise<boolean> {

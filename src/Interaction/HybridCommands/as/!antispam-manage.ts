@@ -93,6 +93,21 @@ export default {
             return;
         };
 
+
+        // console.log(await client.db2.exec.add(client.db2.AntiSpam, {
+        //     guildId: interaction.guildId,
+        //     ignoreBots: false,
+        //     maxInterval: 1900,
+        //     Enabled: true,
+        //     threshold: 3,
+        //     removeMessages: true,
+        //     punishmentType: 'mute',
+        //     punishTime: client.timeCalculator.to_ms('15m')!,
+        // }))
+        let e = await client.db2.exec.get(client.db2.AntiSpam, interaction.guildId)
+
+        console.log(e)
+
         let baseData: AntiSpam.AntiSpamOptions = await client.db.get(`${interaction.guildId}.GUILD.ANTISPAM`) || {
             ignoreBots: false,
             maxInterval: 1900,
