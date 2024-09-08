@@ -421,7 +421,7 @@ class ReactionRolesData extends Model { }
 ReactionRolesData.init({
     messageId: {
         type: DataTypes.STRING,
-        primaryKey: true
+        primaryKey: false
     },
     reaction: {
         type: DataTypes.JSON,  // Store reaction roles as JSON object
@@ -439,7 +439,7 @@ class RoleSaverData extends Model { }
 RoleSaverData.init({
     userId: {
         type: DataTypes.STRING,
-        primaryKey: true
+        primaryKey: false
     },
     roles: {
         type: DataTypes.JSON,
@@ -502,7 +502,7 @@ class SnipeData extends Model { }
 SnipeData.init({
     channelId: {
         type: DataTypes.STRING,
-        primaryKey: true
+        primaryKey: false
     },
     snipe: {
         type: DataTypes.STRING,
@@ -577,7 +577,7 @@ class SuggestionData extends Model { }
 SuggestionData.init({
     suggestCode: {
         type: DataTypes.STRING,
-        primaryKey: true
+        primaryKey: false
     },
     author: {
         type: DataTypes.STRING,
@@ -622,7 +622,7 @@ class TicketUserData extends Model { }
 TicketUserData.init({
     channelId: {
         type: DataTypes.STRING,
-        primaryKey: true
+        primaryKey: false
     },
     channel: {
         type: DataTypes.STRING,
@@ -648,7 +648,7 @@ class TicketData extends Model { }
 TicketData.init({
     userId: {
         type: DataTypes.STRING,
-        primaryKey: true
+        primaryKey: false
     }
 }, {
     sequelize,
