@@ -9,6 +9,37 @@ export const sequelize = new Sequelize('ihrz_test', 'ihrz_test', 'MS94yuYb~R}2-9
 });
 
 class DbBackupsUserObject extends Model { }
+class BlockNewAccountSchema extends Model { }
+class ConfessionSchema extends Model { }
+class DbEmbedObject extends Model { }
+class GhostPingData extends Model { }
+class EconomyUserSchema extends Model { }
+class GuildConfigSchema extends Model { }
+class GuildStats extends Model { }
+class InvitesUserData extends Model { }
+class JoinBannerOptions extends Model { }
+class MemberCountSchema extends Model { }
+class NotifierLastNotifiedMedias extends Model { }
+class NotifierSchema extends Model { }
+class NotifierUserSchema extends Model { }
+class PunishPubSchema extends Model { }
+class ReactionRolesData extends Model { }
+class RoleSaverData extends Model { }
+class RoleSaverSchema extends Model { }
+class SecuritySchema extends Model { }
+class SnipeData extends Model { }
+class StatsMessage extends Model { }
+class StatsVoice extends Model { }
+class SuggestionData extends Model { }
+class SuggestSchema extends Model { }
+class TicketUserData extends Model { }
+class TicketData extends Model { }
+class UserStats extends Model { }
+class UtilsData extends Model { }
+class VoiceData extends Model { }
+class AllowListData extends Model { }
+class AntiSpam extends Model { }
+class XpLevelingUserSchema extends Model { }
 
 DbBackupsUserObject.init({
     guildId: {
@@ -38,8 +69,6 @@ DbBackupsUserObject.init({
     timestamps: false
 });
 
-class BlockNewAccountSchema extends Model { }
-
 BlockNewAccountSchema.init({
     guildId: {
         type: DataTypes.STRING,
@@ -59,8 +88,6 @@ BlockNewAccountSchema.init({
     tableName: 'block_new_account_schema',
     timestamps: false
 });
-
-class ConfessionSchema extends Model { }
 
 ConfessionSchema.init({
     guildId: {
@@ -90,8 +117,6 @@ ConfessionSchema.init({
     timestamps: false
 });
 
-class DbEmbedObject extends Model { }
-
 DbEmbedObject.init({
     guildId: {
         type: DataTypes.STRING,
@@ -116,8 +141,6 @@ DbEmbedObject.init({
     timestamps: false
 });
 
-class GhostPingData extends Model { }
-
 GhostPingData.init({
     guildId: {
         type: DataTypes.STRING,
@@ -137,8 +160,6 @@ GhostPingData.init({
     tableName: 'ghost_ping_data',
     timestamps: false
 });
-
-class EconomyUserSchema extends Model { }
 
 EconomyUserSchema.init({
     guildId: {
@@ -175,8 +196,6 @@ EconomyUserSchema.init({
     tableName: 'economy_user_schema',
     timestamps: false
 });
-
-class GuildConfigSchema extends Model { }
 
 GuildConfigSchema.init({
     guildId: {
@@ -246,8 +265,6 @@ GuildConfigSchema.init({
     timestamps: false
 });
 
-class GuildStats extends Model { }
-
 GuildStats.init({
     guildId: {
         type: DataTypes.STRING,
@@ -263,9 +280,6 @@ GuildStats.init({
     tableName: 'guild_stats',
     timestamps: false
 });
-
-
-class InvitesUserData extends Model { }
 
 InvitesUserData.init({
     guildId: {
@@ -303,8 +317,6 @@ InvitesUserData.init({
     timestamps: false
 });
 
-class JoinBannerOptions extends Model { }
-
 JoinBannerOptions.init({
     guildId: {
         type: DataTypes.STRING,
@@ -341,8 +353,6 @@ JoinBannerOptions.init({
     timestamps: false
 });
 
-class MemberCountSchema extends Model { }
-
 MemberCountSchema.init({
     guildId: {
         type: DataTypes.STRING,
@@ -375,8 +385,6 @@ MemberCountSchema.init({
     timestamps: false
 });
 
-class NotifierLastNotifiedMedias extends Model { }
-
 NotifierLastNotifiedMedias.init({
     guildId: {
         type: DataTypes.STRING,
@@ -396,8 +404,6 @@ NotifierLastNotifiedMedias.init({
     tableName: 'notifier_last_notified_medias',
     timestamps: false
 });
-
-class NotifierSchema extends Model { }
 
 NotifierSchema.init({
     guildId: {
@@ -427,9 +433,6 @@ NotifierSchema.init({
     timestamps: false
 });
 
-
-class NotifierUserSchema extends Model { }
-
 NotifierUserSchema.init({
     guildId: {
         type: DataTypes.STRING,
@@ -449,8 +452,6 @@ NotifierUserSchema.init({
     tableName: 'notifier_user_schema',
     timestamps: false
 });
-
-class PunishPubSchema extends Model { }
 
 PunishPubSchema.init({
     guildId: {
@@ -476,9 +477,6 @@ PunishPubSchema.init({
     timestamps: false
 });
 
-
-class ReactionRolesData extends Model { }
-
 ReactionRolesData.init({
     guildId: {
         type: DataTypes.STRING,
@@ -499,8 +497,6 @@ ReactionRolesData.init({
     timestamps: false
 });
 
-class RoleSaverData extends Model { }
-
 RoleSaverData.init({
     guildId: {
         type: DataTypes.STRING,
@@ -520,8 +516,6 @@ RoleSaverData.init({
     tableName: 'role_saver_data',
     timestamps: false
 });
-
-class RoleSaverSchema extends Model { }
 
 RoleSaverSchema.init({
     guildId: {
@@ -547,9 +541,6 @@ RoleSaverSchema.init({
     timestamps: false
 });
 
-
-class SecuritySchema extends Model { }
-
 SecuritySchema.init({
     guildId: {
         type: DataTypes.STRING,
@@ -573,8 +564,6 @@ SecuritySchema.init({
     tableName: 'security_schema',
     timestamps: false
 });
-
-class SnipeData extends Model { }
 
 SnipeData.init({
     guildId: {
@@ -608,7 +597,6 @@ SnipeData.init({
     timestamps: false
 });
 
-class StatsMessage extends Model { }
 
 StatsMessage.init({
     guildId: {
@@ -634,9 +622,6 @@ StatsMessage.init({
     timestamps: false
 });
 
-
-class StatsVoice extends Model { }
-
 StatsVoice.init({
     guildId: {
         type: DataTypes.STRING,
@@ -660,8 +645,6 @@ StatsVoice.init({
     tableName: 'stats_voices',
     timestamps: false
 });
-
-class SuggestionData extends Model { }
 
 SuggestionData.init({
     guildId: {
@@ -691,9 +674,6 @@ SuggestionData.init({
     timestamps: false
 });
 
-
-class SuggestSchema extends Model { }
-
 SuggestSchema.init({
     guildId: {
         type: DataTypes.STRING,
@@ -714,7 +694,6 @@ SuggestSchema.init({
     timestamps: false
 });
 
-class TicketUserData extends Model { }
 
 TicketUserData.init({
     guildId: {
@@ -744,8 +723,6 @@ TicketUserData.init({
     timestamps: false
 });
 
-class TicketData extends Model { }
-
 TicketData.init({
     guildId: {
         type: DataTypes.STRING,
@@ -766,7 +743,6 @@ TicketData.hasMany(TicketUserData, { foreignKey: 'userId' });
 TicketUserData.belongsTo(TicketData, { foreignKey: 'userId' });
 
 
-class UserStats extends Model { }
 
 UserStats.init({
     guildId: {
@@ -789,7 +765,6 @@ UserStats.init({
 });
 
 
-class UtilsData extends Model { }
 
 UtilsData.init({
     guildId: {
@@ -810,8 +785,6 @@ UtilsData.init({
     tableName: 'utils_data',
     timestamps: false
 });
-
-class VoiceData extends Model { }
 
 VoiceData.init({
     guildId: {
@@ -838,8 +811,6 @@ VoiceData.init({
 });
 
 
-class XpLevelingUserSchema extends Model { }
-
 XpLevelingUserSchema.init({
     guildId: {
         type: DataTypes.STRING,
@@ -864,7 +835,7 @@ XpLevelingUserSchema.init({
     timestamps: false
 });
 
-class AllowListData extends Model { }
+
 
 AllowListData.init({
     guildId: {
@@ -886,7 +857,6 @@ AllowListData.init({
     timestamps: false
 });
 
-class AntiSpam extends Model { }
 
 AntiSpam.init({
     guildId: {
