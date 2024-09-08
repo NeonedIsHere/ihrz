@@ -55,7 +55,7 @@ class ConfessionSchema extends Model { }
 
 ConfessionSchema.init({
     panel: {
-        type: DataTypes.JSON, 
+        type: DataTypes.JSON,
         allowNull: true
     },
     disable: {
@@ -63,7 +63,7 @@ ConfessionSchema.init({
         allowNull: true
     },
     ALL_CONFESSIONS: {
-        type: DataTypes.JSON, 
+        type: DataTypes.JSON,
         allowNull: true
     },
     cooldown: {
@@ -95,7 +95,7 @@ DbEmbedObject.init({
 }, {
     sequelize,
     modelName: 'DbEmbedObject',
-    tableName: 'db_embed_objects',  
+    tableName: 'db_embed_objects',
     timestamps: false
 });
 
@@ -103,7 +103,7 @@ class GhostPingData extends Model { }
 
 GhostPingData.init({
     channels: {
-        type: DataTypes.JSON,  
+        type: DataTypes.JSON,
         allowNull: true
     },
     active: {
@@ -761,6 +761,53 @@ AllowListData.init({
     timestamps: false
 });
 
+class AntiSpam extends Model { }
+
+AntiSpam.init({
+    bypassRoles: {
+        type: DataTypes.JSON,
+        primaryKey: false
+    },
+    bypassChannels: {
+        type: DataTypes.JSON,
+        primaryKey: false
+    },
+    ignoreBots: {
+        type: DataTypes.BOOLEAN,
+        primaryKey: false
+    },
+    maxInterval: {
+        type: DataTypes.INTEGER,
+        primaryKey: false
+    },
+    Enabled: {
+        type: DataTypes.BOOLEAN,
+        primaryKey: false
+    },
+    threshold: {
+        type: DataTypes.INTEGER,
+        primaryKey: false
+    },
+    removeMessages: {
+        type: DataTypes.BOOLEAN,
+        primaryKey: false
+    },
+    punishmentType: {
+        type: DataTypes.STRING,
+        primaryKey: false
+    },
+    punishTime: {
+        type: DataTypes.INTEGER,
+        primaryKey: false
+    },
+
+}, {
+    sequelize,
+    modelName: 'AntiSpan',
+    tableName: 'antispam',
+    timestamps: false
+});
+
 (async () => {
     try {
         // Synchronisation de tous les modèles
@@ -771,8 +818,67 @@ AllowListData.init({
     }
 })();
 
+class DatabaseWrapper {
+    private sequelize: Sequelize;
+
+    constructor(sequelize: Sequelize) {
+        this.sequelize = sequelize;
+    }
+
+    async get<T extends Model>(model: { new(): T; findOne: any }, key: any, options: object = {}): Promise<T | null> {
+        return await model.findOne({ where: { id: key }, ...options });
+    }
+
+    async delete<T extends Model>(model: { new(): T; findOne: any }, key: any, options: object = {}): Promise<boolean> {
+        const record = await model.findOne({ where: { id: key }, ...options });
+        if (record) {
+            await record.destroy();
+            return true;
+        }
+        return false;
+    }
+
+    async add<T extends Model>(model: { new(): T; create: any }, data: object): Promise<T> {
+        return await model.create(data);
+    }
+
+    async push<T extends Model>(model: { new(): T; findOne: any }, key: any, updateData: object, options: object = {}): Promise<T | null> {
+        const record = await model.findOne({ where: { id: key }, ...options });
+        if (record) {
+            return await record.update(updateData);
+        }
+        return null;
+    }
+
+    async sub<T extends Model>(model: { new(): T; findOne: any }, key: any, field: string, value: number, options: object = {}): Promise<T | null> {
+        const record = await model.findOne({ where: { id: key }, ...options });
+        if (record && typeof record[field] === 'number') {
+            record[field] -= value;
+            return await record.save();
+        }
+        return null;
+    }
+
+    async addValue<T extends Model>(model: { new(): T; findOne: any }, key: any, field: string, value: number, options: object = {}): Promise<T | null> {
+        const record = await model.findOne({ where: { id: key }, ...options });
+        if (record && typeof record[field] === 'number') {
+            record[field] += value;
+            return await record.save();
+        }
+        return null;
+    }
+
+    async find<T extends Model>(model: { new(): T; findAll: any }, conditions: WhereOptions, options: object = {}): Promise<T[]> {
+        return await model.findAll({ where: conditions, ...options });
+    }
+}
+
+const exec = new DatabaseWrapper(sequelize);
+
 export const models = {
+    exec,
     AllowListData,
+    AntiSpam,
     BlockNewAccountSchema,
     ConfessionSchema,
     EconomyUserSchema,
