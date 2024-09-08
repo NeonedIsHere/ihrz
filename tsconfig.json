@@ -26,6 +26,7 @@
     "./node_modules",
     "./src/files/config.example.ts",
     "./ownihrz",
-    "./IN_DEV_Interaction/*"
+    "./IN_DEV_Interaction/*",
+    "./IN_DEV_Events/*"
   ]
 }
