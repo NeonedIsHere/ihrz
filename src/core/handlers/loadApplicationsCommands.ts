@@ -30,28 +30,28 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default async (client: Client) => {
-    client.applicationsCommands = new Collection<string, AnotherCommand>();
+    // client.applicationsCommands = new Collection<string, AnotherCommand>();
 
-    let loadCommands = async (commandType: string) => {
-        let commandPath = path.join(__dirname, '..', '..', 'Interaction', commandType + 'ApplicationCommands');
+    // let loadCommands = async (commandType: string) => {
+    //     let commandPath = path.join(__dirname, '..', '..', 'Interaction', commandType + 'ApplicationCommands');
 
-        let files = readdirSync(commandPath);
+    //     let files = readdirSync(commandPath);
 
-        for (let file of files.filter((file: string) => file.endsWith('.js'))) {
-            let { command } = await import(`${commandPath}/${file}`);
+    //     for (let file of files.filter((file: string) => file.endsWith('.js'))) {
+    //         let { command } = await import(`${commandPath}/${file}`);
 
-            client.applicationsCommands.set(command.name, {
-                type: command.type,
-                run: command.run,
-                name: command.name,
-                thinking: command.thinking,
-            });
-        }
-    };
+    //         client.applicationsCommands.set(command.name, {
+    //             type: command.type,
+    //             run: command.run,
+    //             name: command.name,
+    //             thinking: command.thinking,
+    //         });
+    //     }
+    // };
 
-    /**  Load MessageApplicationCommands */
-    await loadCommands('Message');
+    // /**  Load MessageApplicationCommands */
+    // await loadCommands('Message');
 
-    /**  Load UserApplicationCommands */
-    await loadCommands('User');
+    // /**  Load UserApplicationCommands */
+    // await loadCommands('User');
 };
