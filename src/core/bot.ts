@@ -21,8 +21,9 @@
 
 import { Client, Partials, GatewayIntentBits } from 'discord.js';
 import * as ClientVersion from "../version.js";
-import * as core from './core.js';
+import { sequelize } from './newDatabase.js';
 import config from "../files/config.js";
+import * as core from './core.js';
 
 const client = new Client({
     intents: [
@@ -59,4 +60,6 @@ const client = new Client({
 
 client.version = ClientVersion
 client.config = config;
+sequelize;
+
 core.main(client);

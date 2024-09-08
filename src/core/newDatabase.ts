@@ -1,4 +1,4 @@
-import { Sequelize, DataTypes, Model } from 'sequelize';
+import { Sequelize, DataTypes, Model, WhereOptions } from 'sequelize';
 
 // Configuration Sequelize
 export const sequelize = new Sequelize('ihrz_test', 'ihrz_test', 'MS94yuYb~R}2-9[j', {
