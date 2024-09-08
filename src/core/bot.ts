@@ -60,7 +60,8 @@ export const client = new Client({
 
 client.version = ClientVersion
 client.config = config;
-client.db2 = models;
+client.db2 = models.exec;
+client.m = models;
 sequelize;
 
 core.main(client);

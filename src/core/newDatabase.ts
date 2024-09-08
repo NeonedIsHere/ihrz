@@ -932,7 +932,7 @@ AntiSpam.init({
 
 }, {
     sequelize,
-    modelName: 'AntiSpan',
+    modelName: 'AntiSpam',
     tableName: 'antispam',
     timestamps: false
 });
@@ -959,7 +959,7 @@ class DatabaseWrapper {
     }
 
     async delete<T extends Model>(model: { new(): T; findOne: any }, key: any, options: object = {}): Promise<boolean> {
-        const record = await model.findOne({ where: { id: key }, ...options });
+        const record = await model.findOne({ where: { guildId: key }, ...options });
         if (record) {
             await record.destroy();
             return true;
@@ -972,7 +972,7 @@ class DatabaseWrapper {
     }
 
     async push<T extends Model>(model: { new(): T; findOne: any }, key: any, updateData: object, options: object = {}): Promise<T | null> {
-        const record = await model.findOne({ where: { id: key }, ...options });
+        const record = await model.findOne({ where: { guildId: key }, ...options });
         if (record) {
             return await record.update(updateData);
         }
@@ -980,7 +980,7 @@ class DatabaseWrapper {
     }
 
     async sub<T extends Model>(model: { new(): T; findOne: any }, key: any, field: string, value: number, options: object = {}): Promise<T | null> {
-        const record = await model.findOne({ where: { id: key }, ...options });
+        const record = await model.findOne({ where: { guildId: key }, ...options });
         if (record && typeof record[field] === 'number') {
             record[field] -= value;
             return await record.save();
@@ -989,7 +989,7 @@ class DatabaseWrapper {
     }
 
     async addValue<T extends Model>(model: { new(): T; findOne: any }, key: any, field: string, value: number, options: object = {}): Promise<T | null> {
-        const record = await model.findOne({ where: { id: key }, ...options });
+        const record = await model.findOne({ where: { guildId: key }, ...options });
         if (record && typeof record[field] === 'number') {
             record[field] += value;
             return await record.save();

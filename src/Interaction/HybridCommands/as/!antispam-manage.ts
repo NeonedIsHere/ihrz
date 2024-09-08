@@ -104,9 +104,9 @@ export default {
         //     punishmentType: 'mute',
         //     punishTime: client.timeCalculator.to_ms('15m')!,
         // }))
-        let e = await client.db2.exec.get(client.db2.AntiSpam, interaction.guildId)
-
-        console.log(e)
+        // let e = await client.db2.get(client.m.AntiSpam, interaction.guildId)
+        await client.db2.delete(client.m.AntiSpam, interaction.guildId)
+        // console.log(e)
 
         let baseData: AntiSpam.AntiSpamOptions = await client.db.get(`${interaction.guildId}.GUILD.ANTISPAM`) || {
             ignoreBots: false,

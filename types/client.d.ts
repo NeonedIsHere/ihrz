@@ -55,8 +55,9 @@ declare module 'discord.js' {
         vanityInvites: Collection<Snowflake, VanityInviteData>,
         buttons: Collection<string, Function>,
         selectmenu: Collection<string, Function>,
-        db: SteganoDB
-        db2: typeof models,
+        db: SteganoDB,
+        m: typeof models,
+        db2: typeof models.exec,
         applicationsCommands: Collection<string, AnotherCommand>,
         iHorizon_Emojis: Emojis,
         giveawaysManager: GiveawayManager,
