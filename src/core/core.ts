@@ -45,6 +45,7 @@ import { readFile } from 'node:fs/promises';
 import { getToken } from './functions/getToken.js';
 import { StreamNotifier } from './StreamNotifier.js';
 import { setMaxListeners } from 'node:events';
+import { SteganoDB } from 'stegano.db';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -85,6 +86,7 @@ export async function main(client: Client) {
     client.owners = [];
     client.content = [];
     client.category = [];
+    client.db = new SteganoDB()
     client.invites = new Collection();
     client.timeCalculator = new iHorizonTimeCalculator();
     client.lyricsSearcher = new LyricsManager();

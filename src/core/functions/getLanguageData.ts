@@ -20,7 +20,7 @@
 */
 
 import { LanguageData } from '../../../types/languageData.js';
-import { getDatabaseInstance } from '../database.js';
+import { client } from '../bot.js';
 
 import yaml from 'js-yaml';
 import fs from 'node:fs';
@@ -30,10 +30,9 @@ interface LangsData {
 }
 
 let LangsData: LangsData = {};
-let database = getDatabaseInstance();
 
 export default async function getLanguageData(arg: string): Promise<LanguageData> {
-    let lang = await database.get(`${arg}.GUILD.LANG.lang`) as string;
+    let lang = await client.db.get(`${arg}.GUILD.LANG.lang`) as string;
 
     if (!lang) {
         lang = 'en-US';

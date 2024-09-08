@@ -72,43 +72,43 @@ export const event: BotEvent = {
             client.user?.setPresence({ activities: [{ name: status.current[Math.floor(Math.random() * status.current.length)], type: ActivityType.Custom }] });
         };
 
-        async function refreshSchedule() {
-            let table = client.db.table("SCHEDULE");
-            let listAll = await table.all();
+        // async function refreshSchedule() {
+        //     let table = client.db.table("SCHEDULE");
+        //     let listAll = await table.all();
 
-            let dateNow = Date.now();
-            let desc: string = '';
+        //     let dateNow = Date.now();
+        //     let desc: string = '';
 
-            Object.entries(listAll).forEach(async ([userId, array]) => {
+        //     Object.entries(listAll).forEach(async ([userId, array]) => {
 
-                let member = client.users.cache.get(array.id) as User;
+        //         let member = client.users.cache.get(array.id) as User;
 
-                for (let ScheduleId in array.value) {
-                    if (array.value[ScheduleId]?.expired <= dateNow) {
-                        desc += `${format(new Date(array.value[ScheduleId]?.expired), 'YYYY/MM/DD HH:mm:ss')}`;
-                        desc += `\`\`\`${array.value[ScheduleId]?.title}\`\`\``;
-                        desc += `\`\`\`${array.value[ScheduleId]?.description}\`\`\``;
+        //         for (let ScheduleId in array.value) {
+        //             if (array.value[ScheduleId]?.expired <= dateNow) {
+        //                 desc += `${format(new Date(array.value[ScheduleId]?.expired), 'YYYY/MM/DD HH:mm:ss')}`;
+        //                 desc += `\`\`\`${array.value[ScheduleId]?.title}\`\`\``;
+        //                 desc += `\`\`\`${array.value[ScheduleId]?.description}\`\`\``;
 
-                        let embed = new EmbedBuilder()
-                            .setColor('#56a0d3')
-                            .setTitle(`#${ScheduleId} Schedule has been expired!`)
-                            .setDescription(desc)
-                            .setThumbnail((member.displayAvatarURL()))
-                            .setTimestamp()
-                            .setFooter({ text: 'iHorizon', iconURL: "attachment://footer_icon.png" });
+        //                 let embed = new EmbedBuilder()
+        //                     .setColor('#56a0d3')
+        //                     .setTitle(`#${ScheduleId} Schedule has been expired!`)
+        //                     .setDescription(desc)
+        //                     .setThumbnail((member.displayAvatarURL()))
+        //                     .setTimestamp()
+        //                     .setFooter({ text: 'iHorizon', iconURL: "attachment://footer_icon.png" });
 
-                        member?.send({
-                            content: member.toString(),
-                            embeds: [embed],
-                            files: [await client.method.bot.footerAttachmentBuilder(client)]
-                        }).catch(() => { });
+        //                 member?.send({
+        //                     content: member.toString(),
+        //                     embeds: [embed],
+        //                     files: [await client.method.bot.footerAttachmentBuilder(client)]
+        //                 }).catch(() => { });
 
-                        await table.delete(`${array.id}.${ScheduleId}`);
-                    };
+        //                 await table.delete(`${array.id}.${ScheduleId}`);
+        //             };
 
-                }
-            });
-        };
+        //         }
+        //     });
+        // };
 
         async function refreshBotData() {
             await client.db.set("BOT", {
@@ -145,9 +145,9 @@ export const event: BotEvent = {
         new OwnIHRZ().Startup_Cluster(client);
         await client.notifier.start();
 
-        setInterval(quotesPresence, 120_000), setInterval(refreshSchedule, 15_000), setInterval(refreshBotData, 45_000);
+        // setInterval(quotesPresence, 120_000), setInterval(refreshSchedule, 15_000), setInterval(refreshBotData, 45_000);
 
-        fetchInvites(), refreshDatabaseModel(), quotesPresence(), refreshSchedule(), refreshBotData();
+        // fetchInvites(), refreshDatabaseModel(), quotesPresence(), refreshSchedule(), refreshBotData();
 
         PfpsManager_Init(client);
 

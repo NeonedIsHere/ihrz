@@ -23,7 +23,6 @@ import { Message, Channel, User, Role, GuildMember, APIRole, ChannelType, BaseGu
 import { Command } from "../../../types/command.js";
 import { Option } from "../../../types/option.js";
 import { LanguageData } from "../../../types/languageData.js";
-import * as perm from './permissonsCalculator.js'
 import * as f from './displayBotName.js';
 import * as  h from './helper.js';
 import * as c from '../core.js';
@@ -419,7 +418,6 @@ export function generateCustomMessagePreview(
 
 }
 
-export const permission = perm;
 export const bot = f;
 export const helper = h;
 export const core = c;
