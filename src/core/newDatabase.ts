@@ -931,7 +931,7 @@ class DatabaseWrapper {
         return false;
     }
 
-    async add<T extends Model>(model: { new(): T; create: any }, data: object): Promise<T> {
+    async create<T extends Model>(model: { new(): T; create: any }, data: object): Promise<T> {
         return await model.create(data);
     }
 
@@ -952,7 +952,7 @@ class DatabaseWrapper {
         return null;
     }
 
-    async addValue<T extends Model>(model: { new(): T; findOne: any }, key: any, field: string, value: number, options: object = {}): Promise<T | null> {
+    async set<T extends Model>(model: { new(): T; findOne: any }, key: any, field: string, value: number, options: object = {}): Promise<T | null> {
         const record = await model.findOne({ where: { guildId: key }, ...options });
         if (record && typeof record[field] === 'number') {
             record[field] += value;
