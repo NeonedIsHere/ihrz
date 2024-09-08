@@ -948,12 +948,6 @@ AntiSpam.init({
 })();
 
 class DatabaseWrapper {
-    private sequelize: Sequelize;
-
-    constructor(sequelize: Sequelize) {
-        this.sequelize = sequelize;
-    }
-
     async get<T extends Model>(model: { new(): T; findOne: any }, key: any, options: object = {}): Promise<T | null> {
         return await model.findOne({ where: { guildId: key }, ...options });
     }
@@ -1002,7 +996,7 @@ class DatabaseWrapper {
     }
 }
 
-const exec = new DatabaseWrapper(sequelize);
+const exec = new DatabaseWrapper();
 
 export const models = {
     exec,
