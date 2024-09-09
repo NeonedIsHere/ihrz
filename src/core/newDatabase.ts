@@ -1,12 +1,19 @@
-import { Sequelize, DataTypes, Model, WhereOptions } from 'sequelize';
+import { Sequelize, DataTypes, Model, WhereOptions, ModelCtor, ModelStatic } from 'sequelize';
 
 // Configuration Sequelize
-export const sequelize = new Sequelize('ihrz_test', 'ihrz_test', 'MS94yuYb~R}2-9[j', {
-    host: 'ca1.ihorizon.me',
-    port: 25570,
-    dialect: 'mysql',  // Ou 'postgres', 'sqlite', etc.
+export const sequelize = new Sequelize({
+    dialect: "sqlite",
+    storage: process.cwd() + "/db.sqlite",
     logging: false,
+    logQueryParameters: false
 });
+
+// const sequelize = new Sequelize('ihrz_test', 'ihrz_test', 'MS94yuYb~R}2-9[j', {
+//     host: 'ca1.ihorizon.me',
+//     port: 25570,
+//     dialect: 'mysql',  // Ou 'postgres', 'sqlite', etc.
+//     logging: false,
+// });
 
 class DbBackupsUserObject extends Model { }
 class BlockNewAccountSchema extends Model { }
@@ -917,7 +924,13 @@ AntiSpam.init({
     }
 })();
 
-class DatabaseWrapper {
+interface GuildModel extends Model {
+    guildId: string;
+}
+
+class SequelizeWrapper {
+    constructor() { }
+
     async get<T extends Model>(model: { new(): T; findOne: any }, key: any, options: object = {}): Promise<T | null> {
         return await model.findOne({ where: { guildId: key }, ...options });
     }
@@ -929,10 +942,6 @@ class DatabaseWrapper {
             return true;
         }
         return false;
-    }
-
-    async create<T extends Model>(model: { new(): T; create: any }, data: object): Promise<T> {
-        return await model.create(data);
     }
 
     async push<T extends Model>(model: { new(): T; findOne: any }, key: any, updateData: object, options: object = {}): Promise<T | null> {
@@ -952,21 +961,45 @@ class DatabaseWrapper {
         return null;
     }
 
-    async set<T extends Model>(model: { new(): T; findOne: any }, key: any, field: string, value: number, options: object = {}): Promise<T | null> {
-        const record = await model.findOne({ where: { guildId: key }, ...options });
-        if (record && typeof record[field] === 'number') {
-            record[field] += value;
-            return await record.save();
-        }
-        return null;
-    }
-
     async find<T extends Model>(model: { new(): T; findAll: any }, conditions: WhereOptions, options: object = {}): Promise<T[]> {
         return await model.findAll({ where: conditions, ...options });
     }
+
+    async add<T extends Model>(model: { findOne: Function }, guildId: string, key: keyof T, value: number): Promise<T | null> {
+        const instance = await model.findOne({ where: { guildId } });
+        if (!instance) return null;
+
+        if (typeof instance[key] === 'number') {
+            (instance[key] as unknown as number) += value;
+            await instance.save();
+            return instance;
+        } else {
+            throw new Error(`Key ${String(key)} does not exist or is not a number on model`);
+        }
+    }
+
+    async set<T extends Model>(
+        model: ModelStatic<T>,
+        fields: Partial<T['_attributes']>
+    ): Promise<T | null> {
+        if (!fields.guildId) {
+            throw new Error('guildId is required in the fields object');
+        }
+
+        let instance = await model.findOne({ where: { guildId: fields.guildId } });
+
+        if (!instance) {
+            instance = await model.create(fields as T['_creationAttributes']);
+        } else {
+            Object.assign(instance, fields);
+            await instance.save();
+        }
+
+        return instance;
+    }
 }
 
-const exec = new DatabaseWrapper();
+const exec = new SequelizeWrapper();
 
 export const models = {
     exec,
