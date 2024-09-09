@@ -47,7 +47,7 @@ export namespace AntiSpam {
         Enabled: boolean;
         Threshold: number;
         removeMessages: boolean;
-        punishment_type: 'mute' | 'kick' | 'ban';
+        punishmentType: 'mute' | 'kick' | 'ban';
         punishTime: number;
     }
 }

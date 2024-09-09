@@ -53,7 +53,7 @@ const AntiSpamPreset: { [key in PresetKeys]: AntiSpam.AntiSpamOptions } = {
         Enabled: true,
         Threshold: 7,
         removeMessages: true,
-        punishment_type: 'mute',
+        punishmentType: 'mute',
         punishTime: 1000 * 60 * 2 // 2 MINUTES,
     },
     guard: {
@@ -63,7 +63,7 @@ const AntiSpamPreset: { [key in PresetKeys]: AntiSpam.AntiSpamOptions } = {
         Enabled: true,
         Threshold: 5,
         removeMessages: true,
-        punishment_type: 'mute',
+        punishmentType: 'mute',
         punishTime: 1000 * 60 * 4 // 4 MINUTES,
     },
     extreme: {
@@ -73,7 +73,7 @@ const AntiSpamPreset: { [key in PresetKeys]: AntiSpam.AntiSpamOptions } = {
         Enabled: true,
         Threshold: 3,
         removeMessages: true,
-        punishment_type: 'mute',
+        punishmentType: 'mute',
         punishTime: 1000 * 60 * 30 // 30 MINUTES,
     },
 }
@@ -93,28 +93,28 @@ export default {
             return;
         };
 
-        await client.db2.set(client.m.AntiSpam, {
-            guildId: interaction.guildId!,
-            ignoreBots: false,
-            maxInterval: 1900,
-            Enabled: true,
-            threshold: 3,
-            removeMessages: true,
-            punishmentType: 'mute',
-            punishTime: client.timeCalculator.to_ms('15m')!,
-        });
+        // await client.db2.set(client.m.AntiSpam, {
+        //     guildId: interaction.guildId!,
+        //     ignoreBots: false,
+        //     maxInterval: 1900,
+        //     Enabled: true,
+        //     threshold: 3,
+        //     removeMessages: true,
+        //     punishmentType: 'mute',
+        //     punishTime: client.timeCalculator.to_ms('15m')!,
+        // });
 
-        let e = await client.db2.get(client.m.AntiSpam, interaction.guildId!)
+        // let e = await client.db2.get(client.m.AntiSpam, interaction.guildId!)
         // await client.db2.delete(client.m.AntiSpam, interaction.guildId)
-        console.log(e)
+        // console.log(e)
 
-        let baseData: AntiSpam.AntiSpamOptions = await client.db.get(`${interaction.guildId}.GUILD.ANTISPAM`) || {
+        let baseData: AntiSpam.AntiSpamOptions = await client.db2.get(client.m.AntiSpam, interaction.guildId!) || {
             ignoreBots: false,
             maxInterval: 1900,
             Enabled: true,
             Threshold: 3,
             removeMessages: true,
-            punishment_type: 'mute',
+            punishmentType: 'mute',
             punishTime: client.timeCalculator.to_ms('15m')!,
         }
 
@@ -151,7 +151,7 @@ export default {
                 {
                     label: lang.antispam_manage_choices_3_label,
                     description: lang.antispam_manage_choices_3_desc,
-                    value: 'punishment_type',
+                    value: 'punishmentType',
                     type: 'punish',
 
                     componentType: ComponentType.StringSelect,
@@ -234,7 +234,7 @@ export default {
                 case 'removeMessages':
                 case 'punishTimeMultiplier':
                     return value ? `\`🟢 ${lang.guildprofil_set_blockpub}\`` : `\`🔴 ${lang.guildprofil_not_set_blockpub}\``;
-                case 'punishment_type':
+                case 'punishmentType':
                     return value ? `\`${value}\`` : `\`🔥 ${lang.setjoinroles_var_none}\``;
                 case 'punishTime':
                 case 'maxDuplicatesInterval':
@@ -249,7 +249,7 @@ export default {
             embed.setFields([
                 { name: lang.antispam_manage_choices_1_label, value: beautifyValue('Enabled', baseData.Enabled, lang), inline: true },
                 { name: lang.antispam_manage_choices_2_label, value: beautifyValue('ignoreBots', baseData.ignoreBots, lang), inline: true },
-                { name: lang.antispam_manage_choices_3_label, value: beautifyValue('punishment_type', baseData.punishment_type, lang), inline: true },
+                { name: lang.antispam_manage_choices_3_label, value: beautifyValue('punishmentType', baseData.punishmentType, lang), inline: true },
                 { name: lang.antispam_manage_choices_4_label, value: beautifyValue('punishTime', baseData.punishTime, lang), inline: true },
                 { name: lang.antispam_manage_choices_6_label, value: beautifyValue('removeMessages', baseData.removeMessages, lang), inline: true },
                 { name: lang.antispam_manage_choices_7_label, value: beautifyValue('maxInterval', baseData.maxInterval, lang), inline: true },
@@ -299,7 +299,7 @@ export default {
             };
 
             if (i.customId === 'antispam-manage-save-button') {
-                await client.db.set(`${interaction.guildId}.GUILD.ANTISPAM`, baseData);
+                await client.db2.set(client.m.AntiSpam, { guildId: interaction.guildId!, ...baseData })
                 await i.deferUpdate();
 
                 collector.stop();

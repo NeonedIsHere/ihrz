@@ -890,7 +890,7 @@ AntiSpam.init({
         type: DataTypes.BOOLEAN,
         primaryKey: false
     },
-    threshold: {
+    Threshold: {
         type: DataTypes.INTEGER,
         primaryKey: false
     },
@@ -917,7 +917,7 @@ AntiSpam.init({
 (async () => {
     try {
         // Synchronisation de tous les modèles
-        // await sequelize.sync({ force: true, logging: false });
+        await sequelize.sync({ alter: false, logging: false });
         console.log('Tous les modèles ont été synchronisés avec succès.');
     } catch (error) {
         console.error('Erreur lors de la synchronisation des modèles :', error);
@@ -931,8 +931,8 @@ interface GuildModel extends Model {
 class SequelizeWrapper {
     constructor() { }
 
-    async get<T extends Model>(model: { new(): T; findOne: any }, key: any, options: object = {}): Promise<T | null> {
-        return await model.findOne({ where: { guildId: key }, ...options });
+    async get<T extends Model>(model: { new(): T; findOne: any }, key: any, options: object = {}): Promise<T["dataValues"] | null> {
+        return (await model.findOne({ where: { guildId: key }, ...options }))?.dataValues || null
     }
 
     async delete<T extends Model>(model: { new(): T; findOne: any }, key: any, options: object = {}): Promise<boolean> {
