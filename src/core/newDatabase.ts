@@ -920,7 +920,7 @@ AntiSpam.init({
         await sequelize.sync({ alter: false, logging: false });
         console.log('Tous les modèles ont été synchronisés avec succès.');
     } catch (error) {
-        console.error('Erreur lors de la synchronisation des modèles :', error);
+        console.error('Erreur slors de la synchronisation des modèles :', error);
     }
 })();
 
@@ -931,8 +931,15 @@ interface GuildModel extends Model {
 class SequelizeWrapper {
     constructor() { }
 
-    async get<T extends Model>(model: { new(): T; findOne: any }, key: any, options: object = {}): Promise<T["dataValues"] | null> {
-        return (await model.findOne({ where: { guildId: key }, ...options }))?.dataValues || null
+    async get<T extends GuildModel>(model: { findOne: Function }, guildId: string, key?: keyof T): Promise<T["dataValues"] | T[keyof T] | null> {
+        const instance = (await model.findOne({ where: { guildId } })).dataValues;
+        if (!instance) return null;
+
+        if (key) {
+            return instance[key] !== undefined ? instance[key] : null;
+        }
+
+        return instance;
     }
 
     async delete<T extends Model>(model: { new(): T; findOne: any }, key: any, options: object = {}): Promise<boolean> {
