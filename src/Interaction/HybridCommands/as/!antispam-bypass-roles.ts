@@ -54,7 +54,7 @@ export default {
             return;
         };
 
-        let all_roles = await client.db.get(`${interaction.guildId}.GUILD.ANTISPAM.BYPASS_ROLES`) as AntiSpam.AntiSpamOptions['BYPASS_ROLES'];
+        let all_roles = await client.database.get(client.m.AntiSpam, interaction.guildId!, "bypassRoles") || []
 
         const embed = new EmbedBuilder()
             .setColor("#6666ff")
@@ -111,7 +111,7 @@ export default {
                 return;
             };
 
-            await client.db.set(`${interaction.guildId}.GUILD.ANTISPAM.BYPASS_ROLES`, allroles);
+            await client.database.set(client.m.AntiSpam, { guildId: interaction.guildId, bypassRoles: allroles });
 
             await i.deferUpdate();
 
@@ -135,11 +135,11 @@ export default {
             })
 
             allroles = i.values;
-            await client.method.interactionSend(originalResponse as Message, { embeds: [embed] });
+            await originalResponse.edit({ embeds: [embed] });
         });
 
         collector.on('end', async () => {
-            await client.method.interactionSend(originalResponse as Message, { components: [] });
+            await client.method.interactionSend(originalResponse, { components: [] });
         })
     },
 };

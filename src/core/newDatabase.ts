@@ -924,14 +924,11 @@ AntiSpam.init({
     }
 })();
 
-interface GuildModel extends Model {
-    guildId: string;
-}
 
 class SequelizeWrapper {
     constructor() { }
 
-    async get<T extends GuildModel>(model: { findOne: Function }, guildId: string, key?: keyof T): Promise<T["dataValues"] | T[keyof T] | null> {
+    async get<T extends Model>(model: { findOne: Function }, guildId: string, key?: keyof T["dataValues"]): Promise<T["dataValues"] | T[keyof T] | null> {
         const instance = (await model.findOne({ where: { guildId } })).dataValues;
         if (!instance) return null;
 

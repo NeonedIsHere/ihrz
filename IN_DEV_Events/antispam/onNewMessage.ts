@@ -58,7 +58,7 @@ async function logsAction(lang: LanguageData, message: Message, users: Set<Guild
     if (users.size === 0) return;
 
     const firstUser = users.values().next().value;
-    await message.client.db.exec.get(message.client.db.AntiSpam, message.guildId)
+    await message.client.database.exec.get(message.client.db.AntiSpam, message.guildId)
     const inDb = await message.client.db.get(`${message.guildId}.GUILD.SERVER_LOGS.antispam`) as string | null;
 
     if (!inDb) return;

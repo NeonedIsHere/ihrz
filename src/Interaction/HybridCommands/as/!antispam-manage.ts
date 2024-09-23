@@ -93,7 +93,7 @@ export default {
             return;
         };
 
-        let baseData: AntiSpam.AntiSpamOptions = await client.db2.get(client.m.AntiSpam, interaction.guildId!) || {
+        let baseData: AntiSpam.AntiSpamOptions = await client.database.get(client.m.AntiSpam, interaction.guildId!) || {
             ignoreBots: false,
             maxInterval: 1900,
             Enabled: true,
@@ -284,7 +284,7 @@ export default {
             };
 
             if (i.customId === 'antispam-manage-save-button') {
-                await client.db2.set(client.m.AntiSpam, { guildId: interaction.guildId!, ...baseData })
+                await client.database.set(client.m.AntiSpam, { guildId: interaction.guildId!, ...baseData })
                 await i.deferUpdate();
 
                 collector.stop();

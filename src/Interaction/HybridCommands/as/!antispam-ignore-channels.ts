@@ -54,7 +54,7 @@ export default {
             return;
         };
 
-        let all_channels = await client.db.get(`${interaction.guildId}.GUILD.ANTISPAM.BYPASS_CHANNELS`) as AntiSpam.AntiSpamOptions['BYPASS_CHANNELS'];
+        let all_channels = await client.database.get(client.m.AntiSpam, interaction.guildId!, "bypassChannels") || [];
 
         const embed = new EmbedBuilder()
             .setColor("#6666ff")
@@ -76,7 +76,7 @@ export default {
             .setMaxValues(25)
             .setMinValues(0);
 
-        if (all_channels !== undefined && all_channels.length >= 1) {
+        if (all_channels !== undefined && all_channels?.length >= 1) {
             const channels: string[] = Array.isArray(all_channels) ? all_channels : [all_channels];
             select.setDefaultChannels(channels);
         };
@@ -113,7 +113,7 @@ export default {
                 return;
             };
 
-            await client.db.set(`${interaction.guildId}.GUILD.ANTISPAM.BYPASS_CHANNELS`, allchannel);
+            await client.database.set(client.m.AntiSpam, { guildId: interaction.guildId, bypassChannels: allchannel });
 
             await i.deferUpdate();
 
