@@ -61,8 +61,6 @@ export default {
             return;
         };
 
-        await client.db.set(`${interaction.guildId}.CONFESSION.channel`, channel.id);
-
         await client.method.interactionSend(interaction, {
             content: data.confession_channel_command_work
                 .replace('${channel?.toString()}', channel.toString()!)
@@ -92,9 +90,12 @@ export default {
             nonce: nonce
         });
 
-        await client.db.set(`${interaction.guildId}.GUILD.CONFESSION.panel`, {
-            channelId: message.channelId,
-            messageId: message.id
+        await client.database.set(client.m.ConfessionSchema, {
+            guildId: interaction.guildId,
+            panel: {
+                channelId: message.channelId,
+                messageId: message.id
+            }
         });
 
         await client.method.iHorizonLogs.send(interaction, {

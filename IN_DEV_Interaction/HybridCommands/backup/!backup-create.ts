@@ -28,8 +28,6 @@ import {
     PermissionsBitField,
 } from 'discord.js';
 
-
-import logger from '../../../core/logger.js';
 import backup from 'discord-rebackup';
 import { LanguageData } from '../../../../types/languageData.js';
 import { SubCommandArgumentValue } from '../../../core/functions/method.js';
@@ -78,7 +76,7 @@ export default {
 
             let elData = { guildName: backupData.name, categoryCount: i, channelCount: j };
 
-            await client.db.set(`BACKUPS.${interaction.member?.user.id}.${backupData.id}`, elData);
+            await client.database.set(`BACKUPS.${interaction.member?.user.id}.${backupData.id}`, elData);
 
             client.method.channelSend(interaction, { content: data.backup_command_work_on_creation });
 

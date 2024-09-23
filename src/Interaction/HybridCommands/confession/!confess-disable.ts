@@ -38,13 +38,11 @@ export default {
         if (!interaction.member || !client.user || !interaction.guild || !interaction.channel) return;
 
         if (interaction instanceof ChatInputCommandInteraction) {
-            var action = interaction.options.getString("time") as string;
+            var action = interaction.options.getString("action");
         } else {
             var _ = await client.method.checkCommandArgs(interaction, command, args!, data); if (!_) return;
-            var action = (client.method.string(args!, 0) || "0s") as string
+            var action = client.method.string(args!, 0);
         };
-
-        let time = client.timeCalculator.to_ms(action);
 
         const permissionsArray = [PermissionsBitField.Flags.Administrator]
         const permissions = interaction instanceof ChatInputCommandInteraction ?
@@ -56,27 +54,33 @@ export default {
             return;
         };
 
-        if (!time) {
+        if (action === 'on') {
+            await client.database.set(client.m.ConfessionSchema, { guildId: interaction.guildId!, disable: false });
             await client.method.interactionSend(interaction, {
-                content: data.too_new_account_invalid_time_on_enable
+                content: data.confession_disable_command_work_on
             });
+
+            await client.method.iHorizonLogs.send(interaction, {
+                title: data.confession_log_embed_title_on_enable,
+                description: data.confession_log_embed_desc_on_enable
+                    .replace('${interaction.user}', interaction.member.user.toString())
+            });
+
+            return;
+        } else if (action === 'off') {
+
+            await client.database.set(client.m.ConfessionSchema, { guildId: interaction.guildId!, disable: true });
+            await client.method.interactionSend(interaction, {
+                content: data.confession_disable_command_work_off
+            });
+
+            await client.method.iHorizonLogs.send(interaction, {
+                title: data.confession_log_embed_title_on_enable,
+                description: data.confession_log_embed_desc_on_disabled
+                    .replace('${interaction.user}', interaction.member.user.toString())
+            });
+
             return;
         };
-
-        await client.db.set(`${interaction.guildId}.GUILD.CONFESSION.cooldown`, time);
-        await client.method.interactionSend(interaction, {
-            content: data.confession_coolodwn_command_work
-                .replace('${interaction.user.toString()}', interaction.member.user.toString())
-                .replace('${client.timeCalculator.to_beautiful_string(time)}', client.timeCalculator.to_beautiful_string(time))
-        });
-
-        await client.method.iHorizonLogs.send(interaction, {
-            title: data.confession_cooldown_log_embed_title,
-            description: data.confession_cooldown_log_embed_desc
-                .replace('${interaction.user}', interaction.member.user.toString())
-                .replace('${client.timeCalculator.to_beautiful_string(time)}', client.timeCalculator.to_beautiful_string(time))
-        });
-
-        return;
     },
 };
