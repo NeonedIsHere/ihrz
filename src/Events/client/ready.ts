@@ -19,167 +19,52 @@
 ・ Copyright © 2020-2024 iHorizon
 */
 
-import { Client, Collection, PermissionsBitField, ActivityType, EmbedBuilder, GuildFeature, User } from 'discord.js';
-import { PfpsManager_Init } from "../../core/modules/pfpsManager.js";
-import { OwnIHRZ } from "../../core/modules/ownihrzManager.js";
-import { format } from '../../core/functions/date-and-time.js';
+import {
+  Client,
+  ActivityType,
+} from "discord.js";
 
-import status from "../../files/status.json" with { "type": "json" }
 import logger from "../../core/logger.js";
 
-import { BotEvent } from '../../../types/event.js';
-import { GiveawayManager } from '../../core/modules/giveawaysManager.js';
-import { DatabaseStructure } from '../../../types/database_structure.js';
+import { BotEvent } from "../../../types/event.js";
 
 export const event: BotEvent = {
-    name: "ready",
-    run: async (client: Client) => {
+  name: "ready",
+  run: async (client: Client) => {
+    async function refreshDatabaseModel() {
+      client.db.table(`TEMP`).deleteAll();
+      let table = client.db.table("OWNER");
+      let owners = [...client.owners, ...(await table.all()).map((x) => x.id)];
 
-        async function fetchInvites() {
-            client.guilds.cache.forEach(async (guild) => {
-                try {
-                    if (!guild.members.me?.permissions.has([PermissionsBitField.Flags.ManageGuild, PermissionsBitField.Flags.ViewAuditLog])) return;
-                    guild.invites.fetch().then(guildInvites => {
-                        client.invites.set(guild.id, new Collection(guildInvites.map((invite) => [invite.code, invite.uses])));
-
-                        if (guild.features.includes(GuildFeature.VanityURL)) {
-                            guild.fetchVanityData().then((vanityInvite) => {
-                                client.vanityInvites.set(guild.id, vanityInvite);
-                            });
-                        }
-                    })
-                } catch (error: any) {
-                    logger.err(`Error fetching invites for guild ${guild.id}: ${error}`.red);
-                };
-            });
-        };
-
-        async function refreshDatabaseModel() {
-            await client.db.table(`TEMP`).deleteAll();
-            let table = client.db.table('OWNER');
-            let owners = [...client.owners, ...(await table.all()).map(x => x.id)];
-
-            owners.forEach(async ownerId => {
-                try {
-                    let _ = await client.users?.fetch(ownerId);
-                    await table.set(_.id, { owner: true })
-                } catch {
-                    await table.delete(ownerId)
-                }
-            });
-        };
-
-        async function quotesPresence() {
-            client.user?.setPresence({ activities: [{ name: status.current[Math.floor(Math.random() * status.current.length)], type: ActivityType.Custom }] });
-        };
-
-        async function refreshSchedule() {
-            let table = client.db.table("SCHEDULE");
-            let listAll = await table.all();
-
-            let dateNow = Date.now();
-            let desc: string = '';
-
-            Object.entries(listAll).forEach(async ([userId, array]) => {
-
-                let member = client.users.cache.get(array.id) as User;
-
-                for (let ScheduleId in array.value) {
-                    if (array.value[ScheduleId]?.expired <= dateNow) {
-                        desc += `${format(new Date(array.value[ScheduleId]?.expired), 'YYYY/MM/DD HH:mm:ss')}`;
-                        desc += `\`\`\`${array.value[ScheduleId]?.title}\`\`\``;
-                        desc += `\`\`\`${array.value[ScheduleId]?.description}\`\`\``;
-
-                        let embed = new EmbedBuilder()
-                            .setColor('#56a0d3')
-                            .setTitle(`#${ScheduleId} Schedule has been expired!`)
-                            .setDescription(desc)
-                            .setThumbnail((member.displayAvatarURL()))
-                            .setTimestamp()
-                            .setFooter({ text: 'iHorizon', iconURL: "attachment://footer_icon.png" });
-
-                        member?.send({
-                            content: member.toString(),
-                            embeds: [embed],
-                            files: [await client.method.bot.footerAttachmentBuilder(client)]
-                        }).catch(() => { });
-
-                        await table.delete(`${array.id}.${ScheduleId}`);
-                    };
-
-                }
-            });
-        };
-
-        async function refreshBotData() {
-            await client.db.set("BOT", {
-                "info": {
-                    members: client.guilds.cache.reduce((a, b) => a + b.memberCount, 0),
-                    servers: client.guilds.cache.size,
-                    shards: client.shard?.count,
-                    ping: client.ws.ping
-                },
-                "content": {
-                    commands: client.commands.size + client.message_commands.size + client.applicationsCommands.size,
-                    category: client.category.length
-                },
-                "user": client.user
-            })
+      owners.forEach(async (ownerId) => {
+        try {
+          let _ = await client.users?.fetch(ownerId);
+          await table.set(_.id, { owner: true });
+        } catch {
+          table.delete(ownerId);
         }
+      });
+    }
 
-        async function statsRefresher() {
-            const currentTime = Date.now();
-            const fourteenDaysInMillis = 30 * 24 * 60 * 60 * 1000;
+    async function quotesPresence() {
+      client.user?.setPresence({
+        activities: [
+          {
+            name: `music on ${client.guilds.cache.size} guilds | Use ;help`,
+            type: ActivityType.Listening,
+          },
+        ],
+      });
+    }
 
-            (await client.db.all()).forEach(async (index, value) => {
-                let guild = index.value as DatabaseStructure.DbInId;
-                let stats = guild.STATS?.USER;
+    await client.player.init({
+      id: client.user?.id as string,
+      username: "bot_" + client.user?.id,
+    });
 
-                if (stats) {
-                    Object.keys(stats).forEach(userId => {
-                        let userStats = stats[userId];
-
-                        if (userStats.messages) {
-                            userStats.messages = userStats.messages.filter((message: DatabaseStructure.StatsMessage) => {
-                                return (currentTime - message.sentTimestamp) <= fourteenDaysInMillis;
-                            });
-                        }
-                        if (userStats.voices) {
-                            userStats.voices = userStats.voices.filter((voice: DatabaseStructure.StatsVoice) => {
-                                return (currentTime - voice.endTimestamp) <= fourteenDaysInMillis;
-                            });
-                        }
-                    });
-                    await client.db.set(index.id, guild);
-                }
-            });
-        }
-
-        // @ts-ignore
-        client.giveawaysManager = new GiveawayManager(client, {
-            storage: `${process.cwd()}/src/files/giveaways/`,
-            config: {
-                botsCanWin: false,
-                embedColor: '#9a5af2',
-                embedColorEnd: '#2f3136',
-                reaction: '🎉',
-                botName: "iHorizon",
-                forceUpdateEvery: 3600,
-                endedGiveawaysLifetime: 345_600_000,
-            },
-        });
-
-        await client.player.init({ id: client.user?.id as string, username: 'bot_' + client.user?.id });
-
-        new OwnIHRZ().Startup_Cluster(client);
-        await client.notifier.start();
-
-        setInterval(quotesPresence, 120_000), setInterval(refreshSchedule, 15_000), setInterval(refreshBotData, 45_000);
-
-        fetchInvites(), refreshDatabaseModel(), quotesPresence(), refreshSchedule(), refreshBotData(), statsRefresher();
-
-        PfpsManager_Init(client);
-
-        logger.log(`${client.config.console.emojis.HOST} >> Bot is ready`.white);
-    },
+    setInterval(quotesPresence, 120_000),
+      refreshDatabaseModel(),
+      quotesPresence(),
+      logger.log(`${client.config.console.emojis.HOST} >> Bot is ready`.white);
+  },
 };

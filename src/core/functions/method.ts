@@ -27,7 +27,6 @@ import * as perm from './permissonsCalculator.js'
 import * as f from './displayBotName.js';
 import * as  h from './helper.js';
 import * as c from '../core.js';
-import * as html from './html2png.js';
 import * as l from './ihorizon-logs.js';
 
 export async function user(interaction: Message, args: string[], argsNumber: number): Promise<User | null> {
@@ -508,5 +507,4 @@ export const permission = perm;
 export const bot = f;
 export const helper = h;
 export const core = c;
-export const imageManipulation = html;
 export const iHorizonLogs = l;

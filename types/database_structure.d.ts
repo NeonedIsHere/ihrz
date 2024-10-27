@@ -300,6 +300,7 @@ export namespace DatabaseStructure {
     }
 
     export interface UtilsData {
+        LEASH: { dom: string; sub: string; }[]; // yeah, bdsm ref lmao
         PERMS?: UtilsPermsData;
         USER_PERMS?: UtilsPermsUserData;
         unban_members?: string[];

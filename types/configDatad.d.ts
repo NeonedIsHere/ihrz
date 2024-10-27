@@ -42,13 +42,9 @@ export interface ConfigData {
     };
 
     core: {
-        devMode: boolean;
-        bash: boolean;
         blacklistPictureInEmbed: string;
         guildLogsChannelID: string;
         reportChannelID: string;
-
-        cluster: string[];
 
         shutdownClusterWhenStop: boolean;
     };
@@ -63,17 +59,6 @@ export interface ConfigData {
         owners?: string[];
     };
 
-    api: {
-        HorizonGateway?: string; // only for the production phase (private source code)
-        useHttps?: boolean;
-        domain?: string;
-        port?: string;
-        useProxy?: boolean;
-        proxyUrl?: string;
-        apiToken: string;
-        clientID: string;
-    };
-
     console: {
         emojis: {
             OK: string;
@@ -82,21 +67,6 @@ export interface ConfigData {
             KISA: string;
             LOAD: string
         }
-    };
-
-    database?: {
-        method: 'CACHED_POSTGRES' | 'MONGO_DB' | 'JSON' | 'MYSQL' | 'SQLITE' | 'CACHED_SQL' | 'CACHED_MONGO' | 'POSTGRES' | 'PNG' | 'JSON2'
-
-        mongoDb?: string;
-
-        mySQL?: {
-            host?: string;
-            hostname?: string;
-            user: string;
-            password: string;
-            database: string;
-            port?: number;
-        };
     };
 
 }

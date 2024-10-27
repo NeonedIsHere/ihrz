@@ -23,10 +23,7 @@ import './core/functions/colors.js';
 import { ShardingManager } from 'discord.js';
 import config from './files/config.js';
 import logger from './core/logger.js';
-import { getToken } from './core/functions/getToken.js';
 
-const _token = await getToken();
-
-let manager = new ShardingManager('./dist/src/core/bot.js', { totalShards: "auto", token: _token || process.env.BOT_TOKEN || config.discord.token });
+let manager = new ShardingManager('./dist/src/core/bot.js', { totalShards: "auto", token: process.env.BOT_TOKEN || config.discord.token });
 manager.on("shardCreate", (shard) => logger.log(`${config.console.emojis.HOST} >> The Shard number ${shard.id} is now launched :) !`.green));
 manager.spawn();

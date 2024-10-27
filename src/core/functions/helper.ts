@@ -20,25 +20,28 @@
 */
 
 import { Message } from "discord.js";
-import { QuickDB } from "quick.db";
 import { SteganoDB } from "stegano.db";
 
 export async function coolDown(message: Message, method: string, ms: number) {
-    let tn = Date.now();
-    let table = message.client.db.table("TEMP");
-    var fetch = await table.get(`COOLDOWN.${method}.${message.author.id}`);
-    if (fetch !== null && ms - (tn - fetch) > 0) return true;
+  let tn = Date.now();
+  let table = message.client.db.table("TEMP");
+  var fetch = await table.get(`COOLDOWN.${method}.${message.author.id}`);
+  if (fetch !== null && ms - (tn - fetch) > 0) return true;
 
-    await table.set(`COOLDOWN.${method}.${message.author.id}`, tn);
-    return false;
-};
+  await table.set(`COOLDOWN.${method}.${message.author.id}`, tn);
+  return false;
+}
 
-export async function hardCooldown(database: QuickDB<any> | SteganoDB, method: string, ms: number) {
-    let tn = Date.now();
-    let table = database.table("TEMP");
-    var fetch = await table.get(`COOLDOWN.${method}`);
-    if (fetch !== null && ms - (tn - fetch) > 0) return true;
+export async function hardCooldown(
+  database: SteganoDB,
+  method: string,
+  ms: number,
+) {
+  let tn = Date.now();
+  let table = database.table("TEMP");
+  var fetch = await table.get(`COOLDOWN.${method}`);
+  if (fetch !== null && ms - (tn - fetch) > 0) return true;
 
-    await table.set(`COOLDOWN.${method}`, tn);
-    return false;
-};
+  await table.set(`COOLDOWN.${method}`, tn);
+  return false;
+}

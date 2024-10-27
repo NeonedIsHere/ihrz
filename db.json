@@ -1,0 +1,26 @@
+{
+  "json": {
+    "1181123770845503600": {
+      "owner": true
+    },
+    "606504664610897920": {
+      "owner": true
+    },
+    "COOLDOWN": {
+      "1181123770845503600": 1730032609547
+    },
+    "999449972615413861": {
+      "MUSIC_HISTORY": {
+        "buffer": [
+          "[27/10/2024 13:38:04: PLAYED]: { [object Object] - crvvdy & STRAWANGLE - COMO UM G6 | https://www.youtube.com/watch?v=eHEQju-OlkI } by [object Object]"
+        ],
+        "embed": [
+          "<t:1730032684:R>: [object Object] - crvvdy & STRAWANGLE - COMO UM G6 | https://www.youtube.com/watch?v=eHEQju-OlkI by [object Object]"
+        ]
+      }
+    }
+  },
+  "TEMP": {},
+  "OWNER": {},
+  "BLACKLIST": {}
+}
