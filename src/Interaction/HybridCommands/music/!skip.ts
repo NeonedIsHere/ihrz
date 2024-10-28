@@ -30,7 +30,7 @@ import {
     Message,
     MessagePayload,
     MessageReplyOptions,
-} from 'discord.js';
+} from 'pwss';
 import { LanguageData } from '../../../../types/languageData';
 import logger from '../../../core/logger.js';
 import { SubCommandArgumentValue } from '../../../core/functions/method';

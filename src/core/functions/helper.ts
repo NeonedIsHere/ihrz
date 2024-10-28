@@ -19,7 +19,7 @@
 ・ Copyright © 2020-2024 iHorizon
 */
 
-import { Message } from "discord.js";
+import { Message } from "pwss";
 import { SteganoDB } from "stegano.db";
 
 export async function coolDown(message: Message, method: string, ms: number) {

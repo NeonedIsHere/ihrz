@@ -30,7 +30,7 @@ import {
     MessagePayload,
     MessageReplyOptions,
     time,
-} from 'discord.js';
+} from 'pwss';
 
 import { LanguageData } from '../../../../types/languageData';
 import maskLink from '../../../core/functions/maskLink.js';

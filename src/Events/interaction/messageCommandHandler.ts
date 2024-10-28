@@ -21,7 +21,7 @@
 
 import { Command } from '../../../types/command';
 import { BotEvent } from '../../../types/event';
-import { BaseGuildTextChannel, Client, EmbedBuilder, GuildMember, Message, PermissionFlagsBits } from 'discord.js';
+import { BaseGuildTextChannel, Client, EmbedBuilder, GuildMember, Message, PermissionFlagsBits } from 'pwss';
 import { LanguageData } from '../../../types/languageData';
 
 export async function isMessageCommand(client: Client, message: Message): Promise<{ s: boolean, a?: string[], c?: Command }> {

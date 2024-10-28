@@ -26,7 +26,7 @@ import {
     ApplicationCommandType,
     Message,
     EmbedBuilder,
-} from 'discord.js';
+} from 'pwss';
 
 import { Command } from '../../../../types/command';
 import { LanguageData } from '../../../../types/languageData';

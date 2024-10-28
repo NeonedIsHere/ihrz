@@ -34,7 +34,7 @@ import {
   Collection,
   Snowflake,
   DefaultWebSocketManagerOptions,
-} from "discord.js";
+} from "pwss";
 import { readdirSync } from "node:fs";
 import { fileURLToPath } from "url";
 import path from "path";

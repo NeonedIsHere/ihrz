@@ -45,12 +45,6 @@ export interface ConfigData {
         blacklistPictureInEmbed: string;
         guildLogsChannelID: string;
         reportChannelID: string;
-
-        shutdownClusterWhenStop: boolean;
-    };
-
-    command: {
-        alway100: string[]
     };
 
     owner: {

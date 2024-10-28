@@ -24,7 +24,7 @@ import { iHorizonTimeCalculator } from "../src/core/functions/ms.js";
 import * as argsHelper from "../src/core/functions/method.js";
 
 import { GiveawayManager } from "../src/core/modules/giveawaysManager.js";
-import { Collection, Snowflake } from "discord.js";
+import { Collection, Snowflake } from "pwss";
 import { LavalinkManager } from "lavalink-client";
 import { QuickDB } from "quick.db";
 
@@ -44,7 +44,7 @@ import { BashCommands } from "./bashCommands.js";
 import { SteganoDB } from "stegano.db";
 import { StreamNotifier } from "../src/core/StreamNotifier.js";
 
-declare module "discord.js" {
+declare module "pwss" {
   export interface Client {
     func: clientFunction;
     commands: Collection<string, Command>;

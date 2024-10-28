@@ -23,9 +23,9 @@ import pkg from "././../package.json" with { "type": "json" }
 
 const env = "dev"; // production, ownihrz, dev, main
 const version = pkg.version;
-const djs = pkg.dependencies['discord.js'];
+const djs = pkg.dependencies['pwss'];
 
-const ClientVersion = `${env}@${version} discord.js@${djs}`;
+const ClientVersion = `${env}@${version} pwss@${djs}`;
 
 export {
     env, version, djs, ClientVersion

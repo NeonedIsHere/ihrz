@@ -21,7 +21,7 @@
 
 import './core/functions/colors.js';
 
-import { Client, Partials, GatewayIntentBits } from 'discord.js';
+import { Client, Partials, GatewayIntentBits } from 'pwss';
 
 import { ConfigData } from '../types/configDatad.js';
 

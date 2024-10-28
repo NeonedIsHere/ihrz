@@ -27,7 +27,7 @@ import {
     Message,
     MessagePayload,
     MessageReplyOptions,
-} from 'discord.js';
+} from 'pwss';
 
 import logger from '../../../core/logger.js';
 import { LanguageData } from '../../../../types/languageData.js';
