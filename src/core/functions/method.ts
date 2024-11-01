@@ -362,24 +362,27 @@ export function hasSubCommand(options: Option[] | undefined): boolean {
 }
 
 export async function punish(data: any, user: GuildMember | undefined) {
+    async function derank() {
+        let user_roles = Array.from(user?.roles.cache.values()!);
+        let role_app = user_roles.find(x => x.managed);
+        if (role_app) {
+            await role_app.setPermissions(PermissionFlagsBits.ViewChannel);
+        }
+
+        user_roles
+            .filter(x => !x.managed && x.position < x.guild.members.me?.roles.highest.position! && x.id !== x.guild.roles.everyone.id)
+            .forEach(async role => {
+                await user?.roles.remove(role.id, "Protection").catch(() => { })
+            });
+    }
     switch (data?.['SANCTION']) {
         case 'simply':
             break;
         case 'simply+derank':
-            let user_roles = Array.from(user?.roles.cache.values()!);
-            let role_app = user_roles.find(x => x.managed);
-            if (role_app) {
-                await role_app.setPermissions(PermissionFlagsBits.ViewChannel);
-            }
-
-            user_roles
-                .filter(x => !x.managed && x.position < x.guild.members.me?.roles.highest.position! && x.id !== x.guild.roles.everyone.id)
-                .forEach(async role => {
-                    await user?.roles.remove(role.id, "Protection").catch(() => { })
-                });
+            await derank();
             break;
         case 'simply+ban':
-            user?.ban({ reason: 'Protect!' }).catch(() => { });
+            user?.ban({ reason: 'Protect!' }).catch(async () => await derank().catch(() => false));
             break;
         default:
             return;
@@ -443,7 +446,7 @@ export const findOptionRecursively = (options: Option[], subcommandName: string)
     return undefined;
 };
 
-export const buttonReact = async (msg: Message, button: ButtonBuilder): Promise<Message> => {
+export async function buttonReact(msg: Message, button: ButtonBuilder): Promise<Message> {
     let comp = msg.components;
     let isAdd = false;
 
@@ -474,7 +477,7 @@ export const buttonReact = async (msg: Message, button: ButtonBuilder): Promise<
     return msg;
 }
 
-export const buttonUnreact = async (msg: Message, buttonEmoji: string): Promise<Message> => {
+export async function buttonUnreact(msg: Message, buttonEmoji: string): Promise<Message> {
     let comp = msg.components;
     let isRemoved = false;
 
@@ -483,7 +486,7 @@ export const buttonUnreact = async (msg: Message, buttonEmoji: string): Promise<
     for (let i = 0; i < comp.length; i++) {
         const actionRow = comp[i];
         const newComponents = actionRow.components.filter(component => {
-            if (component.type === ComponentType.Button && component.emoji?.name === buttonEmoji) {
+            if (component.type === ComponentType.Button && component.emoji?.id === buttonEmoji) {
                 isRemoved = true;
                 return false;
             }
