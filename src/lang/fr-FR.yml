@@ -205,6 +205,11 @@ ranksSetMessage_buttom_del_name: "Message par défaut"
 ranksSetMessage_awaiting_response: "Écrivez le nouveau message des rangs personnalisé."
 ranksSetMessage_embed_fields_xpmessage: "Message des rangs"
 
+# /ranks ranks-ureset
+reset_uranks_are_you_sure: "**Êtes-vous vraiment sûr de vouloir supprimer toutes les données de rang?\nCette action est permanente et vous ne pourrez pas revenir en arrière.**\n**Cette action est destructive!!**"
+reset_uranks_logs_embed_title: "Logs du module de rangs (ACTION DANGEREUSE)"
+reset_uranks_logs_embed_desc: "${interaction.member.user.toString()} a supprimé toutes les données du module de rangs pour ${user.toString()}!"
+
 
 # Owner commands
 # /owner, /unowner, /blacklist, /unblacklist
@@ -422,6 +427,10 @@ dogs_embed_title: "🐶 ouaf-ouaf."
 # /love
 love_embed_description: "**${user1.username}** + **${user2.username}** = __${randomNumber}%__ d'amour 💗"
 love_command_error: "Une erreur s'est produite lors de la création de l'image"
+
+# /fun disable
+fun_disable_command_msg: "${interaction.member?.user.toString()}, tu as ${action_type} la catégorie fun!"
+fun_category_disable: "Tu ne peux pas utiliser cette commande, la catégorie des commandes fun est désactivée."
 
 
 # Economy commands
@@ -650,9 +659,28 @@ all_admins_unrank_button_label: "Déclasser tous"
 all_admins_unrank_embed_desc: "${interaction.member?.user.toString()}, iHorizon a exécuté la déclassification de tous pour le module AllAdmins.\n\n**${good}** Utilisateur(s) __déclassés__ avec succès\niHorizon a __échoué__ à déclasser **${bad}** Utilisateur(s)."
 all_admins_unrank_not_owner: "Seul le propriétaire du serveur peut déclasser tous les administrateurs du serveur"
 
+# /allbots
+all_bots_embed_title: "Liste de tous les bot(s) | Page ${i / usersPerPage + 1}"
+
 # /addrole
-utils_addrole_highter_or_egal_roles_msg: "${client.iHorizon_Emojis.icon.Stop_Logo} Vous ne pouvez pas ajouter un rôle à un utilisateur ayant un rôle supérieur au vôtre..."
-utils_addrole_command_ok: "${author.toString()} a réussi à ajouter le rôle ${role?.toString()} à ${user.toString()}"
+utils_addrole_highter_or_egal_roles_msg: "${client.iHorizon_Emojis.icon.Stop_Logo} Vous ne pouvez pas ajouter un rôle à un utilisateur qui a un rôle supérieur au vôtre..."
+utils_addrole_command_ok: "${author.toString()} a ajouté avec succès le rôle ${role?.toString()} à ${user.toString()}"
+utils_addrole_not_wl: "${client.iHorizon_Emojis.icon.No_Logo} | Le rôle que vous souhaitez ajouter à l'utilisateur n'est pas dans la liste blanche. Un administrateur doit d'abord l'ajouter ! (en utilisant `/utils wlroles`)"
+
+# /delrole
+utils_delrole_highter_or_egal_roles_msg: "${client.iHorizon_Emojis.icon.Stop_Logo} Vous ne pouvez pas supprimer un rôle à un utilisateur qui a un rôle supérieur au vôtre..."
+utils_delrole_command_ok: "${author.toString()} a supprimé avec succès le rôle ${role?.toString()} à ${user.toString()}"
+utils_delrole_not_wl: "${client.iHorizon_Emojis.icon.No_Logo} | Le rôle que vous souhaitez supprimer à l'utilisateur n'est pas dans la liste blanche. Un administrateur doit d'abord l'ajouter ! (en utilisant `/utils wlroles`)"
+
+# /utils wlroles
+utils_wlroles_embed_title: "Rôles dans la liste blanche"
+utils_wlroles_embed_desc: "Voici tous les rôles autorisés pouvant être attribués avec les commandes `addrole` et `delrole` !"
+utils_wlRoles_logsEmbed_title: "Module des rôles de la liste blanche"
+utils_wlRoles_logsEmbed_desc: "${interaction.member?.user.toString()} a modifié les rôles dans la liste blanche (pour les commandes `addrole` et `delrole`)"
+
+# /utils dm
+utils_dm: "${client.iHorizon_Emojis.icon.Yes_Logo} Le message as parfaitement été envoyer à ${targetMember.toString()}"
+utils_dm_cant: "${client.iHorizon_Emojis.icon.No_Logo} Je n'ai pas réussi à envoyer de message à ${targetMember.toString()}. Il à peut-être bloquer les message privée, ou il m'a bloqué!"
 
 
 # Guild Config commands
@@ -946,6 +974,7 @@ perm_list_no_command_set: "Il n'y a pas de commande avec des permissions spécif
 # /perm set
 perm_set_deleted: "${user.toString()} a eu sa permission **supprimée** !"
 perm_set_ok: "${user.toString()} a vu sa permission changée en **`${perm}`**"
+perm_set_warn_message: "${interaction.member.toString()}, vous ne pouvez pas donner des permissions supérieures ou égales aux vôtres !"
 
 # /perm roles
 perm_roles_created_role: "Les rôles suivants ont été créés : ${createdRoles.join(', ')}"
@@ -1172,6 +1201,23 @@ unmute_muted_role_doesnt_exist: "Le rôle sourdine n'existe pas. Veuillez d'abor
 unmute_command_work: "<@${tomute.id}> a été enlever de sa sourdine !"
 unmute_logs_embed_title: "Logs de sourdine"
 unmute_logs_embed_description: "<@${interaction.user.id}> a enlever de sa sourdine <@${tomute.id}>"
+
+# /warn
+warn_command_work: "${client.iHorizon_Emojis.icon.Yes_Logo} ${member?.toString()} a été averti ! **Raison** : `${reason}`\n__ID de l'avertissement__: `${warnId}`"
+warn_logEmbed_title: "Historique des Avertissements"
+warn_logEmbed_desc: "${interaction.member.toString()} a averti ${member?.toString()} pour la raison : `${reason}`"
+
+# /unwarn
+unwarn_cannot_found: "${client.iHorizon_Emojis.icon.No_Logo} ${member?.toString()} ne semble avoir aucun avertissement dans ma base de données !"
+unwarn_cannot_found_id: "${client.iHorizon_Emojis.icon.No_Logo} ${member?.toString()} l'ID d'avertissement que vous avez fourni n'est pas dans ma base de données"
+unwarn_command_ok: "${client.iHorizon_Emojis.icon.Yes_Logo} L'avertissement de ${member?.toString()} a été retiré avec succès !"
+unwarn_logEmbed_title: "Historique des Retraits d'Avertissements"
+unwarn_logEmbed_desc: "${interaction.member.toString()} a retiré l'avertissement de ${member?.toString()}"
+
+# /warnlist
+warnlist_no_data: "${client.iHorizon_Emojis.icon.No_Logo} ${member?.toString()} ne semble avoir aucun avertissement dans ma base de données !"
+warnlist_embed_desc: "### ID: ${x.id} - ${format(x.timestamp, 'DD/MM/YYYY')}\n> Auteur : <@${x.authorID}>\n> Raison : `${x.reason}`"
+warnlist_embed_title: "Liste des Avertissements de ${member?.user.globalName} | Page ${i / usersPerPage + 1}"
 
 
 # Backup commands

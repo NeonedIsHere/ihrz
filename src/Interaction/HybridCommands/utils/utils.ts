@@ -140,6 +140,71 @@ export const command: Command = {
             type: ApplicationCommandOptionType.Subcommand
         },
         {
+            name: 'dm',
+            name_localizations: {
+                "fr": "mp"
+            },
+
+            description: 'Send a private message to the user1',
+            description_localizations: {
+                "fr": "Envoyer un message privée à un utilisateur"
+            },
+
+            options: [
+                {
+                    name: "private",
+
+                    description: "is private ?",
+                    description_localizations: {
+                        "fr": "l'autheur est-t'il anonyme ?"
+                    },
+
+                    choices: [
+                        { name: "Yes", value: "yes" },
+                        { name: "No", value: "no" }
+                    ],
+                    type: ApplicationCommandOptionType.String,
+                    required: true
+                },
+                {
+                    name: "member",
+
+                    description: "the member you want",
+                    description_localizations: {
+                        "fr": "l'autheur que vous voulez"
+                    },
+
+                    type: ApplicationCommandOptionType.User,
+                    required: true
+                },
+                {
+                    name: "message",
+
+                    description: "the private message",
+                    description_localizations: {
+                        "fr": "le message"
+                    },
+
+                    type: ApplicationCommandOptionType.String,
+                    required: true
+                },
+            ],
+
+            type: ApplicationCommandOptionType.Subcommand
+        },
+        {
+            name: 'wlroles',
+
+            description: 'Define allowed roles for addrole & delrole command',
+            description_localizations: {
+                "fr": "Définir les rôles autorisés pour les commandes addrole et delrole"
+            },
+
+            aliases: ["wlrole"],
+
+            type: ApplicationCommandOptionType.Subcommand
+        },
+        {
             name: 'setmentionrole',
 
             description: 'Give a specific role to the user who pings me!',
@@ -469,6 +534,18 @@ export const command: Command = {
             type: ApplicationCommandOptionType.Subcommand
         },
         {
+            name: 'allbots',
+
+            description: 'Get the list of all bot in the guild',
+            description_localizations: {
+                "fr": "Obtenez la liste de tous les bot de la guilde"
+            },
+
+            aliases: ["allb", "bots"],
+
+            type: ApplicationCommandOptionType.Subcommand
+        },
+        {
             name: "addrole",
 
             description: "Add role to user",
@@ -495,6 +572,44 @@ export const command: Command = {
                     description: "The role you want to add to the user",
                     description_localizations: {
                         "fr": "Le role que vous voulez ajouter a l'utilisateur"
+                    },
+
+                    type: ApplicationCommandOptionType.Role,
+
+                    required: true
+                },
+
+            ],
+
+            type: ApplicationCommandOptionType.Subcommand
+        },
+        {
+            name: "delrole",
+
+            description: "Removew role to user",
+            description_localizations: {
+                "fr": "Enlever un rôle à un utilisateur"
+            },
+
+            options: [
+                {
+                    name: "user",
+
+                    description: "The user you want to remove role",
+                    description_localizations: {
+                        "fr": "L'utilisateur que vous voulez enlever le rôle"
+                    },
+
+                    type: ApplicationCommandOptionType.User,
+
+                    required: true
+                },
+                {
+                    name: "role",
+
+                    description: "The role you want to remove to the user",
+                    description_localizations: {
+                        "fr": "Le role que vous voulez enlever a l'utilisateur"
                     },
 
                     type: ApplicationCommandOptionType.Role,

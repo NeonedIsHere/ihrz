@@ -204,6 +204,12 @@ ranksSetMessage_buttom_del_name: "الرسالة الافتراضية"
 ranksSetMessage_awaiting_response: "اكتب رسالة الرتب المخصصة الجديدة."
 ranksSetMessage_embed_fields_xpmessage: "رسالة الرتب"
 
+# /ranks ranks-ureset
+reset_uranks_are_you_sure: "**هل أنت متأكد حقًا أنك تريد حذف جميع بيانات الرتب؟\nهذا الإجراء دائم ولن تتمكن من التراجع عنه.**\n**هذا الإجراء مدمر!!**"
+reset_uranks_logs_embed_title: "سجلات وحدة الرتب (إجراء خطير)"
+reset_uranks_logs_embed_desc: "${interaction.member.user.toString()} قام بحذف جميع بيانات وحدة الرتب لـ ${user.toString()}!"
+
+
 # Owner commands
 # /owner, /unowner, /blacklist, /unblacklist
 
@@ -418,6 +424,11 @@ dogs_embed_title: "🐶 عواء."
 # /love
 love_embed_description: "**${user1.username}** + **${user2.username}** = __${randomNumber}%__ من الحب 💗"
 love_command_error: "حدث خطأ أثناء محاولة إنشاء الصورة."
+
+# /fun disable
+fun_disable_command_msg: "${interaction.member?.user.toString()}، انت ${action_type} فئة الترفيه!"
+fun_category_disable: "مش مسموحلك تستخدم الأمر ده، فئة الأوامر الترفيهية معطلة."
+
 
 # Economy commands
 # /addmoney, /balance, /daily, /monthly, /pay, /removemoney, /rob, /weekly, /work
@@ -645,10 +656,29 @@ all_admins_unrank_button_label: "إلغاء التصنيف لجميع"
 all_admins_unrank_embed_desc: "${interaction.member?.user.toString()}, لقد قامت iHorizon بتنفيذ إلغاء التصنيف لجميع في وحدة AllAdmins.\n\n**${good}** مستخدم/مستخدمون __تم إلغاء تصنيفهم__ بنجاح\nفشلت iHorizon في إلغاء تصنيف **${bad}** مستخدم/مستخدمون."
 all_admins_unrank_not_owner: "فقط مالك الخادم يمكنه إلغاء تصنيف جميع المشرفين في الخادم"
 
+# /allbots
+all_bots_embed_title: "قائمة جميع البوتات | الصفحة ${i / usersPerPage + 1}"
 
 # /addrole
-utils_addrole_highter_or_egal_roles_msg: "${client.iHorizon_Emojis.icon.Stop_Logo} لا يمكنك إضافة دور لمستخدم لديه دور أعلى منك..."
-utils_addrole_command_ok: "${author.toString()} قد أضاف بنجاح دور ${role?.toString()} إلى ${user.toString()}"
+utils_addrole_highter_or_egal_roles_msg: "${client.iHorizon_Emojis.icon.Stop_Logo} لا يمكنك إضافة دور إلى مستخدم يمتلك دورًا أعلى منك..."
+utils_addrole_command_ok: "${author.toString()} قام بإضافة الدور ${role?.toString()} بنجاح إلى ${user.toString()}"
+utils_addrole_not_wl: "${client.iHorizon_Emojis.icon.No_Logo} | الدور الذي تريد إضافته للمستخدم غير مدرج في القائمة البيضاء. يجب على المسؤول إضافته أولاً! (باستخدام `/utils wlroles`)"
+
+# /delrole
+utils_delrole_highter_or_egal_roles_msg: "${client.iHorizon_Emojis.icon.Stop_Logo} لا يمكنك إزالة دور من مستخدم يمتلك دورًا أعلى منك..."
+utils_delrole_command_ok: "${author.toString()} قام بإزالة الدور ${role?.toString()} بنجاح من ${user.toString()}"
+utils_delrole_not_wl: "${client.iHorizon_Emojis.icon.No_Logo} | الدور الذي تريد حذفه من المستخدم غير مدرج في القائمة البيضاء. يجب على المسؤول إضافته أولاً! (باستخدام `/utils wlroles`)"
+
+# /utils wlroles
+utils_wlroles_embed_title: "الأدوار المسموح بها"
+utils_wlroles_embed_desc: "هذه هي جميع الأدوار المسموح بها التي يمكن إعطاؤها باستخدام أوامر `addrole` و `delrole`!"
+utils_wlRoles_logsEmbed_title: "وحدة أدوار القائمة البيضاء"
+utils_wlRoles_logsEmbed_desc: "${interaction.member?.user.toString()} قام بتحرير أدوار القائمة البيضاء (لأوامر `addrole` و `delrole`)"
+
+# /utils dm
+utils_dm: "${client.iHorizon_Emojis.icon.Yes_Logo} الرسالة اتبعتت بنجاح لـ ${targetMember.toString()}"
+utils_dm_cant: "${client.iHorizon_Emojis.icon.No_Logo} معرفتش أبعت الرسالة لـ ${targetMember.toString()}. يمكن يكون قافل الرسائل الخاصة أو يكون حظرني!"
+
 
 # Guild Config commands
 # /blockpub, /guildprofil, /setchannels, /setjoindm, /setjoinmessage, /setjoinroles, /setleavemessage, /setup
@@ -944,6 +974,7 @@ perm_list_no_command_set: "لا توجد أوامر تم تعيين أذونات
 # /perm set
 perm_set_deleted: "${user.toString()} تم **حذف** أذنه!"
 perm_set_ok: "${user.toString()} تم تغيير أذنه إلى **`${perm}`**"
+perm_set_warn_message: "${interaction.member.toString()}، لا يمكنك منح إذن أعلى أو مساوٍ لك!"
 
 # /perm roles
 perm_roles_created_role: "الأدوار اللي اتعملت: ${createdRoles.join(', ')}"
@@ -1169,6 +1200,22 @@ unmute_command_work: "<@${tomute.id}> تم رفع ميوته!"
 unmute_logs_embed_title: "سجلات رفع الميوت"
 unmute_logs_embed_description: "<@${interaction.user.id}> رفع ميوت <@${tomute.id}>"
 
+# /warn
+warn_command_work: "${client.iHorizon_Emojis.icon.Yes_Logo} ${member?.toString()} اتحذر! **السبب**: `${reason}`\n__رقم التحذير__: `${warnId}`"
+warn_logEmbed_title: "سجلات التحذير"
+warn_logEmbed_desc: "${interaction.member.toString()} حذر ${member?.toString()} بسبب `${reason}`"
+
+# /unwarn
+unwarn_cannot_found: "${client.iHorizon_Emojis.icon.No_Logo} ${member?.toString()} شكله مفيش تحذيرات ليه في قاعدة البيانات بتاعتي!"
+unwarn_cannot_found_id: "${client.iHorizon_Emojis.icon.No_Logo} ${member?.toString()} رقم التحذير اللي إديته مش موجود في قاعدة البيانات بتاعتي"
+unwarn_command_ok: "${client.iHorizon_Emojis.icon.Yes_Logo} ${member?.toString()} تم إلغاء التحذير بتاعه!"
+unwarn_logEmbed_title: "سجلات إلغاء التحذير"
+unwarn_logEmbed_desc: "${interaction.member.toString()} ألغى تحذير ${member?.toString()}"
+
+# /warnlist
+warnlist_no_data: "${client.iHorizon_Emojis.icon.No_Logo} ${member?.toString()} شكله مفيش تحذيرات ليه في قاعدة البيانات بتاعتي!"
+warnlist_embed_desc: "### الرقم: ${x.id} - ${format(x.timestamp, 'DD/MM/YYYY')}\n> الكاتب: <@${x.authorID}>\n> السبب: `${x.reason}`"
+warnlist_embed_title: "قائمة تحذيرات ${member?.user.globalName} | الصفحة ${i / usersPerPage + 1}"
 
 
 # Backup commands

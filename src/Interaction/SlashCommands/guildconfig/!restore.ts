@@ -28,9 +28,10 @@ import { LanguageData } from '../../../../types/languageData';
 import { axios } from '../../../core/functions/axios.js';
 
 import { SubCommandArgumentValue } from '../../../core/functions/method';
+import { decrypt } from '../../../core/functions/encryptDecryptMethod.js';
 
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached">, data: LanguageData, command: SubCommandArgumentValue) => {        
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached">, data: LanguageData, command: SubCommandArgumentValue) => {
         let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
         if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, data, permCheck.neededPerm || 0);
 
@@ -46,11 +47,13 @@ export default {
 
         if (backup) {
             try {
-                const response = await axios.get(backup.url, { responseType: "arrayBuffer" });
+                const response = await fetch(backup.url);
+                let res = JSON.parse(decrypt(client.config.api.apiToken, await response.text()) || "{}");
+                if (!res) throw "";
 
-                await client.db.set(`${interaction.guildId}`, response.data);
+                await client.db.set(`${interaction.guildId}`, res);
             } catch (error) {
-                await interaction.editReply({ content: data.guildconfig_config_restor_msg });
+                await interaction.editReply({ content: data.guildconfig_config_restore_msg });
                 return;
             }
         };

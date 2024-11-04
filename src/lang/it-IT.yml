@@ -205,6 +205,11 @@ ranksSetMessage_buttom_del_name: "Messaggio predefinito"
 ranksSetMessage_awaiting_response: "Scrivi il nuovo messaggio dei ranghi personalizzato."
 ranksSetMessage_embed_fields_xpmessage: "Messaggio dei ranghi"
 
+# /ranks ranks-ureset
+reset_uranks_are_you_sure: "**Sei davvero sicuro di voler cancellare tutti i dati dei ranghi?\nQuesta azione è permanente e non potrai annullarla.**\n**Questa azione è distruttiva!!**"
+reset_uranks_logs_embed_title: "Log del Modulo dei Ranghi (AZIONE PERICOLOSA)"
+reset_uranks_logs_embed_desc: "${interaction.member.user.toString()} ha cancellato tutti i dati del modulo dei ranghi per ${user.toString()}!"
+
 
 # Owner commands
 # /owner, /unowner, /blacklist, /unblacklist
@@ -422,6 +427,10 @@ dogs_embed_title: "🐶 bau-bau."
 # /love
 love_embed_description: "**${user1.username}** + **${user2.username}** = __${randomNumber}%__ di amore 💗"
 love_command_error: "Si è verificato un errore durante la creazione dell'immagine"
+
+# /fun disable
+fun_disable_command_msg: "${interaction.member?.user.toString()}, hai ${action_type} la categoria divertimento!"
+fun_category_disable: "Non puoi usare questo comando, la categoria dei comandi divertimento è disabilitata."
 
 
 # Economy commands
@@ -650,9 +659,28 @@ all_admins_unrank_button_label: "Declassa tutti"
 all_admins_unrank_embed_desc: "${interaction.member?.user.toString()}, iHorizon ha eseguito il declassamento di tutti per il modulo AllAdmins.\n\n**${good}** Utente(i) __declassato(i)__ con successo\niHorizon ha __fallito__ a declassare **${bad}** Utente(i)."
 all_admins_unrank_not_owner: "Solo il proprietario del server può declassare tutti gli amministratori del server"
 
+# /allbots
+all_bots_embed_title: "Elenco di tutti i bot | Pagina ${i / usersPerPage + 1}"
+
 # /addrole
-utils_addrole_highter_or_egal_roles_msg: "${client.iHorizon_Emojis.icon.Stop_Logo} Non puoi aggiungere un ruolo a un utente che ha un ruolo superiore al tuo..."
+utils_addrole_highter_or_egal_roles_msg: "${client.iHorizon_Emojis.icon.Stop_Logo} Non puoi aggiungere un ruolo a un utente che ha un ruolo più alto del tuo..."
 utils_addrole_command_ok: "${author.toString()} ha aggiunto con successo il ruolo ${role?.toString()} a ${user.toString()}"
+utils_addrole_not_wl: "${client.iHorizon_Emojis.icon.No_Logo} | Il ruolo che vuoi aggiungere all'utente non è nella whitelist. Un amministratore deve aggiungerlo prima! (usando `/utils wlroles`)"
+
+# /delrole
+utils_delrole_highter_or_egal_roles_msg: "${client.iHorizon_Emojis.icon.Stop_Logo} Non puoi rimuovere un ruolo a un utente che ha un ruolo più alto del tuo..."
+utils_delrole_command_ok: "${author.toString()} ha rimosso con successo il ruolo ${role?.toString()} da ${user.toString()}"
+utils_delrole_not_wl: "${client.iHorizon_Emojis.icon.No_Logo} | Il ruolo che vuoi rimuovere dall'utente non è nella whitelist. Un amministratore deve aggiungerlo prima! (usando `/utils wlroles`)"
+
+# /utils wlroles
+utils_wlroles_embed_title: "Ruoli nella Whitelist"
+utils_wlroles_embed_desc: "Questi sono tutti i ruoli consentiti che possono essere assegnati con i comandi `addrole` e `delrole`!"
+utils_wlRoles_logsEmbed_title: "Modulo Ruoli Whitelist"
+utils_wlRoles_logsEmbed_desc: "${interaction.member?.user.toString()} ha modificato i ruoli della whitelist (per i comandi `addrole` e `delrole`)"
+
+# /utils dm
+utils_dm: "${client.iHorizon_Emojis.icon.Yes_Logo} Il messaggio è stato inviato con successo a ${targetMember.toString()}."
+utils_dm_cant: "${client.iHorizon_Emojis.icon.No_Logo} Non sono riuscito a inviare un messaggio a ${targetMember.toString()}. Potrebbe aver bloccato i messaggi privati o potrebbe aver bloccato me!"
 
 
 # Guild Config commands
@@ -946,6 +974,7 @@ perm_list_no_command_set: "Non ci sono comandi con permessi specifici impostati 
 # /perm set
 perm_set_deleted: "${user.toString()} ha avuto il permesso **eliminato**!"
 perm_set_ok: "${user.toString()} ha cambiato il permesso a **`${perm}`**"
+perm_set_warn_message: "${interaction.member.toString()}, non puoi concedere permessi uguali o superiori ai tuoi!"
 
 # /perm roles
 perm_roles_created_role: "I seguenti ruoli sono stati creati: ${createdRoles.join(', ')}"
@@ -1172,6 +1201,23 @@ unmute_muted_role_doesnt_exist: "Il ruolo mutato non esiste. Per favore muta l'u
 unmute_command_work: "<@${tomute.id}> è stato smutato!"
 unmute_logs_embed_title: "Unmute Logs"
 unmute_logs_embed_description: "<@${interaction.user.id}> smuta <@${tomute.id}>."
+
+# /warn
+warn_command_work: "${client.iHorizon_Emojis.icon.Yes_Logo} ${member?.toString()} è stato avvertito! **Motivo**: `${reason}`\n__ID Avvertimento__: `${warnId}`"
+warn_logEmbed_title: "Registro Avvertimenti"
+warn_logEmbed_desc: "${interaction.member.toString()} ha avvertito ${member?.toString()} per `${reason}`"
+
+# /unwarn
+unwarn_cannot_found: "${client.iHorizon_Emojis.icon.No_Logo} ${member?.toString()} sembra non avere avvertimenti nel mio database!"
+unwarn_cannot_found_id: "${client.iHorizon_Emojis.icon.No_Logo} ${member?.toString()} l'ID dell'avvertimento che hai fornito non è nel mio database"
+unwarn_command_ok: "${client.iHorizon_Emojis.icon.Yes_Logo} L'avvertimento di ${member?.toString()} è stato rimosso!"
+unwarn_logEmbed_title: "Registro Rimozioni Avvertimenti"
+unwarn_logEmbed_desc: "${interaction.member.toString()} ha rimosso l'avvertimento di ${member?.toString()}"
+
+# /warnlist
+warnlist_no_data: "${client.iHorizon_Emojis.icon.No_Logo} ${member?.toString()} sembra non avere avvertimenti nel mio database!"
+warnlist_embed_desc: "### ID: ${x.id} - ${format(x.timestamp, 'DD/MM/YYYY')}\n> Autore: <@${x.authorID}>\n> Motivo: `${x.reason}`"
+warnlist_embed_title: "Lista Avvertimenti di ${member?.user.globalName} | Pagina ${i / usersPerPage + 1}"
 
 
 # Backup commands

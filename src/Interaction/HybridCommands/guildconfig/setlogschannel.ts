@@ -61,14 +61,15 @@ export const command: Command = {
             required: true,
             choices: [
                 { name: "Delete all settings", value: "off" },
-                { name: "Setup all channels", value: "auto" },
-                { name: "Roles Logs", value: "roles" },
-                { name: "Moderation Logs", value: "moderation" },
-                { name: "Voice Logs", value: "voice" },
-                { name: "Messages Logs", value: "message" },
+                { name: "AntiSpam Logs", value: "antispam" },
                 { name: "Boost Logs", value: "boost" },
+                { name: "Channel Logs", value: "channel" },
+                { name: "Messages Logs", value: "message" },
+                { name: "Moderation Logs", value: "moderation" },
+                { name: "Roles Logs", value: "roles" },
+                { name: "Setup all channels", value: "auto" },
                 { name: "Ticket Logs", value: "ticket" },
-                { name: "AntiSpam Logs", value: "antispam" }
+                { name: "Voice Logs", value: "voice" },
             ]
         },
         {
@@ -100,7 +101,8 @@ export const command: Command = {
             { id: "boosts", value: lang.setlogschannel_var_boost },
             { id: "roles", value: lang.setlogschannel_var_roles },
             { id: "ticket-log-channel", value: lang.setlogschannel_var_tickets },
-            { id: "antispam", value: lang.setlogschannel_var_antispam }
+            { id: "antispam", value: lang.setlogschannel_var_antispam },
+            { id: "channel", value: lang.var_text_channel }
         ];
 
         const permissionsArray = [PermissionsBitField.Flags.Administrator]
@@ -135,7 +137,7 @@ export const command: Command = {
                     return;
                 }
 
-                (client.channels.cache.get(channel.id) as BaseGuildTextChannel).send({
+                (interaction.guild?.channels.cache.get(channel.id) as BaseGuildTextChannel | null)?.send({
                     content: lang.setlogschannel_confirmation_message
                         .replace("${client.iHorizon_Emojis.icon.Yes_Logo}", client.iHorizon_Emojis.icon.Yes_Logo)
                         .replace("${interaction.user.id}", interaction.member?.user.id!)
@@ -173,7 +175,7 @@ export const command: Command = {
                     }
                 }
                 allCreatedChannels.push(channel.id);
-                (client.channels.cache.get(channel.id) as BaseGuildTextChannel).send({
+                (interaction.guild.channels.cache.get(channel.id) as BaseGuildTextChannel | null)?.send({
                     content: lang.setlogschannel_confirmation_message
                         .replace("${client.iHorizon_Emojis.icon.Yes_Logo}", client.iHorizon_Emojis.icon.Yes_Logo)
                         .replace("${interaction.user.id}", interaction.member.user.id!)
@@ -205,7 +207,7 @@ export const command: Command = {
                         });
                         if (channel) {
                             allCreatedChannels.push(channel.id);
-                            (client.channels.cache.get(channel.id) as BaseGuildTextChannel).send({
+                            (interaction.guild.channels.cache.get(channel.id) as BaseGuildTextChannel | null)?.send({
                                 content: lang.setlogschannel_confirmation_message
                                     .replace("${client.iHorizon_Emojis.icon.Yes_Logo}", client.iHorizon_Emojis.icon.Yes_Logo)
                                     .replace("${interaction.user.id}", interaction.member.user.id!)
@@ -262,6 +264,7 @@ export const command: Command = {
             "boost": lang.setlogschannel_var_boost,
             "ticket": lang.setlogschannel_var_tickets,
             "antispam": lang.setlogschannel_var_antispam,
+            "channel": lang.var_text_channel,
         };
 
         if (type && type in typeOfLogsMap) {

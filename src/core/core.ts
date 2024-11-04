@@ -92,9 +92,9 @@ export async function main(client: Client) {
     client.vanityInvites = new Collection<Snowflake, VanityInviteData>();
 
     process.on('SIGINT', async () => {
-        client.destroy();
         if (client.config.core.shutdownClusterWhenStop) await new OwnIHRZ().QuitProgram(client);
-        if (client.config.database?.method !== "CACHED_SQL") process.exit();
+        await client.destroy();
+        process.exit(0);
     });
 
     client.config.owner.owners?.forEach(owner => {
@@ -105,7 +105,11 @@ export async function main(client: Client) {
 
     errorManager.uncaughtExceptionHandler(client);
     client.db = await initializeDatabase(client.config);
-    client.notifier = new StreamNotifier(client, process.env.TWITCH_APPLICATION_ID || "", process.env.TWITCH_APPLICATION_SECRET || "");
+    client.notifier = new StreamNotifier(client,
+        process.env.TWITCH_APPLICATION_ID || "",
+        process.env.TWITCH_APPLICATION_SECRET || "",
+        process.env.YOUTUBE_API_KEY || ""
+    );
 
     assetsCalc(client);
     playerManager(client);

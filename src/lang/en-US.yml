@@ -10,7 +10,7 @@ var_guild: "Guild"
 var_sanction: "Sanction"
 var_time: "Time"
 var_message: "Message"
-var_no_set: "No Set"
+var_no_set: "Not Set"
 var_none: "None"
 var_roles: "Roles"
 var_names: "Names"
@@ -18,7 +18,7 @@ var_text_channel: "Text Channel"
 var_voice_channel: "Voice Channel"
 var_ownihrz: "OWNIHRZ"
 var_creator: "Creator"
-var_doesnt_have_permissions: "You are not authorised to do this. You need the {permission} permission."
+var_doesnt_have_permissions: "You are not allowed to do this. You need the {permission} permission."
 var_ihorizon: "iHorizon"
 var_developer: "Developer"
 var_chance: "Luck"
@@ -47,19 +47,19 @@ var_add: "Add"
 var_remove: "Remove"
 var_edit: "Edit"
 var_confirm: "Confirm"
-var_succes: "Succes"
+var_succes: "Success"
 
 # Ticket commands
 # /add, /close, /delete, /sethereticket, /open, /remove, /transript, /disableticket
-ticket_disabled_command: "You can't use this command because an Administrator disabled the ticket command !"
+ticket_disabled_command: "You can't use this command because an Administrator disabled the ticket commands !"
 
 # /add
-add_disabled_command: "You can't use this command because an Administrator disabled the ticket command !"
+add_disabled_command: "You can't use this command because an Administrator disabled the ticket commands !"
 add_command_work: "Successfully added ${member.tag} to your ticket!"
 add_command_error: "error occurred, please try again"
 
 # /close
-close_disabled_command: "You can't use this command because an Administrator disabled the ticket command !"
+close_disabled_command: "You can't use this command because an Administrator disabled the ticket commands !"
 close_title_sourcebin: "Ticket transcripted by iHorizon"
 close_description_sourcebin: " "
 close_error_command: "Error occurred, please try again!"
@@ -69,22 +69,22 @@ close_command_error: "Error occurred, please try again!"
 close_not_in_ticket: "You cannot use this command outside of a ticket channel !"
 
 # /delete
-delete_disabled_command: "You can't use this command because an Administrator disabled the ticket command !"
+delete_disabled_command: "You can't use this command because an Administrator disabled the ticket commands !"
 delete_not_in_ticket: "You cannot use this command outside of a ticket channel !"
 
 # /sethereticket
-sethereticket_disabled_command: "You can't use this command because an Administrator disabled the ticket command !"
+sethereticket_disabled_command: "You can't use this command because an Administrator disabled the ticket commands !"
 sethereticket_not_admin: ":x: | You must be an administrator of this server in order to do this command!"
 sethereticket_description_embed: "To create a new ticket, please react with 📩"
 sethereticket_command_work: "Ticket panel has been set successfully!"
-sethereticket_command_type_menu_placeholder: "What's Panel type do you want ?"
-sethereticket_command_type_menu_choice_1_label: "Create panel with button"
-sethereticket_command_type_menu_choice_2_label: "Create panel with selection"
-sethereticket_command_type_menu_question: "<@${interaction.user.id}>, what panel type, do you want ?"
-sethereticket_panelforcreate_embed_desc: "## Creating an ticket's panel with Selection\n"
-sethereticket_panelforcreate_button_add_label: "Add New Case"
-sethereticket_panelforcreate_button_sub_label: "Remove Last Case"
-sethereticket_panelforcreate_button_save_label: "Send Embed"
+sethereticket_command_type_menu_placeholder: "What type of panel do you want ?"
+sethereticket_command_type_menu_choice_1_label: "Create a panel with buttons"
+sethereticket_command_type_menu_choice_2_label: "Create a panel with selections"
+sethereticket_command_type_menu_question: "<@${interaction.user.id}>, what type of panel, do you want ?"
+sethereticket_panelforcreate_embed_desc: "## Creating a panel with the selection\n"
+sethereticket_panelforcreate_button_add_label: "Add a new case"
+sethereticket_panelforcreate_button_sub_label: "Remove the last case"
+sethereticket_panelforcreate_button_save_label: "Send the Embed"
 sethereticket_modal_1_title : "Add a new case to the panel"
 sethereticket_modal_1_fields_1_placeholder: "The case's name for the selection"
 sethereticket_modal_1_fields_1_label: "Name"
@@ -98,23 +98,23 @@ sethereticket_modal_2_fields_2_title: "Embed's Description"
 sethereticket_panel_select_embed_desc: "# Panel Name\n```${result.panelName}```\n{msg}\n\n## Category\n```{category}```\n"
 
 # /open
-open_disabled_command: "You can't use this command because an Administrator disabled the ticket command !"
+open_disabled_command: "You can't use this command because an Administrator disabled the ticket commands !"
 open_command_work: "Successfully re-opened ${interaction.channel}"
 open_command_error: "Error occurred, please try again!"
 open_not_in_ticket: "You cannot use this command outside of a ticket channel!"
 
 # /remove
-remove_disabled_command: "You can't use this command because an Administrator disabled the ticket command !"
+remove_disabled_command: "You can't use this command because an Administrator disabled the ticket commands !"
 remove_not_in_ticket: "You cannot use this command outside of a ticket channel !"
 remove_command_error: "Error occurred, please try again"
-remove_command_work: "Successfully removed ${member.tag} to your ticket!"
+remove_command_work: "Successfully removed ${member.tag} from your ticket!"
 
 # /transript
 transript_disabled_command: "You can't use this command because an Administrator disabled the ticket command !"
 transript_name_sourcebin: " "
 transript_title_sourcebin: "Ticket Chat transcript for ${channel.name}"
 transript_command_error: "Error occurred, please try again!"
-transript_command_work: "You have closed your ticket. iHorizon sent you the transcript"
+transript_command_work: "You have closed your ticket. iHorizon sent you a transcript of the content of your ticket."
 transript_not_in_ticket: "You cannot use this command outside of a ticket channel !"
 
 # /disableticket
@@ -130,11 +130,11 @@ disableticket_command_work_enable: "You have successfully enabled the ticket com
 setticketcategory_not_admin: ":x: | You must be an administrator of this server to do this command!"
 setticketcategory_disabled_command: "You can't use this commands because an Administrator disable the ticket commands !"
 setticketcategory_not_a_category: "The channel specified is not an Category, please try again."
-setticketcategory_command_work: "<@${interaction.user.id}>, you have set the Category for ticket channel to `${category.name}` !"
+setticketcategory_command_work: "<@${interaction.user.id}>, you have set the Category for the ticket channels to `${category.name}` !"
 
 # /ticket log-channel
 ticket_logchannel_embed_title: "Ticket Logs Channel"
-ticket_logchannel_embed_desc: "${interaction.user}, you have been set the Ticket Module's Channel logs to ${channel}!"
+ticket_logchannel_embed_desc: "${interaction.user}, you have set the Ticket Module's Channel logs to ${channel}!"
 
 
 # Ranks commands
@@ -204,6 +204,11 @@ ranksSetMessage_button_set_name: "Set message"
 ranksSetMessage_buttom_del_name: "Default Message"
 ranksSetMessage_awaiting_response: "Wrote the new custom ranks Message."
 ranksSetMessage_embed_fields_xpmessage: "Ranks Message"
+
+# /ranks ranks-ureset
+reset_uranks_are_you_sure: "**Are you really sure you want to delete all rank data?\nThis action is permanent and you cannot undo it.**\n**This action is destructive!!**"
+reset_uranks_logs_embed_title: "Rank Module Logs (DANGEROUS ACTION)"
+reset_uranks_logs_embed_desc: "${interaction.member.user.toString()} has deleted all rank module data for ${user.toString()}!"
 
 
 # Owner commands
@@ -423,6 +428,9 @@ dogs_embed_title: "🐶 woof-woof."
 love_embed_description: "**${user1.username}** + **${user2.username}** = __${randomNumber}%__ of love 💗"
 love_command_error: "An error occurred while trying to create the image"
 
+# /fun disable
+fun_disable_command_msg: "${interaction.member?.user.toString()}, you have ${action_type} the fun category!"
+fun_category_disable: "You cannot use this command, the fun commands category is disable."
 
 # Economy commands
 # /addmoney, /balance, /daily, /monthly, /pay, /removemoney, /rob, /weekly, /work
@@ -650,9 +658,28 @@ all_admins_unrank_button_label: "Unrank all"
 all_admins_unrank_embed_desc: "${interaction.member?.user.toString()}, iHorizon has executed the unrank-all for the AllAdmins module.\n\n**${good}** User(s) __unranked__ successfully\niHorizon __failed__ to unrank **${bad}** User(s)."
 all_admins_unrank_not_owner: "Only the owner of the guild can unrank all administrator of the server"
 
+# /allbots
+all_bots_embed_title: "List of all bot(s) | Page ${i / usersPerPage + 1}"
+
 # /addrole
 utils_addrole_highter_or_egal_roles_msg: "${client.iHorizon_Emojis.icon.Stop_Logo} You cannot add role to user who have higher role than you..."
 utils_addrole_command_ok: "${author.toString()} have succefully added the ${role?.toString()} role to ${user.toString()}"
+utils_addrole_not_wl: "${client.iHorizon_Emojis.icon.No_Logo} | The role you want to add to the user is not whitelisted. An administrator must add it first! (using `/utils wlroles`)"
+
+# /delrole
+utils_delrole_highter_or_egal_roles_msg: "${client.iHorizon_Emojis.icon.Stop_Logo} You cannot remove role to user who have higher role than you..."
+utils_delrole_command_ok: "${author.toString()} have succefully removed the ${role?.toString()} role to ${user.toString()}"
+utils_delrole_not_wl: "${client.iHorizon_Emojis.icon.No_Logo} | The role you want to delete to the user is not whitelisted. An administrator must add it first! (using `/utils wlroles`)"
+
+# /utils wlroles
+utils_wlroles_embed_title: "Whitelist Role"
+utils_wlroles_embed_desc: "Here are all the allowed roles possibly giveable with `addrole`, `delrole` command!"
+utils_wlRoles_logsEmbed_title: "Whitelist Roles Modules"
+utils_wlRoles_logsEmbed_desc: "${interaction.member?.user.toString()} have edited wlRoles (for `addrole`, `delrole` command)"
+
+# /utils dm
+utils_dm: "${client.iHorizon_Emojis.icon.Yes_Logo} The message was successfully sent to ${targetMember.toString()}."
+utils_dm_cant: "${client.iHorizon_Emojis.icon.No_Logo} I couldn't send a message to ${targetMember.toString()}. They may have blocked private messages, or they may have blocked me!"
 
 
 # Guild Config commands
@@ -946,6 +973,7 @@ perm_list_no_command_set: "There is not command with specific permission set in 
 # /perm set
 perm_set_deleted: "${user.toString()} have their permission **deleted**!"
 perm_set_ok: "${user.toString()} have their permission changed to **`${perm}`**"
+perm_set_warn_message: "${interaction.member.toString()}, you cannot give permission highter or equals than your!"
 
 # /perm roles
 perm_roles_created_role: "The following roles have been created: ${createdRoles.join(', ')}"
@@ -1171,6 +1199,23 @@ unmute_muted_role_doesnt_exist: "The `muted` role does not exist. Please mute th
 unmute_command_work: "<@${tomute.id}> has been unmuted!"
 unmute_logs_embed_title: "Unmute Logs"
 unmute_logs_embed_description: "<@${interaction.user.id}> unmute <@${tomute.id}>"
+
+# /warn
+warn_command_work: "${client.iHorizon_Emojis.icon.Yes_Logo} ${member?.toString()} have been warned ! **Reason**: `${reason}`\n__Warn ID__: `${warnId}`"
+warn_logEmbed_title: "Warn Logs"
+warn_logEmbed_desc: "${interaction.member.toString()} have warned ${member?.toString()} for `${reason}`"
+
+# /unwarn
+unwarn_cannot_found: "${client.iHorizon_Emojis.icon.No_Logo} ${member?.toString()} seem to doesn't have any warns on my database !"
+unwarn_cannot_found_id: "${client.iHorizon_Emojis.icon.No_Logo} ${member?.toString()} the warn id you have provide is not in my database"
+unwarn_command_ok: "${client.iHorizon_Emojis.icon.Yes_Logo} ${member?.toString()} have been unwarned !"
+unwarn_logEmbed_title: "UnWarn Logs"
+unwarn_logEmbed_desc: "${interaction.member.toString()} have unwarned ${member?.toString()}"
+
+# /warnlist
+warnlist_no_data: "${client.iHorizon_Emojis.icon.No_Logo} ${member?.toString()} seem to doesn't have any warns on my database !"
+warnlist_embed_desc: "### ID: ${x.id} - ${format(x.timestamp, 'DD/MM/YYYY')}\n> Author: <@${x.authorID}>\n> Reason: `${x.reason}`"
+warnlist_embed_title: "${member?.user.globalName}'s WarnList | Page ${i / usersPerPage + 1}"
 
 
 # Backup commands

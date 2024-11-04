@@ -249,12 +249,22 @@ export default {
                     break;
                 case '10':
                     await handleCollector(i, 'embed_choose_10', (message) => {
-                        if (!isValidLink(message.content)) {
-                            __tempEmbed.setImage("https://exemple.com/exemple/png");
-                        } else {
+                        let files = [];
+
+                        if (isValidLink(message.content)) {
                             __tempEmbed.setImage(message.content);
+                        } else if (message.attachments.first()?.contentType?.startsWith("image/")) {
+                            __tempEmbed.setImage("attachment://image.png");
+                            files.push(
+                                {
+                                    attachment: message.attachments.first()?.url!,
+                                    name: 'image.png'
+                                }
+                            )
                         }
-                        response.edit({ embeds: [__tempEmbed] });
+                        response.edit({
+                            embeds: [__tempEmbed], files
+                        });
                     });
                     break;
                 case '11':
@@ -288,7 +298,7 @@ export default {
         async function handleCollector(i: StringSelectMenuInteraction<"cached">, replyContent: LanguageDataKeys, onCollect: (message: Message) => void) {
             const replyMessage = Array.isArray(lang[replyContent]) ? (lang[replyContent] as string[]).join(' ') : lang[replyContent];
             let reply = await i.reply({ content: replyMessage.toString(), ephemeral: true });
-            let messageCollector = (interaction.channel as BaseGuildTextChannel)?.createMessageCollector({ filter: (m) => m.author.id === interaction.member?.user.id!, max: 1, time: 120_000 });
+            let messageCollector = (interaction.channel as BaseGuildTextChannel)?.createMessageCollector({ filter: (m) => m.author.id === interaction.member?.user.id!, max: 1, time: 300_000 });
             messageCollector?.on('collect', async (message) => {
                 onCollect(message);
                 await reply.delete();
@@ -315,7 +325,7 @@ export default {
             let seCollector = (interaction.channel as BaseGuildTextChannel)?.createMessageComponentCollector({
                 filter: (m) => m.user.id === interaction.member?.user.id! && m.customId === 'embed-save-channel',
                 max: 1,
-                time: 120_000,
+                time: 300_000,
                 componentType: ComponentType.ChannelSelect
             });
 
@@ -352,7 +362,7 @@ export default {
 
         const buttonCollector = response.createMessageComponentCollector({
             componentType: ComponentType.Button,
-            time: 120_000
+            time: 300_000
         });
 
         buttonCollector.on('collect', async (confirmation: ButtonInteraction<"cached">) => {

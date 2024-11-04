@@ -205,6 +205,11 @@ ranksSetMessage_buttom_del_name: "Сообщение по умолчанию"
 ranksSetMessage_awaiting_response: "Напишите новое пользовательское сообщение о рангах."
 ranksSetMessage_embed_fields_xpmessage: "Сообщение о рангах"
 
+# /ranks ranks-ureset
+reset_uranks_are_you_sure: "**Вы действительно уверены, что хотите удалить все данные о рангах?\nЭто действие необратимо и вы не сможете его отменить.**\n**Это действие разрушительно!!**"
+reset_uranks_logs_embed_title: "Журналы модуля рангов (ОПАСНОЕ ДЕЙСТВИЕ)"
+reset_uranks_logs_embed_desc: "${interaction.member.user.toString()} удалил все данные модуля рангов для ${user.toString()}!"
+
 
 # Команды владельца
 # /owner, /unowner, /blacklist, /unblacklist
@@ -422,6 +427,10 @@ dogs_embed_title: "🐶 Гав-гав."
 # /love
 love_embed_description: "**${user1.username}** + **${user2.username}** = __${randomNumber}%__ любви 💗"
 love_command_error: "Произошла ошибка при создании изображения"
+
+# /fun disable
+fun_disable_command_msg: "${interaction.member?.user.toString()}, вы ${action_type} категорию развлечений!"
+fun_category_disable: "Вы не можете использовать эту команду, категория команд развлечений отключена."
 
 
 # Economy commands
@@ -650,9 +659,28 @@ all_admins_unrank_button_label: "Разжаловать всех"
 all_admins_unrank_embed_desc: "${interaction.member?.user.toString()}, iHorizon выполнил разжалование всех для модуля AllAdmins.\n\n**${good}** Пользователь(и) __успешно__ разжалованы\niHorizon __не смог__ разжаловать **${bad}** Пользователь(и)."
 all_admins_unrank_not_owner: "Только владелец сервера может разжаловать всех администраторов сервера"
 
+# /allbots
+all_bots_embed_title: "Список всех бот(ов) | Страница ${i / usersPerPage + 1}"
+
 # /addrole
-utils_addrole_highter_or_egal_roles_msg: "${client.iHorizon_Emojis.icon.Stop_Logo} Вы не можете добавить роль пользователю, который имеет более высокую роль, чем вы..."
+utils_addrole_highter_or_egal_roles_msg: "${client.iHorizon_Emojis.icon.Stop_Logo} Вы не можете добавить роль пользователю, у которого роль выше вашей..."
 utils_addrole_command_ok: "${author.toString()} успешно добавил роль ${role?.toString()} пользователю ${user.toString()}"
+utils_addrole_not_wl: "${client.iHorizon_Emojis.icon.No_Logo} | Роль, которую вы хотите добавить пользователю, не внесена в белый список. Администратор должен сначала добавить её! (используйте `/utils wlroles`)"
+
+# /delrole
+utils_delrole_highter_or_egal_roles_msg: "${client.iHorizon_Emojis.icon.Stop_Logo} Вы не можете удалить роль у пользователя, у которого роль выше вашей..."
+utils_delrole_command_ok: "${author.toString()} успешно удалил роль ${role?.toString()} у пользователя ${user.toString()}"
+utils_delrole_not_wl: "${client.iHorizon_Emojis.icon.No_Logo} | Роль, которую вы хотите удалить у пользователя, не внесена в белый список. Администратор должен сначала добавить её! (используйте `/utils wlroles`)"
+
+# /utils wlroles
+utils_wlroles_embed_title: "Роли в белом списке"
+utils_wlroles_embed_desc: "Вот все разрешённые роли, которые можно назначить с помощью команд `addrole` и `delrole`!"
+utils_wlRoles_logsEmbed_title: "Модуль белого списка ролей"
+utils_wlRoles_logsEmbed_desc: "${interaction.member?.user.toString()} изменил роли в белом списке (для команд `addrole` и `delrole`)"
+
+# /utils dm
+utils_dm: "${client.iHorizon_Emojis.icon.Yes_Logo} Сообщение было успешно отправлено ${targetMember.toString()}."
+utils_dm_cant: "${client.iHorizon_Emojis.icon.No_Logo} Не удалось отправить сообщение пользователю ${targetMember.toString()}. Возможно, он заблокировал личные сообщения или заблокировал меня!"
 
 
 # Guild Config commands
@@ -946,6 +974,7 @@ perm_list_no_command_set: "В этом сервере нет команд с у�
 # /perm set
 perm_set_deleted: "${user.toString()} имеет разрешение **удалено**!"
 perm_set_ok: "${user.toString()} изменил свое разрешение на **`${perm}`**"
+perm_set_warn_message: "${interaction.member.toString()}, вы не можете назначить разрешения выше или равные вашим!"
 
 # /perm roles
 perm_roles_created_role: "Созданы следующие роли: ${createdRoles.join(', ')}"
@@ -1172,6 +1201,23 @@ unmute_muted_role_doesnt_exist: "Роль `muted` не существует. П�
 unmute_command_work: "<@${tomute.id}> был разблокирован!"
 unmute_logs_embed_title: "Логи разблокировки"
 unmute_logs_embed_description: "<@${interaction.user.id}> разблокировал <@${tomute.id}>"
+
+# /warn
+warn_command_work: "${client.iHorizon_Emojis.icon.Yes_Logo} ${member?.toString()} получил предупреждение! **Причина**: `${reason}`\n__ID предупреждения__: `${warnId}`"
+warn_logEmbed_title: "Журнал предупреждений"
+warn_logEmbed_desc: "${interaction.member.toString()} выдал предупреждение ${member?.toString()} за `${reason}`"
+
+# /unwarn
+unwarn_cannot_found: "${client.iHorizon_Emojis.icon.No_Logo} Похоже, у ${member?.toString()} нет предупреждений в моей базе данных!"
+unwarn_cannot_found_id: "${client.iHorizon_Emojis.icon.No_Logo} ${member?.toString()} предоставленный ID предупреждения отсутствует в моей базе данных"
+unwarn_command_ok: "${client.iHorizon_Emojis.icon.Yes_Logo} Предупреждение с ${member?.toString()} было снято!"
+unwarn_logEmbed_title: "Журнал снятия предупреждений"
+unwarn_logEmbed_desc: "${interaction.member.toString()} снял предупреждение с ${member?.toString()}"
+
+# /warnlist
+warnlist_no_data: "${client.iHorizon_Emojis.icon.No_Logo} Похоже, у ${member?.toString()} нет предупреждений в моей базе данных!"
+warnlist_embed_desc: "### ID: ${x.id} - ${format(x.timestamp, 'DD/MM/YYYY')}\n> Автор: <@${x.authorID}>\n> Причина: `${x.reason}`"
+warnlist_embed_title: "Список предупреждений ${member?.user.globalName} | Страница ${i / usersPerPage + 1}"
 
 
 # Команды резервного копирования

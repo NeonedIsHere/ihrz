@@ -32,6 +32,7 @@ import { LanguageData } from '../../../../../types/languageData';
 import { Command } from '../../../../../types/command';
 import { Option } from '../../../../../types/option';
 import { SubCommandArgumentValue } from '../../../../core/functions/method.js';
+import { DatabaseStructure } from '../../../../../types/database_structure';
 
 export default {
     run: async (client: Client, interaction: ChatInputCommandInteraction<"cached">, lang: LanguageData, command: SubCommandArgumentValue) => {
@@ -63,7 +64,11 @@ export default {
                 fetchedCommand = fetchedCommand.options?.find(x => x.name === commandParts[1]);
             }
 
-            await client.db.set(`${interaction.guildId}.UTILS.PERMS.${fetchedCommand?.name}`, parseInt(perms!) || 0);
+            if (perms! === "0") {
+                await client.db.delete(`${interaction.guildId}.UTILS.PERMS.${fetchedCommand?.name}`);
+            } else {
+                await client.db.set(`${interaction.guildId}.UTILS.PERMS.${fetchedCommand?.name}`, parseInt(perms!));
+            }
 
             if (fetchedCommand) {
                 const commandType = commandParts.length === 1 ? lang.var_command :
@@ -74,7 +79,7 @@ export default {
                 await client.method.interactionSend(interaction, lang.var_unreachable_command);
             }
         } else if (choice === "list") {
-            let res = await client.db.get(`${interaction.guildId}.UTILS.PERMS`);
+            let res = await client.db.get(`${interaction.guildId}.UTILS.PERMS`) as DatabaseStructure.UtilsPermsData;
 
             if (!res || Object.keys(res).length === 0) {
                 await client.method.interactionSend(interaction, { content: lang.perm_list_no_command_set });
@@ -82,9 +87,28 @@ export default {
             }
 
             let permissions = Object.entries(res);
+
+            permissions.sort((a, b) => a[1] - b[1]);
+
             let currentPage = 0;
             let itemsPerPage = 15;
             let pages = [];
+
+            let groupedPermissions: { [key: number]: string[] } = {};
+            permissions.forEach(([perm, level]) => {
+                if (!groupedPermissions[level]) {
+                    groupedPermissions[level] = [];
+                }
+                groupedPermissions[level].push(perm);
+            });
+
+            Object.entries(groupedPermissions).forEach(([level, perms]) => {
+                let pageContent = perms.map(perm => `**\`${perm}\`**`).join('\n');
+                pages.push({
+                    title: `${lang.var_level} ${level}`,
+                    description: pageContent,
+                });
+            });
 
             for (let i = 0; i < permissions.length; i += itemsPerPage) {
                 let pagePermissions = permissions.slice(i, i + itemsPerPage);
@@ -155,7 +179,6 @@ export default {
             collector.on('end', async () => {
                 await messageEmbed.edit({ components: [] });
             });
-
         }
     }
 };

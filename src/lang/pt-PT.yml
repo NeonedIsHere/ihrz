@@ -205,6 +205,11 @@ ranksSetMessage_buttom_del_name: "Mensagem padrão"
 ranksSetMessage_awaiting_response: "Escreva a nova mensagem de ranks personalizada."
 ranksSetMessage_embed_fields_xpmessage: "Mensagem de ranks"
 
+# /ranks ranks-ureset
+reset_uranks_are_you_sure: "**Tem a certeza de que deseja apagar todos os dados de rank?\nEsta ação é permanente e não pode ser desfeita.**\n**Esta ação é destrutiva!!**"
+reset_uranks_logs_embed_title: "Registos do Módulo de Ranks (AÇÃO PERIGOSA)"
+reset_uranks_logs_embed_desc: "${interaction.member.user.toString()} apagou todos os dados do módulo de ranks para ${user.toString()}!"
+
 
 # Comandos do Proprietário
 # /owner, /unowner, /blacklist, /unblacklist
@@ -422,6 +427,10 @@ dogs_embed_title: "🐶 au-au."
 # /love
 love_embed_description: "**${user1.username}** + **${user2.username}** = __${randomNumber}%__ de amor 💗"
 love_command_error: "Ocorreu um erro ao tentar criar a imagem"
+
+# /fun disable
+fun_disable_command_msg: "${interaction.member?.user.toString()}, você ${action_type} a categoria de diversão!"
+fun_category_disable: "Você não pode usar este comando, a categoria de comandos de diversão está desativada."
 
 
 # Comandos de economia
@@ -650,9 +659,28 @@ all_admins_unrank_button_label: "Desclassificar todos"
 all_admins_unrank_embed_desc: "${interaction.member?.user.toString()}, iHorizon executou a desclassificação de todos para o módulo AllAdmins.\n\n**${good}** Usuário(s) __desclassificados__ com sucesso\niHorizon __falhou__ em desclassificar **${bad}** Usuário(s)."
 all_admins_unrank_not_owner: "Somente o proprietário do servidor pode desclassificar todos os administradores do servidor"
 
+# /allbots
+all_bots_embed_title: "Lista de todos os bot(s) | Página ${i / usersPerPage + 1}"
+
 # /addrole
-utils_addrole_highter_or_egal_roles_msg: "${client.iHorizon_Emojis.icon.Stop_Logo} Você não pode adicionar um papel a um usuário que tenha um papel superior ao seu..."
-utils_addrole_command_ok: "${author.toString()} adicionou com sucesso o papel ${role?.toString()} ao ${user.toString()}"
+utils_addrole_highter_or_egal_roles_msg: "${client.iHorizon_Emojis.icon.Stop_Logo} Você não pode adicionar um cargo a um usuário que tem um cargo superior ao seu..."
+utils_addrole_command_ok: "${author.toString()} adicionou com sucesso o cargo ${role?.toString()} a ${user.toString()}"
+utils_addrole_not_wl: "${client.iHorizon_Emojis.icon.No_Logo} | O cargo que você deseja adicionar ao usuário não está na lista de permissões. Um administrador deve adicioná-lo primeiro! (usando `/utils wlroles`)"
+
+# /delrole
+utils_delrole_highter_or_egal_roles_msg: "${client.iHorizon_Emojis.icon.Stop_Logo} Você não pode remover um cargo de um usuário que tem um cargo superior ao seu..."
+utils_delrole_command_ok: "${author.toString()} removeu com sucesso o cargo ${role?.toString()} de ${user.toString()}"
+utils_delrole_not_wl: "${client.iHorizon_Emojis.icon.No_Logo} | O cargo que você deseja remover do usuário não está na lista de permissões. Um administrador deve adicioná-lo primeiro! (usando `/utils wlroles`)"
+
+# /utils wlroles
+utils_wlroles_embed_title: "Cargos Permitidos"
+utils_wlroles_embed_desc: "Aqui estão todos os cargos permitidos que podem ser atribuídos com os comandos `addrole` e `delrole`!"
+utils_wlRoles_logsEmbed_title: "Módulo de Cargos Permitidos"
+utils_wlRoles_logsEmbed_desc: "${interaction.member?.user.toString()} editou os cargos permitidos (para os comandos `addrole` e `delrole`)"
+
+# /utils 
+utils_dm: "${client.iHorizon_Emojis.icon.Yes_Logo} A mensagem foi enviada com sucesso para ${targetMember.toString()}."
+utils_dm_cant: "${client.iHorizon_Emojis.icon.No_Logo} Não consegui enviar uma mensagem para ${targetMember.toString()}. Ele pode ter bloqueado mensagens privadas, ou pode ter me bloqueado!"
 
 
 # Guild Config commands
@@ -946,6 +974,7 @@ perm_list_no_command_set: "Não há comandos com permissões específicas defini
 # /perm set
 perm_set_deleted: "${user.toString()} teve sua permissão **excluída**!"
 perm_set_ok: "${user.toString()} teve sua permissão alterada para **`${perm}`**"
+perm_set_warn_message: "${interaction.member.toString()}, você não pode conceder permissões iguais ou superiores às suas!"
 
 # /perm roles
 perm_roles_created_role: "Созданы следующие роли: ${createdRoles.join(', ')}"
@@ -1172,6 +1201,23 @@ unmute_muted_role_doesnt_exist: "O cargo `silenciado` não existe. Por favor, si
 unmute_command_work: "<@${tomute.id}> foi desilenciado!"
 unmute_logs_embed_title: "Logs de Desilenciamento"
 unmute_logs_embed_description: "<@${interaction.user.id}> desilenciou <@${tomute.id}>"
+
+# /warn
+warn_command_work: "${client.iHorizon_Emojis.icon.Yes_Logo} ${member?.toString()} foi advertido! **Motivo**: `${reason}`\n__ID da Advertência__: `${warnId}`"
+warn_logEmbed_title: "Registros de Advertências"
+warn_logEmbed_desc: "${interaction.member.toString()} advertiu ${member?.toString()} por `${reason}`"
+
+# /unwarn
+unwarn_cannot_found: "${client.iHorizon_Emojis.icon.No_Logo} ${member?.toString()} parece não ter nenhuma advertência no meu banco de dados!"
+unwarn_cannot_found_id: "${client.iHorizon_Emojis.icon.No_Logo} ${member?.toString()} o ID de advertência que você forneceu não está no meu banco de dados"
+unwarn_command_ok: "${client.iHorizon_Emojis.icon.Yes_Logo} A advertência de ${member?.toString()} foi removida!"
+unwarn_logEmbed_title: "Registros de Remoção de Advertências"
+unwarn_logEmbed_desc: "${interaction.member.toString()} removeu a advertência de ${member?.toString()}"
+
+# /warnlist
+warnlist_no_data: "${client.iHorizon_Emojis.icon.No_Logo} ${member?.toString()} parece não ter nenhuma advertência no meu banco de dados!"
+warnlist_embed_desc: "### ID: ${x.id} - ${format(x.timestamp, 'DD/MM/YYYY')}\n> Autor: <@${x.authorID}>\n> Motivo: `${x.reason}`"
+warnlist_embed_title: "Lista de Advertências de ${member?.user.globalName} | Página ${i / usersPerPage + 1}"
 
 
 # Comandos de backup
