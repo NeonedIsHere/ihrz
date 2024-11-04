@@ -43,13 +43,13 @@ export const event: BotEvent = {
 
             let executor = member.guild.members.cache.get(filteredLog?.executorId!);
 
-            await executor?.roles.set([], "Attempt to add an discord bot into this guild! -> Derank").catch(() => false);
+            await client.method.punish({ SANCTION: "simply+derank" }, executor, "Attempt to add an discord bot into this guild! -> Derank");
 
             let owner = member.guild.members.cache.get(member.guild.ownerId);
             let embed = new EmbedBuilder()
                 .setColor(2829617)
                 .setTitle(`⚠️ Danger in ${member.guild.name} ⚠️`)
-                .setDescription(`# PunishPub Warning\nSomeone have try to add discord bot.`)
+                .setDescription(`# BotAdd Warning\nSomeone have try to add discord bot.`)
                 .setFields(
                     { name: "User", value: filteredLog?.executor?.toString() || '`Not detected`', inline: true },
                     { name: "Target bot", value: member.toString(), inline: true },
