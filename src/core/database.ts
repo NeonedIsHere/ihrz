@@ -28,14 +28,14 @@ import mysql from 'mysql2/promise.js';
 import { setInterval } from 'timers';
 
 import { ConfigData } from '../../types/configDatad.js';
-import * as proc from './modules/errorManager.js';
 import logger from './logger.js';
 import fs from 'fs';
 import { MongoClient } from 'mongodb';
 
 let dbInstance: QuickDB<any> | SteganoDB;
 
-const tables = ['OWNER', 'OWNIHRZ', 'BLACKLIST', 'PREVNAMES', 'API', 'TEMP', 'SCHEDULE', 'USER_PROFIL', 'json'];
+const tables = ['OWNER', 'OWNIHRZ', 'BLACKLIST', 'PREVNAMES', 'API', 'TEMP', 'SCHEDULE', 'USER_PROFIL', 'json', "RESTORECORD"];
+const readOnlyTables = ["RESTORECORD", "OWNIHRZ"];
 
 async function isReachable(database: ConfigData['database']): Promise<boolean> {
     let connection;
@@ -203,9 +203,16 @@ export const initializeDatabase = async (config: ConfigData): Promise<QuickDB<an
                         const memoryMap = new Map(memoryData.map(item => [item.id, item.value]));
 
                         for (const [id, value] of memoryMap) {
-                            if (!postgresMap.has(id) || JSON.stringify(postgresMap.get(id)) !== JSON.stringify(value)) {
+                            const postgresValue = postgresMap.get(id);
+                            if (!postgresValue || JSON.stringify(postgresValue) !== JSON.stringify(value)) {
                                 try {
-                                    await postgresTable.set(id, value);
+                                    if (readOnlyTables.includes(table)) {
+                                        for (const { id, value } of postgresData) {
+                                            await memoryTable.set(id, value);
+                                        }
+                                    } else {
+                                        await postgresTable.set(id, value);
+                                    }
                                 } catch (error) {
                                     logger.err(error as any);
                                 }
