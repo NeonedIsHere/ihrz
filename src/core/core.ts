@@ -39,8 +39,6 @@ import { iHorizonTimeCalculator } from './functions/ms.js';
 import assetsCalc from "./functions/assetsCalc.js";
 import database from './functions/DatabaseModel.js';
 import { readFile } from 'node:fs/promises';
-import { getToken } from './functions/getToken.js';
-import { StreamNotifier } from './StreamNotifier.js';
 import { setMaxListeners } from 'node:events';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -86,7 +84,6 @@ export async function main(client: Client) {
     client.invites = new Collection();
     client.timeCalculator = new iHorizonTimeCalculator();
     client.vanityInvites = new Collection<Snowflake, VanityInviteData>();
-    client.notifier = new StreamNotifier(client, process.env.TWITCH_APPLICATION_ID || "", process.env.TWITCH_APPLICATION_SECRET || "", process.env.YOUTUBE_API_KEY || "");
 
     let handlerPath = path.join(__dirname, '..', 'core', 'handlers');
     let handlerFiles = readdirSync(handlerPath).filter(file => file.endsWith('.js'));

@@ -161,8 +161,6 @@ export const event: BotEvent = {
             },
         });
 
-        await client.notifier.start();
-
         setInterval(quotesPresence, 80_000), setInterval(refreshSchedule, 15_000);
 
         fetchInvites(), refreshDatabaseModel(), quotesPresence(), refreshSchedule(), statsRefresher();
