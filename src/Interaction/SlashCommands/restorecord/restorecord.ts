@@ -36,8 +36,8 @@ import {
     ActionRowBuilder
 } from 'discord.js'
 
-import { Command } from '../../../../../types/command.js';
-import { LanguageData } from '../../../../../types/languageData.js';
+import { Command } from '../../../../types/command.js';
+import { LanguageData } from '../../../../types/languageData.js';
 
 export const command: Command = {
     name: 'restorecord',
@@ -189,7 +189,7 @@ export const command: Command = {
         },
 
     ],
-    category: 'newfeatures',
+    category: 'restorecord',
     thinking: false,
     type: ApplicationCommandType.ChatInput,
     run: async (client: Client, interaction: ChatInputCommandInteraction<"cached">, lang: LanguageData, runningCommand: any, execTimestamp?: number, args?: string[]) => {        // Guard's Typing
