@@ -28,10 +28,15 @@ import { Custom_iHorizon, OwnIHRZ_New_Expire_Time_Object, OwnIHRZ_New_Owner_Obje
 import { ConfigData } from "../../../types/configDatad.js";
 
 class OwnIHRZ {
+    private client: Client;
+
+    constructor(client: Client) {
+        this.client = client
+    }
 
     // Working
-    async Startup_Cluster(client: Client) {
-        var table_1 = client.db.table("OWNIHRZ");
+    async Startup_Cluster() {
+        var table_1 = this.client.db.table("OWNIHRZ");
 
         (await table_1.all()).forEach(owner_one => {
             var cluster_ownihrz = owner_one.value;
@@ -42,7 +47,6 @@ class OwnIHRZ {
 
                     axios.get(
                         OwnIhrzCluster(
-                            client.config,
                             parseInt(cluster_ownihrz[owner_id][bot_id].Cluster),
                             ClusterMethod.StartupContainer,
                             bot_id,
@@ -56,10 +60,10 @@ class OwnIHRZ {
     };
 
     // Working
-    async ShutDown(config: ConfigData, cluster_id: number, id_to_bot: string) {
+    async ShutDown(cluster_id: number, id_to_bot: string) {
         axios.get(
             OwnIhrzCluster(
-                config,
+
                 cluster_id,
                 ClusterMethod.ShutdownContainer,
                 id_to_bot,
@@ -71,10 +75,10 @@ class OwnIHRZ {
     };
 
     // Working
-    async PowerOn(config: ConfigData, cluster_id: number, id_to_bot: string) {
+    async PowerOn(cluster_id: number, id_to_bot: string) {
         axios.get(
             OwnIhrzCluster(
-                config,
+
                 cluster_id,
                 ClusterMethod.PowerOnContainer,
                 id_to_bot,
@@ -87,10 +91,10 @@ class OwnIHRZ {
 
 
     // Working
-    async Delete(config: ConfigData, cluster_id: number, id_to_bot: string) {
+    async Delete(cluster_id: number, id_to_bot: string) {
         axios.get(
             OwnIhrzCluster(
-                config,
+
                 cluster_id,
                 ClusterMethod.DeleteContainer,
                 id_to_bot,
@@ -102,8 +106,8 @@ class OwnIHRZ {
     };
 
     // Working
-    async QuitProgram(client: Client) {
-        let table = client.db.table("OWNIHRZ")
+    async QuitProgram() {
+        let table = this.client.db.table("OWNIHRZ")
         let ownihrzClusterData = await table.get("CLUSTER");
 
         for (let userId in ownihrzClusterData as any) {
@@ -111,7 +115,6 @@ class OwnIHRZ {
                 if (ownihrzClusterData[userId][botId].PowerOff || !ownihrzClusterData[userId][botId].Code) continue;
                 await axios.get(
                     OwnIhrzCluster(
-                        client.config,
                         parseInt(ownihrzClusterData[userId][botId].Cluster),
                         ClusterMethod.ShutdownContainer,
                         botId,
@@ -124,8 +127,8 @@ class OwnIHRZ {
         return;
     };
 
-    async Change_Token(config: ConfigData, cluster_id: number, botId: string, bot_token: string) {
-        axios.get(OwnIhrzCluster(config, cluster_id!, ClusterMethod.ChangeTokenContainer, botId, bot_token))
+    async Change_Token(cluster_id: number, botId: string, bot_token: string) {
+        axios.get(OwnIhrzCluster(cluster_id!, ClusterMethod.ChangeTokenContainer, botId, bot_token))
             .then(async () => {
             })
             .catch(error => {
@@ -135,8 +138,8 @@ class OwnIHRZ {
         return;
     };
 
-    async Create_Container(config: ConfigData, cluster_id: number, botData: Custom_iHorizon): Promise<AxiosResponse<any>> {
-        return await axios.post(OwnIhrzCluster(config, cluster_id, ClusterMethod.CreateContainer),
+    async Create_Container(cluster_id: number, botData: Custom_iHorizon): Promise<AxiosResponse<any>> {
+        return await axios.post(OwnIhrzCluster(cluster_id, ClusterMethod.CreateContainer),
             botData,
             {
                 headers: {
@@ -171,7 +174,7 @@ class OwnIHRZ {
     };
 
     async Change_Owner(config: ConfigData, cluster_id: number, botId: string, OwnerData: OwnIHRZ_New_Owner_Object) {
-        return await axios.post(OwnIhrzCluster(config, cluster_id, ClusterMethod.ChangeOwnerContainer),
+        return await axios.post(OwnIhrzCluster(cluster_id, ClusterMethod.ChangeOwnerContainer),
             {
                 adminKey: config.api.apiToken,
                 botId,
@@ -182,7 +185,7 @@ class OwnIHRZ {
     }
 
     async Change_Time(config: ConfigData, cluster_id: number, botId: string, data: OwnIHRZ_New_Expire_Time_Object) {
-        return await axios.post(OwnIhrzCluster(config, cluster_id, ClusterMethod.ChangeExpireTime),
+        return await axios.post(OwnIhrzCluster(cluster_id, ClusterMethod.ChangeExpireTime),
             {
                 adminKey: config.api.apiToken,
                 botId,

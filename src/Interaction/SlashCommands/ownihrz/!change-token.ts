@@ -25,18 +25,15 @@ import {
     EmbedBuilder,
 } from 'discord.js';
 
-import { OwnIHRZ } from '../../../core/modules/ownihrzManager.js';
-
 import { LanguageData } from '../../../../types/languageData';
 import { Custom_iHorizon } from '../../../../types/ownihrz';
 
 import logger from '../../../core/logger.js';
 
-const OWNIHRZ = new OwnIHRZ();
 import { SubCommandArgumentValue } from '../../../core/functions/method';
 
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached">, data: LanguageData, command: SubCommandArgumentValue) => {        
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached">, data: LanguageData, command: SubCommandArgumentValue) => {
         let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
         if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, data, permCheck.neededPerm || 0);
 
@@ -81,7 +78,7 @@ export default {
             return;
         }
 
-        let bot_1 = (await OWNIHRZ.Get_Bot(newToken).catch(() => { }))?.data || 404
+        let bot_1 = (await client.ownihrz.Get_Bot(newToken).catch(() => { }))?.data || 404
 
         if (!bot_1.bot) {
             await interaction.reply({ content: data.mybot_manage_accept_token_error });
@@ -113,7 +110,7 @@ export default {
             });
 
             try {
-                await OWNIHRZ.Change_Token(client.config, id_2.Cluster!, id_2.Code, newToken);
+                await client.ownihrz.Change_Token(id_2.Cluster!, id_2.Code, newToken);
             } catch (error: any) {
                 return logger.err(error)
             };

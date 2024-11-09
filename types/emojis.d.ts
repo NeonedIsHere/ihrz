@@ -69,6 +69,10 @@ interface Icon {
     iHorizon_Discord_Loading: string;
     iHorizon_Unlock: string;
     iHorizon_Lock: string;
+    iHorizon_Minus: string;
+    iHorizon_Plus: string;
+    iHorizon_Folder: string;
+    iHorizon_Pages: string;
 }
 
 interface Vc {
