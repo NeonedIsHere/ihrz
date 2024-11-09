@@ -373,6 +373,11 @@ export namespace DatabaseStructure {
         bypassChannels?: string[]
     }
 
+    export interface RestoreCordSchema {
+        channelId: string;
+        messageId: string;
+    }
+
     export interface DbGuildObject {
         BOT?: DbGuildBotObject;
         LANG?: {
@@ -422,6 +427,7 @@ export namespace DatabaseStructure {
         };
         BLOCK_NEW_ACCOUNT?: BlockNewAccountSchema;
         ANTISPAM?: AntiSpam.AntiSpamOptions;
+        RESTORECORD?: RestoreCordSchema
     }
 
     export interface DbTicketConfigurationObject {

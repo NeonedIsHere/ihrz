@@ -20,18 +20,27 @@
 */
 
 import { Assets } from "../../../types/assets.js";
-import { ConfigData } from "../../../types/configDatad.js";
+import config from "../../files/config.js";
 
-export const ClusterMethod = {
-    CreateContainer: 0,
-    DeleteContainer: 1,
-    StartupContainer: 2,
-    ShutdownContainer: 3,
-    PowerOnContainer: 4,
-    ChangeTokenContainer: 5,
-    ChangeOwnerContainer: 6,
-    ChangeExpireTime: 7
+export enum ClusterMethod {
+    CreateContainer = 0,
+    DeleteContainer = 1,
+    StartupContainer = 2,
+    ShutdownContainer = 3,
+    PowerOnContainer = 4,
+    ChangeTokenContainer = 5,
+    ChangeOwnerContainer = 6,
+    ChangeExpireTime = 7
 };
+
+export enum GatewayMethod {
+    GenerateOauthLink = 0,
+    CreateRestoreCordGuild = 1,
+    ForceJoinRestoreCord = 2,
+    AddSecurityCodeAmount = 3,
+    ChangeRole = 4,
+};
+
 
 export function assetsFinder(body: Assets, type: string): string {
     return `https://raw.githubusercontent.com/ihrz/assets/main/${type}/${Math.floor(Math.random() * body[type])}.gif`;
