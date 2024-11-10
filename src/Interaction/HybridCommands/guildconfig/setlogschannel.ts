@@ -86,9 +86,8 @@ export const command: Command = {
     thinking: true,
     category: 'guildconfig',
     type: ApplicationCommandType.ChatInput,
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, runningCommand: any, execTimestamp?: number, args?: string[]) => {        
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, lang, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, runningCommand: any, neededPerm?: number, args?: string[]) => {        
+
 
         // Guard's Typing
         if (!client.user || !interaction.member || !interaction.guild || !interaction.channel) return;
@@ -110,7 +109,7 @@ export const command: Command = {
             interaction.memberPermissions?.has(permissionsArray)
             : interaction.member.permissions.has(permissionsArray);
 
-        if (!permissions && permCheck.neededPerm === 0) {
+        if (!permissions && neededPerm === 0) {
             await client.method.interactionSend(interaction, { content: lang.setlogschannel_not_admin });
             return;
         };
@@ -119,7 +118,7 @@ export const command: Command = {
             var type = interaction.options.getString("type")!;
             var channel = interaction.options.getChannel("channel") as Channel | null;
         } else {
-            var _ = await client.method.checkCommandArgs(interaction, command, args!, lang); if (!_) return;
+            
             var type = client.method.string(args!, 0)!;
             var channel = client.method.channel(interaction, args!, 0)
         };
@@ -238,8 +237,8 @@ export const command: Command = {
                         .replace(/\${interaction\.user\.id}/g, interaction.member.user.id!)
                 });
 
-                let checkData = await client.db.get(`${interaction.guildId}.GUILD.SERVER_LOGS`);
-                if (!checkData) {
+                let checklang = await client.db.get(`${interaction.guildId}.GUILD.SERVER_LOGS`);
+                if (!checklang) {
                     await client.method.interactionSend(interaction, { content: lang.setlogschannel_already_deleted });
                     return;
                 }

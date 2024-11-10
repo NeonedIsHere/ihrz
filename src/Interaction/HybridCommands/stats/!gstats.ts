@@ -7,7 +7,8 @@ import {
     User,
 } from 'discord.js';
 import { LanguageData } from '../../../../types/languageData';
-import { SubCommandArgumentValue } from '../../../core/functions/method';
+import { Command } from '../../../../types/command';
+import { Option } from '../../../../types/option';
 import { DatabaseStructure } from '../../../../types/database_structure';
 import { readFileSync } from 'fs';
 import path from 'path';
@@ -41,13 +42,11 @@ type ChannelStats = {
 };
 
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, data: LanguageData, command: SubCommandArgumentValue, execTimestamp?: number, args?: string[]) => {
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, data, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, command: Option | Command | undefined, neededPerm: number, args?: string[]) => {
 
         if (!client.user || !interaction.guild || !interaction.channel) return;
 
-        let leaderboardData: {
+        let leaderboardlang: {
             member: User | undefined,
             dailyMessages: number,
             weeklyMessages: number,
@@ -71,16 +70,16 @@ export default {
         let allVoiceActivities: DatabaseStructure.StatsVoice[] = [];
 
         for (let memberId in res?.USER) {
-            let userData = res.USER[memberId];
+            let userlang = res.USER[memberId];
             let dailyMessages = 0, weeklyMessages = 0, monthlyMessages = 0;
             let dailyVoice = 0, weeklyVoice = 0, monthlyVoice = 0;
 
-            allMessages = [...allMessages, ...userData.messages || []];
-            allVoiceActivities = [...allVoiceActivities, ...userData.voices || []];
+            allMessages = [...allMessages, ...userlang.messages || []];
+            allVoiceActivities = [...allVoiceActivities, ...userlang.voices || []];
 
             let user = client.users.cache.get(memberId);
 
-            userData.messages?.forEach(message => {
+            userlang.messages?.forEach(message => {
                 if (nowTimestamp - message.sentTimestamp <= dailyTimeout) {
                     dailyMessages++;
                 }
@@ -100,7 +99,7 @@ export default {
                 channelStats[message.channelId].monthlyMessages += nowTimestamp - message.sentTimestamp <= monthlyTimeout ? 1 : 0;
             });
 
-            userData.voices?.forEach(voice => {
+            userlang.voices?.forEach(voice => {
                 let voiceDuration = voice.endTimestamp - voice.startTimestamp;
                 if (nowTimestamp - voice.endTimestamp <= dailyTimeout) {
                     dailyVoice += voiceDuration;
@@ -121,7 +120,7 @@ export default {
                 channelStats[voice.channelId].monthlyVoice += nowTimestamp - voice.endTimestamp <= monthlyTimeout ? voiceDuration : 0;
             });
 
-            leaderboardData.push({
+            leaderboardlang.push({
                 member: user,
                 dailyMessages: dailyMessages,
                 weeklyMessages: weeklyMessages,
@@ -146,13 +145,13 @@ export default {
 
         var htmlContent = readFileSync(path.join(process.cwd(), 'src', 'assets', 'guildStatsLeaderboard.html'), 'utf-8');
 
-        leaderboardData = getStatsLeaderboard(leaderboardData)
+        leaderboardlang = getStatsLeaderboard(leaderboardlang)
 
         htmlContent = htmlContent
-            .replaceAll('{header_h1_value}', data.header_h1_value)
+            .replaceAll('{header_h1_value}', lang.header_h1_value)
             .replaceAll("{guild_pfp}", interaction.guild.iconURL({ size: 512 }) || client.user.displayAvatarURL({ size: 512 }))
             .replaceAll("{author_username}", interaction.guild.name)
-            .replaceAll('{top_message_users}', leaderboardData.map((user, index) => `
+            .replaceAll('{top_message_users}', leaderboardlang.map((user, index) => `
         <div class="list-item">
             <div class="user-info">
                 <span>${index + 1}. @${user.member?.username}</span>
@@ -160,15 +159,15 @@ export default {
             <div class="activity-stats">
                 <div>
                     <span class="badge">1d</span>
-                    <span>${user.dailyMessages} ${data.messages_word}, ${(user.dailyVoiceActivity / 1000 / 60).toFixed(2)} ${data.minutes_word}</span>
+                    <span>${user.dailyMessages} ${lang.messages_word}, ${(user.dailyVoiceActivity / 1000 / 60).toFixed(2)} ${lang.minutes_word}</span>
                 </div>
                 <div>
                     <span class="badge">7d</span>
-                    <span>${user.weeklyMessages} ${data.messages_word}, ${(user.weeklyVoiceActivity / 1000 / 60).toFixed(2)} ${data.minutes_word}</span>
+                    <span>${user.weeklyMessages} ${lang.messages_word}, ${(user.weeklyVoiceActivity / 1000 / 60).toFixed(2)} ${lang.minutes_word}</span>
                 </div>
                 <div>
                     <span class="badge">30d</span>
-                    <span>${user.monthlyMessages} ${data.messages_word}, ${(user.monthlyVoiceActivity / 1000 / 60).toFixed(2)} ${data.minutes_word}</span>
+                    <span>${user.monthlyMessages} ${lang.messages_word}, ${(user.monthlyVoiceActivity / 1000 / 60).toFixed(2)} ${lang.minutes_word}</span>
                 </div>
             </div>
         </div>
@@ -176,29 +175,29 @@ export default {
             .replaceAll('{top_text_channels}', `
         <div class="list-item">
             <span># ${getChannelName(interaction.guild, firstActiveChannel)}</span>
-            <span>${getChannelMessagesCount(firstActiveChannel, allMessages)} ${data.messages_word}</span>
+            <span>${getChannelMessagesCount(firstActiveChannel, allMessages)} ${lang.messages_word}</span>
         </div>
         <div class="list-item">
             <span># ${getChannelName(interaction.guild, secondActiveChannel)}</span>
-            <span>${getChannelMessagesCount(secondActiveChannel, allMessages)} ${data.messages_word}</span>
+            <span>${getChannelMessagesCount(secondActiveChannel, allMessages)} ${lang.messages_word}</span>
         </div>
         <div class="list-item">
             <span># ${getChannelName(interaction.guild, thirdActiveChannel)}</span>
-            <span>${getChannelMessagesCount(thirdActiveChannel, allMessages)} ${data.messages_word}</span>
+            <span>${getChannelMessagesCount(thirdActiveChannel, allMessages)} ${lang.messages_word}</span>
         </div>
         `)
             .replaceAll('{top_voice_channels}', `
         <div class="list-item">
             <span># ${getChannelName(interaction.guild, firstActiveVoiceChannel)}</span>
-            <span>${getChannelMinutesCount(firstActiveVoiceChannel, allVoiceActivities)} ${data.minutes_word}</span>
+            <span>${getChannelMinutesCount(firstActiveVoiceChannel, allVoiceActivities)} ${lang.minutes_word}</span>
         </div>
         <div class="list-item">
             <span># ${getChannelName(interaction.guild, secondActiveVoiceChannel)}</span>
-            <span>${getChannelMinutesCount(secondActiveVoiceChannel, allVoiceActivities)} ${data.minutes_word}</span>
+            <span>${getChannelMinutesCount(secondActiveVoiceChannel, allVoiceActivities)} ${lang.minutes_word}</span>
         </div>
         <div class="list-item">
             <span># ${getChannelName(interaction.guild, thirdActiveVoiceChannel)}</span>
-            <span>${getChannelMinutesCount(thirdActiveVoiceChannel, allVoiceActivities)} ${data.minutes_word}</span>
+            <span>${getChannelMinutesCount(thirdActiveVoiceChannel, allVoiceActivities)} ${lang.minutes_word}</span>
         </div>
         `);
 

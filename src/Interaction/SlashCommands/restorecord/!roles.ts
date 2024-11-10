@@ -30,17 +30,16 @@ import {
     PermissionsBitField,
 } from 'discord.js';
 import { changeRoleRestoreCord, getGuildDataPerSecretCode } from '../../../core/functions/restoreCordHelper.js';
-import { SubCommandArgumentValue } from '../../../core/functions/method.js';
 import { LanguageData } from '../../../../types/languageData.js';
+import { Option } from '../../../../types/option.js';
+import { Command } from '../../../../types/command.js';
 
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached">, lang: LanguageData, command: SubCommandArgumentValue) => {
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, lang, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached">, lang: LanguageData, command: Option | Command | undefined, neededPerm: number) => {
 
         if (!interaction.member || !client.user || !interaction.user || !interaction.guild || !interaction.channel) return;
 
-        if (!interaction.memberPermissions?.has(PermissionsBitField.Flags.Administrator) && permCheck.neededPerm === 0) {
+        if (!interaction.memberPermissions?.has(PermissionsBitField.Flags.Administrator) && neededPerm === 0) {
             await client.method.interactionSend(interaction, { content: lang.security_disable_not_admin });
             return;
         }
@@ -49,9 +48,9 @@ export default {
         const role = interaction.options.getRole("roles")!;
 
         const table = client.db.table("RESTORECORD");
-        const Data = getGuildDataPerSecretCode(await table.all(), secretCode);
+        const data = getGuildDataPerSecretCode(await table.all(), secretCode);
 
-        if (!Data) return client.method.interactionSend(interaction, {
+        if (!data) return client.method.interactionSend(interaction, {
             content: lang.rc_key_doesnt_exist
                 .replace("${client.iHorizon_Emojis.icon.No_Logo}", client.iHorizon_Emojis.icon.No_Logo)
                 .replace("${secretCode}", secretCode),

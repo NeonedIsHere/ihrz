@@ -35,14 +35,13 @@ import {
 
 import { axios } from '../../../core/functions/axios.js';
 import { Command } from '../../../../types/command';
+import { Option } from '../../../../types/option.js';
 import { LanguageData } from '../../../../types/languageData.js';
 import config from '../../../files/config.js';
 
-import { SubCommandArgumentValue } from '../../../core/functions/method';
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, command: SubCommandArgumentValue, execTimestamp?: number, args?: string[]) => {
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, lang, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, command: Option | Command | undefined, neededPerm: number, args?: string[]) => {
+
 
         // Guard's Typing
         if (!client.user || !interaction.member || !interaction.guild || !interaction.channel) return;
@@ -118,7 +117,7 @@ export default {
         if (interaction instanceof ChatInputCommandInteraction) {
             var member = interaction.options.getUser('user') || interaction.user;
         } else {
-            var _ = await client.method.checkCommandArgs(interaction, command, args!, lang); if (!_) return;
+            
             var member = await client.method.user(interaction, args!, 0) || interaction.author;
         };
 

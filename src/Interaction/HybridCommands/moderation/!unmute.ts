@@ -31,12 +31,11 @@ import {
 
 import logger from '../../../core/logger.js';
 import { LanguageData } from '../../../../types/languageData.js';
-import { SubCommandArgumentValue } from '../../../core/functions/method.js';
+import { Command } from '../../../../types/command.js';
+import { Option } from '../../../../types/option.js';
 
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, data: LanguageData, command: SubCommandArgumentValue, execTimestamp?: number, args?: string[]) => {
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, data, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, command: Option | Command | undefined, neededPerm: number, args?: string[]) => {
 
         // Guard's Typing
         if (!client.user || !interaction.member || !interaction.guild || !interaction.channel) return;;
@@ -44,7 +43,7 @@ export default {
         if (interaction instanceof ChatInputCommandInteraction) {
             var tomute = interaction.options.getMember("user") as GuildMember | null;
         } else {
-            var _ = await client.method.checkCommandArgs(interaction, command, args!, data); if (!_) return;
+            
             var tomute = client.method.member(interaction, args!, 0) as GuildMember | null;
         };
 
@@ -55,42 +54,42 @@ export default {
 
         if (!tomute) return;
 
-        if (!permissions && permCheck.neededPerm === 0) {
+        if (!permissions && neededPerm === 0) {
             await client.method.interactionSend(interaction, {
-                content: data.unmute_dont_have_permission.replace("${client.iHorizon_Emojis.icon.No_Logo}", client.iHorizon_Emojis.icon.No_Logo)
+                content: lang.unmute_dont_have_permission.replace("${client.iHorizon_Emojis.icon.No_Logo}", client.iHorizon_Emojis.icon.No_Logo)
             });
             return;;
         };
 
         if (!interaction.guild.members.me?.permissions.has([PermissionsBitField.Flags.ManageRoles])) {
             await client.method.interactionSend(interaction, {
-                content: data.unmute_i_dont_have_permission.replace("${client.iHorizon_Emojis.icon.No_Logo}", client.iHorizon_Emojis.icon.No_Logo)
+                content: lang.unmute_i_dont_have_permission.replace("${client.iHorizon_Emojis.icon.No_Logo}", client.iHorizon_Emojis.icon.No_Logo)
             });
             return;;
         };
 
         if (tomute?.id === interaction.member.user.id) {
             await client.method.interactionSend(interaction, {
-                content: data.unmute_attempt_mute_your_self.replace("${client.iHorizon_Emojis.icon.No_Logo}", client.iHorizon_Emojis.icon.No_Logo)
+                content: lang.unmute_attempt_mute_your_self.replace("${client.iHorizon_Emojis.icon.No_Logo}", client.iHorizon_Emojis.icon.No_Logo)
             });
             return;;
         };
 
         if (!tomute?.isCommunicationDisabled() === true) {
-            await client.method.interactionSend(interaction, { content: data.unmute_not_muted });
+            await client.method.interactionSend(interaction, { content: lang.unmute_not_muted });
             return;;
         };
 
         tomute.disableCommunicationUntil(Date.now());
 
         await client.method.interactionSend(interaction, {
-            content: data.unmute_command_work
+            content: lang.unmute_command_work
                 .replace("${tomute.id}", tomute.id)
         });
 
         await client.method.iHorizonLogs.send(interaction, {
-            title: data.unmute_logs_embed_title,
-            description: data.unmute_logs_embed_description
+            title: lang.unmute_logs_embed_title,
+            description: lang.unmute_logs_embed_description
                 .replace("${interaction.user.id}", interaction.member.user.id)
                 .replace("${tomute.id}", tomute.id)
         });

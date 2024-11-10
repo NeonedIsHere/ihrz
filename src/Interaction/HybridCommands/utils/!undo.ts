@@ -28,11 +28,10 @@ import {
 } from 'discord.js';
 import { LanguageData } from '../../../../types/languageData';
 import wait from '../../../core/functions/wait.js';
-import { SubCommandArgumentValue } from '../../../core/functions/method';
+import { Command } from '../../../../types/command';
+import { Option } from '../../../../types/option';
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, data: LanguageData, command: SubCommandArgumentValue, execTimestamp?: number, args?: string[]) => {
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, data, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, command: Option | Command | undefined, neededPerm: number, args?: string[]) => {
 
         // Guard's Typing
         if (!interaction.member || !client.user || !interaction.guild || !interaction.channel) return;
@@ -42,8 +41,8 @@ export default {
             interaction.memberPermissions?.has(permissionsArray)
             : interaction.member.permissions.has(permissionsArray);
 
-        if (!permissions && permCheck.neededPerm === 0) {
-            await client.method.interactionSend(interaction, { content: data.prevnames_not_admin });
+        if (!permissions && neededPerm === 0) {
+            await client.method.interactionSend(interaction, { content: lang.prevnames_not_admin });
         }
 
         let unbanned_members = await client.db.get(`${interaction.guildId}.UTILS.unban_members`);
@@ -69,7 +68,7 @@ export default {
                 new EmbedBuilder()
                     .setColor(2829617)
                     .setDescription(
-                        data.action_unban_undo_embed_desc
+                        lang.action_unban_undo_embed_desc
                             .replace("${client.iHorizon_Emojis.icon.Yes_Logo}", client.iHorizon_Emojis.icon.Yes_Logo)
                             .replace('${banned_members.length}', banned_members.length.toString())
                             .replace("${client.iHorizon_Emojis.icon.No_Logo}", client.iHorizon_Emojis.icon.No_Logo)

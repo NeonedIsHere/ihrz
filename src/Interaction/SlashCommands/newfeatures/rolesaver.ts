@@ -31,7 +31,7 @@ import {
 
 import { Command } from '../../../../types/command';
 import { LanguageData } from '../../../../types/languageData';
-import { SubCommandArgumentValue } from '../../../core/functions/method';
+import { Option } from '../../../../types/option';
 
 export const command: Command = {
     name: 'rolesaver',
@@ -108,9 +108,7 @@ export const command: Command = {
     thinking: false,
     category: 'newfeatures',
     type: ApplicationCommandType.ChatInput,
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached">, lang: LanguageData, command: SubCommandArgumentValue) => {        
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command as unknown as Command);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, lang, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached">, lang: LanguageData, command: Option | Command | undefined, neededPerm: number) => {
 
         // Guard's Typing
         if (!interaction.member || !client.user || !interaction.user || !interaction.guild || !interaction.channel) return;
@@ -119,7 +117,7 @@ export const command: Command = {
         var settings = interaction.options.getString("settings") || "None";
         var timeout = interaction.options.getString("timeout") || "None";
 
-        if ((!interaction.memberPermissions?.has(PermissionsBitField.Flags.Administrator) && permCheck.neededPerm === 0)) {
+        if ((!interaction.memberPermissions?.has(PermissionsBitField.Flags.Administrator) && neededPerm === 0)) {
             await interaction.reply({ content: lang.punishpub_not_admin });
             return;
         };

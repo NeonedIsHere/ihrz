@@ -28,11 +28,10 @@ import {
     User,
 } from 'discord.js';
 import { LanguageData } from '../../../../types/languageData';
-import { SubCommandArgumentValue } from '../../../core/functions/method';
+import { Command } from '../../../../types/command';
+import { Option } from '../../../../types/option';
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, data: LanguageData, command: SubCommandArgumentValue, execTimestamp?: number, args?: string[]) => {
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, data, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, command: Option | Command | undefined, neededPerm: number, args?: string[]) => {
 
         // Guard's Typing
         if (!client.user || !interaction.member || !interaction.guild || !interaction.channel) return;
@@ -40,34 +39,34 @@ export default {
         if (interaction instanceof ChatInputCommandInteraction) {
             var user = interaction.options.getMember("user") as GuildMember || interaction.member;
         } else {
-            var _ = await client.method.checkCommandArgs(interaction, command, args!, data); if (!_) return;
+            
             var user = client.method.member(interaction, args!, 0) || interaction.member;
         };
 
-        let baseData = await client.db.get(`${interaction.guildId}.USER.${user.id}.XP_LEVELING`);
-        var level = baseData?.level || 0;
-        var currentxp = baseData?.xp || 0;
+        let baselang = await client.db.get(`${interaction.guildId}.USER.${user.id}.XP_LEVELING`);
+        var level = baselang?.level || 0;
+        var currentxp = baselang?.xp || 0;
 
         var xpNeeded = level * 500 + 500;
         var expNeededForLevelUp = xpNeeded - currentxp;
 
         let nivEmbed = new EmbedBuilder()
-            .setTitle(data.level_embed_title
+            .setTitle(lang.level_embed_title
                 .replace('${user.username}', String(user.user.globalName || user.displayName))
             )
             .setColor('#0014a8')
             .addFields(
                 {
-                    name: data.level_embed_fields1_name, value: data.level_embed_fields1_value
+                    name: lang.level_embed_fields1_name, value: lang.level_embed_fields1_value
                         .replace('${currentxp}', currentxp)
                         .replace('${xpNeeded}', xpNeeded.toString()), inline: true
                 },
                 {
-                    name: data.level_embed_fields2_name, value: data.level_embed_fields2_value
+                    name: lang.level_embed_fields2_name, value: lang.level_embed_fields2_value
                         .replace('${level}', level), inline: true
                 }
             )
-            .setDescription(data.level_embed_description.replace('${expNeededForLevelUp}', expNeededForLevelUp.toString())
+            .setDescription(lang.level_embed_description.replace('${expNeededForLevelUp}', expNeededForLevelUp.toString())
             )
             .setTimestamp()
             .setThumbnail("https://cdn.discordapp.com/attachments/847484098070970388/850684283655946240/discord-icon-new-2021-logo-09772BF096-seeklogo.com.png")

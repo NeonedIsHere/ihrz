@@ -26,12 +26,12 @@ import {
 } from 'discord.js';
 
 import { LanguageData } from '../../../../types/languageData';
-import { SubCommandArgumentValue } from '../../../core/functions/method';
+import { Command } from '../../../../types/command';
+import { Option } from '../../../../types/option';
 
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, command: SubCommandArgumentValue, execTimestamp?: number, args?: string[]) => {
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, lang, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, command: Option | Command | undefined, neededPerm: number, args?: string[]) => {
+
 
         let i: number;
 
@@ -45,7 +45,7 @@ export default {
         if (interaction instanceof ChatInputCommandInteraction) {
             var text = interaction.options.getString("input")?.toUpperCase() as string;
         } else {
-            var _ = await client.method.checkCommandArgs(interaction, command, args!, lang); if (!_) return;
+            
             var text = client.method.longString(args!, 0)?.toUpperCase() as string;
         }
 

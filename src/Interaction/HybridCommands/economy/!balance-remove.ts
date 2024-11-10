@@ -30,11 +30,10 @@ import {
     User,
 } from 'discord.js';
 import { LanguageData } from '../../../../types/languageData';
-import { SubCommandArgumentValue } from '../../../core/functions/method';
+import { Command } from '../../../../types/command';
+import { Option } from '../../../../types/option';
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, command: SubCommandArgumentValue, execTimestamp?: number, args?: string[]) => {
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, lang, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, command: Option | Command | undefined, neededPerm: number, args?: string[]) => {
 
         // Guard's Typing
         if (!interaction.member || !client.user || !interaction.guild || !interaction.channel) return;
@@ -44,8 +43,8 @@ export default {
             interaction.memberPermissions?.has(permissionsArray)
             : interaction.member.permissions.has(permissionsArray);
 
-        if (!permissions && permCheck.neededPerm === 0) {
-            await client.method.interactionSend(interaction, { content: lang.addmoney_not_admin });
+        if (!permissions && neededPerm === 0) {
+            await client.method.interactionSend(interaction, { content: lang.removemoney_not_admin });
             return;
         };
 
@@ -59,27 +58,32 @@ export default {
 
         if (interaction instanceof ChatInputCommandInteraction) {
             var amount = interaction.options.getNumber("amount") as number;
-            var user = interaction.options.getUser("member");
+            var user = interaction.options.getMember("member") as GuildMember;
         } else {
-            var _ = await client.method.checkCommandArgs(interaction, command, args!, lang); if (!_) return;
+            
             var amount = client.method.number(args!, 0) as number;
-            var user = await client.method.user(interaction, args!, 0);
+            var user = client.method.member(interaction, args!, 0) as GuildMember;
         };
 
-        await client.method.interactionSend(interaction, {
-            content: lang.addmoney_command_work
-                .replace("${user.user.id}", user?.id!)
-                .replace("${amount.value}", amount.toString())
-        });
+        await client.db.sub(`${interaction.guildId}.USER.${user.id}.ECONOMY.money`, amount!);
+        let bal = await client.db.get(`${interaction.guildId}.USER.${user.id}.ECONOMY.money`);
 
-        await client.db.add(`${interaction.guildId}.USER.${user?.id}.ECONOMY.money`, amount);
+        let embed = new EmbedBuilder()
+            .setAuthor({ name: lang.removemoney_embed_title, iconURL: (interaction.member.user as User).displayAvatarURL() })
+            .addFields({ name: lang.removemoney_embed_fields, value: `${amount}$` },
+                { name: lang.removemoney_embed_second_fields, value: `${bal}$` })
+            .setColor("#bc0116")
+            .setTimestamp()
 
         await client.method.iHorizonLogs.send(interaction, {
-            title: lang.addmoney_logs_embed_title,
-            description: lang.addmoney_logs_embed_description
+            title: lang.removemoney_logs_embed_title,
+            description: lang.removemoney_logs_embed_description
                 .replace(/\${interaction\.user\.id}/g, interaction.member.user.id)
-                .replace(/\${amount\.value}/g, amount.toString())
-                .replace(/\${user\.user\.id}/g, user?.id!)
+                .replace(/\${amount}/g, amount.toString())
+                .replace(/\${user\.user\.id}/g, user.id)
         });
+
+        await client.method.interactionSend(interaction, { embeds: [embed] });
+        return;
     },
 };

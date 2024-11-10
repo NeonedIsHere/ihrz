@@ -29,12 +29,11 @@ import {
     MessageReplyOptions,
 } from 'discord.js';
 import { LanguageData } from '../../../../types/languageData';
-import { SubCommandArgumentValue } from '../../../core/functions/method';
+import { Command } from '../../../../types/command';
+import { Option } from '../../../../types/option';
 
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, data: LanguageData, command: SubCommandArgumentValue, execTimestamp?: number, args?: string[]) => {
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, data, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, command: Option | Command | undefined, neededPerm: number, args?: string[]) => {
 
         // Guard's Typing
         if (!client.user || !interaction.member || !interaction.guild || !interaction.channel) return;
@@ -43,18 +42,18 @@ export default {
         let player = client.player.getPlayer(interaction.guildId as string);
 
         if (!player || !player.playing || !voiceChannel) {
-            await client.method.interactionSend(interaction, { content: data.shuffle_no_queue });
+            await client.method.interactionSend(interaction, { content: lang.shuffle_no_queue });
             return;
         };
 
         if (player.queue.tracks.length < 2) {
-            await client.method.interactionSend(interaction, { content: data.shuffle_no_enought });
+            await client.method.interactionSend(interaction, { content: lang.shuffle_no_enought });
             return;
         };
 
         await player.queue.shuffle();
 
-        await client.method.interactionSend(interaction, { content: data.shuffle_command_work });
+        await client.method.interactionSend(interaction, { content: lang.shuffle_command_work });
         return;
     },
 };

@@ -26,27 +26,27 @@ import {
     PermissionsBitField
 } from 'discord.js';
 import { LanguageData } from '../../../../types/languageData';
-import { SubCommandArgumentValue } from '../../../core/functions/method';
+import { Command } from '../../../../types/command';
+import { Option } from '../../../../types/option';
 
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached">, data: LanguageData, command: SubCommandArgumentValue) => {        
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, data, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached">, lang: LanguageData, command: Option | Command | undefined, neededPerm: number) => {        
+
 
         // Guard's Typing
         if (!interaction.member || !client.user || !interaction.user || !interaction.guild || !interaction.channel) return;
 
         let action = interaction.options.getString("action");
 
-        if ((!interaction.memberPermissions?.has(PermissionsBitField.Flags.Administrator) && permCheck.neededPerm === 0)) {
-            await interaction.reply({ content: data.setsuggest_disable_not_admin });
+        if ((!interaction.memberPermissions?.has(PermissionsBitField.Flags.Administrator) && neededPerm === 0)) {
+            await interaction.reply({ content: lang.setsuggest_disable_not_admin });
             return;
         };
 
         if (action === 'on') {
             await client.db.set(`${interaction.guildId}.SUGGEST.disable`, false);
             await interaction.reply({
-                content: data.setsuggest_disable_pw_on
+                content: lang.setsuggest_disable_pw_on
                     .replace('${interaction.user}', interaction.user.toString())
             });
 
@@ -54,7 +54,7 @@ export default {
         } else if (action === 'off') {
             await client.db.set(`${interaction.guildId}.SUGGEST.disable`, true);
             await interaction.reply({
-                content: data.setsuggest_disable_pw_off
+                content: lang.setsuggest_disable_pw_off
                     .replace('${interaction.user}', interaction.user.toString())
             });
 

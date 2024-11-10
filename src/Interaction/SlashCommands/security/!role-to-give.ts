@@ -26,27 +26,27 @@ import {
     PermissionsBitField
 } from 'discord.js';
 import { LanguageData } from '../../../../types/languageData';
-import { SubCommandArgumentValue } from '../../../core/functions/method';
+import { Command } from '../../../../types/command';
+import { Option } from '../../../../types/option';
 
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached">, data: LanguageData, command: SubCommandArgumentValue) => {        
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, data, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached">, lang: LanguageData, command: Option | Command | undefined, neededPerm: number) => {        
+
 
         // Guard's Typing
         if (!interaction.member || !client.user || !interaction.user || !interaction.guild || !interaction.channel) return;
 
         let role = interaction.options.getRole("role");
 
-        if ((!interaction.memberPermissions?.has(PermissionsBitField.Flags.Administrator) && permCheck.neededPerm === 0)) {
-            await interaction.reply({ content: data.security_role_to_give_not_admin });
+        if ((!interaction.memberPermissions?.has(PermissionsBitField.Flags.Administrator) && neededPerm === 0)) {
+            await interaction.reply({ content: lang.security_role_to_give_not_admin });
             return;
         };
 
         await client.db.set(`${interaction.guildId}.SECURITY.role`, role?.id);
 
         await interaction.reply({
-            content: data.security_role_to_give_command_work
+            content: lang.security_role_to_give_command_work
                 .replace('${interaction.user}', interaction.user.toString())
                 .replace('${role}', role?.toString()!)
         });

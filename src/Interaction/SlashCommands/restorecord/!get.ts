@@ -30,7 +30,8 @@ import {
     PermissionsBitField,
 } from 'discord.js';
 import { LanguageData } from '../../../../types/languageData';
-import { SubCommandArgumentValue } from '../../../core/functions/method';
+import { Command } from '../../../../types/command';
+import { Option } from '../../../../types/option';
 import { getGuildDataPerSecretCode, securityCodeUpdate } from '../../../core/functions/restoreCordHelper.js';
 import { discordLocales } from '../../../files/locales.js';
 import { format } from '../../../core/functions/date-and-time.js';
@@ -38,13 +39,12 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached">, lang: LanguageData, command: SubCommandArgumentValue) => {
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, lang, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached">, lang: LanguageData, command: Option | Command | undefined, neededPerm: number) => {
+
 
         if (!interaction.member || !client.user || !interaction.user || !interaction.guild || !interaction.channel) return;
 
-        if (!interaction.memberPermissions?.has(PermissionsBitField.Flags.Administrator) && permCheck.neededPerm === 0) {
+        if (!interaction.memberPermissions?.has(PermissionsBitField.Flags.Administrator) && neededPerm === 0) {
             await client.method.interactionSend(interaction, { content: lang.security_disable_not_admin });
             return;
         }
@@ -77,7 +77,7 @@ export default {
                 { name: lang.rc_get_mainEmbed_field2_name, value: interaction.guild.roles.cache.get(Data.data.config.roleId)?.toString() || Data.data.config.roleId, inline: true },
                 { name: lang.rc_get_mainEmbed_field3_name, value: `${lang.rc_get_mainEmbed_field3_value}\n\n${format(new Date(Data.data.config.createDate || 0), "MM/DD/YYYY HH:mm")}`, inline: false },
                 { name: lang.rc_get_mainEmbed_field4_name, value: String(Data.data.config.securityCodeUsed || 0), inline: true },
-                { name: lang.rc_get_mainEmbed_field5_name, value: (await client.users.fetch(Data.data.config.author.id)).toString() || lang.rc_get_unkwnon_user.replace("${Data.data.config.author.id}", Data.data.config.author.id), inline: true }
+                { name: lang.rc_get_mainEmbed_field5_name, value: (await client.users.fetch(Data.data.config.author.id)).toString() || lang.rc_get_unkwnon_user.replace("${lang.data.config.author.id}", Data.data.config.author.id), inline: true }
             )
             .setFooter(footer);
 
@@ -93,7 +93,7 @@ export default {
             return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
         });
 
-        const registrationData = timeLabels.map(dateLabel => {
+        const registrationlang = timeLabels.map(dateLabel => {
             return members.filter(member => {
                 if (!member.registerTimestamp) return false;
 
@@ -107,7 +107,7 @@ export default {
             }).length;
         });
 
-        const localeData = Object.entries(members.reduce((acc: Record<string, number>, member) => {
+        const localelang = Object.entries(members.reduce((acc: Record<string, number>, member) => {
             acc[member.locale] = (acc[member.locale] || 0) + 1;
             return acc;
         }, {}))
@@ -146,9 +146,9 @@ export default {
             .replaceAll('{total_members}', String(members.length))
             .replaceAll('{total_verifications}', String(members.length))
             .replaceAll('{key_used_count}', String(Data.data.config.securityCodeUsed))
-            .replaceAll('{registrationData}', JSON.stringify(registrationData))
+            .replaceAll('{registrationlang}', JSON.stringify(registrationlang))
             .replaceAll('{timeLabels}', JSON.stringify(timeLabels))
-            .replaceAll('{localeData}', JSON.stringify(localeData))
+            .replaceAll('{localelang}', JSON.stringify(localelang))
             .replaceAll('{recentVerifications}', JSON.stringify(recentVerifications))
             .replaceAll('{created_by}', lang.rc_created_by)
             .replaceAll('{created_on}', lang.rc_created_on)

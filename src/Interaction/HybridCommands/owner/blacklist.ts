@@ -72,9 +72,8 @@ export const command: Command = {
     thinking: false,
     category: 'owner',
     type: ApplicationCommandType.ChatInput,
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, runningCommand: any, execTimestamp?: number, args?: string[]) => {
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, lang, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, runningCommand: any, neededPerm?: number, args?: string[]) => {
+
 
         // Guard's Typing
         if (!client.user || !interaction.member || !interaction.guild || !interaction.channel) return;
@@ -94,7 +93,7 @@ export const command: Command = {
             var user = interaction.options.getUser('user');
             var reason = interaction.options.getString('reason') || 'blacklisted!'
         } else {
-            var _ = await client.method.checkCommandArgs(interaction, command, args!, lang); if (!_) return;
+            
             var member = client.method.member(interaction, args!, 0) as GuildMember | null;
             var user = await client.method.user(interaction, args!, 0);
             var reason = client.method.longString(args!, 1) || 'blacklisted!';

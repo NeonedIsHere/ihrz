@@ -25,12 +25,12 @@ import { LanguageData } from '../../../../types/languageData';
 import Jimp from 'jimp';
 import logger from '../../../core/logger.js';
 
-import { SubCommandArgumentValue } from '../../../core/functions/method';
+import { Command } from '../../../../types/command';
+import { Option } from '../../../../types/option';
 
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, command: SubCommandArgumentValue, execTimestamp?: number, args?: string[]) => {
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, lang, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, command: Option | Command | undefined, neededPerm: number, args?: string[]) => {
+
 
         if (await client.db.get(`${interaction.guildId}.GUILD.FUN.states`) === "off") {
             await client.method.interactionSend(interaction, { content: lang.fun_category_disable });
@@ -40,7 +40,7 @@ export default {
             var user1 = interaction.options.getUser("user1") || interaction.user;
             var user2 = interaction.options.getUser("user2") || interaction.guild?.members.cache.random()?.user as User;
         } else {
-            var _ = await client.method.checkCommandArgs(interaction, command, args!, lang); if (!_) return;
+            
             var user1 = await client.method.user(interaction, args!, 0) || interaction.author;
             var user2 = await client.method.user(interaction, args!, 1) || interaction.guild?.members.cache.random()?.user as User;
         }
