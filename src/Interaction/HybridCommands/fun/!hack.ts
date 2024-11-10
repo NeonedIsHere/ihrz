@@ -31,6 +31,8 @@ import { LanguageData } from '../../../../types/languageData';
 import crypto from 'crypto';
 import { SubCommandArgumentValue } from '../../../core/functions/method';
 import fs from "node:fs";
+import { Option } from '../../../../types/option';
+import { Command } from '../../../../types/command';
 
 const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-';
 const idd = 'ihorizon';

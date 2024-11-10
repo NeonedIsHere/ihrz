@@ -82,46 +82,8 @@ async function handleCommandExecution(client: Client, interaction: ChatInputComm
 }
 
 async function handleCommandError(client: Client, interaction: ChatInputCommandInteraction, command: any, error: any) {
-    const block = `\`\`\`TS\nMessage: The command ran into a problem!\nCommand Name: ${command.name}\nError: ${error}\`\`\`\n`;
     await client.method.interactionSend(interaction, {
-        content: block + "**Let me suggest you to report this issue with `/report`.**"
-    });
-
-    const channel = client.channels.cache.get(client.config.core.reportChannelID);
-    if (!channel) return;
-
-    const options = interaction.options as CommandInteractionOptionResolver;
-    const optionsList = options["_hoistedOptions"].map(element => `${element.name}:${element.value}`);
-
-    let commandPath = interaction.commandName;
-    const group = options.getSubcommandGroup(false);
-    const subCommand = options.getSubcommand(false);
-
-    if (group) commandPath += ` ${group}`;
-    if (subCommand) commandPath += ` ${subCommand}`;
-    if (optionsList.length) commandPath += ` ${optionsList.join(' ')}`;
-
-    await (channel as BaseGuildTextChannel).send({
-        embeds: [
-            new EmbedBuilder()
-                .setTitle(`SLASH_CMD_CRASH_NOT_HANDLE`)
-                .setDescription(block)
-                .setTimestamp()
-                .setFields(
-                    {
-                        name: "🛡️ Bot Admin",
-                        value: interaction.guild?.members.me?.permissions.has(PermissionFlagsBits.Administrator) ? "yes" : "no"
-                    },
-                    {
-                        name: "📝 User Admin",
-                        value: (interaction.member as GuildMember)?.permissions.has(PermissionFlagsBits.Administrator) ? "yes" : "no"
-                    },
-                    {
-                        name: "** **",
-                        value: `/${commandPath}\n\n`
-                    },
-                )
-        ]
+        content: "**Let me suggest you to report this issue with `/report`.**"
     });
 }
 
