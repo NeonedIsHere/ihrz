@@ -27,19 +27,19 @@ import {
 import { LanguageData } from '../../../../types/languageData';
 import { axios } from '../../../core/functions/axios.js';
 
-import { SubCommandArgumentValue } from '../../../core/functions/method';
+import { Command } from '../../../../types/command';
+import { Option } from '../../../../types/option';
 import { decrypt } from '../../../core/functions/encryptDecryptMethod.js';
 
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached">, data: LanguageData, command: SubCommandArgumentValue) => {
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, data, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached">, lang: LanguageData, command: Option | Command | undefined, neededPerm: number) => {
+
 
         // Guard's Typing
         if (!interaction.member || !client.user || !interaction.user || !interaction.guild || !interaction.channel) return;
 
-        if ((!interaction.memberPermissions?.has(PermissionsBitField.Flags.Administrator) && permCheck.neededPerm === 0)) {
-            await interaction.editReply({ content: data.setup_not_admin });
+        if ((!interaction.memberPermissions?.has(PermissionsBitField.Flags.Administrator) && neededPerm === 0)) {
+            await interaction.editReply({ content: lang.setup_not_admin });
             return;
         };
 
@@ -53,12 +53,12 @@ export default {
 
                 await client.db.set(`${interaction.guildId}`, res);
             } catch (error) {
-                await interaction.editReply({ content: data.guildconfig_config_restore_msg });
+                await interaction.editReply({ content: lang.guildconfig_config_restore_msg });
                 return;
             }
         };
 
-        await interaction.editReply({ content: data.guildconfig_config_restore_msg });
+        await interaction.editReply({ content: lang.guildconfig_config_restore_msg });
         return
     },
 };

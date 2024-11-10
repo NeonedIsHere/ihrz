@@ -28,11 +28,10 @@ import {
 } from 'discord.js';
 
 import { LanguageData } from '../../../../types/languageData';
-import { SubCommandArgumentValue } from '../../../core/functions/method';
+import { Command } from '../../../../types/command';
+import { Option } from '../../../../types/option';
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, data: LanguageData, command: SubCommandArgumentValue, execTimestamp?: number, args?: string[]) => {
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, data, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, command: Option | Command | undefined, neededPerm: number, args?: string[]) => {
 
         // Guard's Typing
         if (!interaction.member || !client.user || !interaction.guild || !interaction.channel) return;
@@ -42,8 +41,8 @@ export default {
         let weekly = await client.db.get(`${interaction.guildId}.USER.${interaction.member.user.id}.ECONOMY.weekly`);
 
         if (await client.db.get(`${interaction.guildId}.ECONOMY.disabled`) === true) {
-            await client.method.interactionSend(interaction, {
-                content: data.economy_disable_msg
+            await client.method.interactionSend(interaction,{
+                content: lang.economy_disable_msg
                     .replace('${interaction.user.id}', interaction.member.user.id)
             });
             return;
@@ -52,16 +51,17 @@ export default {
         if (weekly !== null && timeout - (Date.now() - weekly) > 0) {
             let time = client.timeCalculator.to_beautiful_string(timeout - (Date.now() - weekly));
 
-            await client.method.interactionSend(interaction, {
-                content: data.weekly_cooldown_error
+            await client.method.interactionSend(interaction,{
+                content: lang.weekly_cooldown_error
                     .replace(/\${time}/g, time)
             });
         } else {
             let embed = new EmbedBuilder()
+                .setAuthor({ name: lang.weekly_embed_title, iconURL: (interaction.member.user as User).displayAvatarURL() })
                 .setColor(await client.db.get(`${interaction.guild?.id}.GUILD.GUILD_CONFIG.embed_color.economy`) || "#a4cb80")
-                .setAuthor({ name: data.weekly_embed_title, iconURL: (interaction.member.user as User).displayAvatarURL() })
-                .setDescription(data.weekly_embed_description)
-                .addFields({ name: data.weekly_embed_fields, value: `${amount}${client.iHorizon_Emojis.icon.Coin}` });
+                .setDescription(lang.weekly_embed_description)
+                .addFields({ name: lang.weekly_embed_fields, value: `${amount}${client.iHorizon_Emojis.icon.Coin}` })
+
 
             await client.db.add(`${interaction.guildId}.USER.${interaction.member.user.id}.ECONOMY.money`, amount);
             await client.db.set(`${interaction.guildId}.USER.${interaction.member.user.id}.ECONOMY.weekly`, Date.now());

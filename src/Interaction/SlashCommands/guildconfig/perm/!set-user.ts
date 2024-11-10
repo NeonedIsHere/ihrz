@@ -29,17 +29,17 @@ import {
     User,
 } from 'discord.js';
 import { LanguageData } from '../../../../../types/languageData';
-import { SubCommandArgumentValue } from '../../../../core/functions/method';
+import { Command } from '../../../../../types/command';
+import { Option } from '../../../../../types/option';
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached">, data: LanguageData, command: SubCommandArgumentValue) => {
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, data, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached">, lang: LanguageData, command: Option | Command | undefined, neededPerm: number) => {
+
 
         // Guard's Typing
         if (!interaction.member || !client.user || !interaction.user || !interaction.guild || !interaction.channel) return;
 
-        if ((!interaction.memberPermissions?.has(PermissionsBitField.Flags.Administrator) && permCheck.neededPerm === 0)) {
-            await client.method.interactionSend(interaction, { content: data.setup_not_admin });
+        if ((!interaction.memberPermissions?.has(PermissionsBitField.Flags.Administrator) && neededPerm === 0)) {
+            await client.method.interactionSend(interaction, { content: lang.setup_not_admin });
             return;
         };
 
@@ -50,7 +50,7 @@ export default {
             await client.db.delete(`${interaction.guildId}.UTILS.USER_PERMS.${user.id}`);
 
             await client.method.interactionSend(interaction, {
-                content: data.perm_set_deleted.replace("${user.toString()}", user.toString())
+                content: lang.perm_set_deleted.replace("${user.toString()}", user.toString())
             });
         } else {
             let fetchedPerm = await client.method.permission.checkUserPermissions(
@@ -59,7 +59,7 @@ export default {
 
             if (fetchedPerm <= parseInt(perm) && interaction.guild.ownerId !== interaction.member.id) {
                 await client.method.interactionSend(interaction, {
-                    content: data.perm_set_warn_message.replace(
+                    content: lang.perm_set_warn_message.replace(
                         "${interaction.member.toString()}",
                         interaction.member.toString(),
                     ),
@@ -70,7 +70,7 @@ export default {
             await client.db.set(`${interaction.guildId}.UTILS.USER_PERMS.${user.id}`, parseInt(perm));
 
             await client.method.interactionSend(interaction, {
-                content: data.perm_set_ok.replace("${user.toString()}", user.toString())
+                content: lang.perm_set_ok.replace("${user.toString()}", user.toString())
                     .replace("${perm}", perm)
             });
         }

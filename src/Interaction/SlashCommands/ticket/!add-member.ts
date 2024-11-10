@@ -25,27 +25,26 @@ import {
     Client,
 } from 'discord.js';
 
-import { TicketRemoveMember } from '../../../core/modules/ticketsManager.js';
-import { LanguageData } from '../../../../types/languageData';
-import { SubCommandArgumentValue } from '../../../core/functions/method';
+import { TicketAddMember } from '../../../core/modules/ticketsManager.js';
+import { LanguageData } from '../../../../types/languageData.js';
+import { Command } from '../../../../types/command.js';
+import { Option } from '../../../../types/option.js';
 
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached">, data: LanguageData, command: SubCommandArgumentValue) => {        
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, data, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached">, lang: LanguageData, command: Option | Command | undefined, neededPerm: number) => {        
+
 
         // Guard's Typing
         if (!interaction.member || !client.user || !interaction.user || !interaction.guild || !interaction.channel) return;
 
         if (await client.db.get(`${interaction.guildId}.GUILD.TICKET.disable`)) {
-            await interaction.editReply({ content: data.ticket_disabled_command });
+            await interaction.editReply({ content: lang.ticket_disabled_command });
             return;
         };
-
         if (!(interaction.channel as BaseGuildTextChannel).name.includes('ticket-')) {
-            await interaction.editReply({ content: data.remove_not_in_ticket });
+            await interaction.editReply({ content: lang.close_not_in_ticket });
             return;
-        } 
-        await TicketRemoveMember(interaction);
+        };
+        await TicketAddMember(interaction);
     },
 };

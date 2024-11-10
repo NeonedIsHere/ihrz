@@ -30,19 +30,19 @@ import {
     PermissionsBitField
 } from 'discord.js';
 import { LanguageData } from '../../../../types/languageData';
-import { SubCommandArgumentValue } from '../../../core/functions/method';
+import { Command } from '../../../../types/command';
+import { Option } from '../../../../types/option';
 
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached">, data: LanguageData, command: SubCommandArgumentValue) => {        
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, data, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached">, lang: LanguageData, command: Option | Command | undefined, neededPerm: number) => {        
+
 
         // Guard's Typing
         if (!interaction.member || !client.user || !interaction.user || !interaction.guild || !interaction.channel) return;
 
         if (!interaction.memberPermissions?.has([PermissionsBitField.Flags.Administrator])) {
             await interaction.editReply({
-                content: data.tempvoice_if_text_not_admin
+                content: lang.tempvoice_if_text_not_admin
                     .replace('${interaction.user.id}', interaction.user.id)
             });
             return;
@@ -54,33 +54,33 @@ export default {
             .setColor(2829617)
             .setImage(`https://ihorizon.me/assets/img/banner/ihrz_${await client.db.get(`${interaction.guildId}.GUILD.LANG.lang`) || 'fr-FR'}.png`)
             .setDescription(
-                data.tempvoice_if_text_desc_embed
+                lang.tempvoice_if_text_desc_embed
             )
             .addFields(
                 {
                     name: "** **",
-                    value: data.tempvoice_if_text_fields_value_limit
+                    value: lang.tempvoice_if_text_fields_value_limit
                         .replace('${client.iHorizon_Emojis.vc.Limit}', client.iHorizon_Emojis.vc.Limit)
                     ,
                     inline: true
                 },
                 {
                     name: "** **",
-                    value: data.tempvoice_if_text_fields_value_name
+                    value: lang.tempvoice_if_text_fields_value_name
                         .replace('${client.iHorizon_Emojis.vc.Name}', client.iHorizon_Emojis.vc.Name)
                     ,
                     inline: true
                 },
                 {
                     name: "** **",
-                    value: data.tempvoice_if_text_fields_value_region
+                    value: lang.tempvoice_if_text_fields_value_region
                         .replace('${client.iHorizon_Emojis.vc.Region}', client.iHorizon_Emojis.vc.Region)
                     ,
                     inline: true
                 },
                 {
                     name: "** **",
-                    value: data.tempvoice_if_text_fields_value_trust
+                    value: lang.tempvoice_if_text_fields_value_trust
                         .replace("${client.iHorizon_Emojis.vc.Trust}", client.iHorizon_Emojis.vc.Trust)
                     ,
                     inline: true
@@ -92,14 +92,14 @@ export default {
                 },
                 {
                     name: "** **",
-                    value: data.tempvoice_if_text_fields_value_untrust
+                    value: lang.tempvoice_if_text_fields_value_untrust
                         .replace("${client.iHorizon_Emojis.vc.Untrust}", client.iHorizon_Emojis.vc.Untrust)
                     ,
                     inline: true
                 },
                 {
                     name: "** **",
-                    value: data.tempvoice_if_text_fields_value_block
+                    value: lang.tempvoice_if_text_fields_value_block
                         .replace("${client.iHorizon_Emojis.vc.Block}", client.iHorizon_Emojis.vc.Block)
                     ,
                     inline: true
@@ -111,28 +111,28 @@ export default {
                 },
                 {
                     name: "** **",
-                    value: data.tempvoice_if_text_fields_value_unblock
+                    value: lang.tempvoice_if_text_fields_value_unblock
                         .replace("${client.iHorizon_Emojis.vc.Unblock}", client.iHorizon_Emojis.vc.Unblock)
                     ,
                     inline: true
                 },
                 {
                     name: "** **",
-                    value: data.tempvoice_if_text_fields_value_claim
+                    value: lang.tempvoice_if_text_fields_value_claim
                         .replace("${client.iHorizon_Emojis.vc.Claim}", client.iHorizon_Emojis.vc.Claim)
                     ,
                     inline: true
                 },
                 {
                     name: "** **",
-                    value: data.tempvoice_if_text_fields_value_privacy
+                    value: lang.tempvoice_if_text_fields_value_privacy
                         .replace("${client.iHorizon_Emojis.vc.Privacy}", client.iHorizon_Emojis.vc.Privacy)
                     ,
                     inline: true
                 },
                 {
                     name: "** **",
-                    value: data.tempvoice_if_text_fields_value_transfer
+                    value: lang.tempvoice_if_text_fields_value_transfer
                         .replace('${client.iHorizon_Emojis.vc.Transfer}', client.iHorizon_Emojis.vc.Transfer)
                     ,
                     inline: true
@@ -144,7 +144,7 @@ export default {
                 },
                 {
                     name: "** **",
-                    value: data.tempvoice_if_text_fields_value_delete
+                    value: lang.tempvoice_if_text_fields_value_delete
                         .replace('${client.iHorizon_Emojis.vc.Delete}', client.iHorizon_Emojis.vc.Delete)
                     ,
                     inline: true

@@ -29,16 +29,16 @@ import {
 } from 'discord.js';
 import { LanguageData } from '../../../../types/languageData';
 import { DatabaseStructure } from '../../../../types/database_structure';
-import { SubCommandArgumentValue } from '../../../core/functions/method';
+import { Command } from '../../../../types/command';
+import { Option } from '../../../../types/option';
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached">, data: LanguageData, command: SubCommandArgumentValue) => {
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, data, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached">, lang: LanguageData, command: Option | Command | undefined, neededPerm: number) => {
+
         // Guard's Typing
         if (!interaction.member || !client.user || !interaction.user || !interaction.guild || !interaction.channel) return;
 
-        if ((!interaction.memberPermissions?.has(PermissionsBitField.Flags.Administrator) && permCheck.neededPerm === 0)) {
-            await client.method.interactionSend(interaction, { content: data.setup_not_admin });
+        if ((!interaction.memberPermissions?.has(PermissionsBitField.Flags.Administrator) && neededPerm === 0)) {
+            await client.method.interactionSend(interaction, { content: lang.setup_not_admin });
             return;
         };
 
@@ -47,7 +47,7 @@ export default {
 
         if (all_channels?.includes(channel.id)) {
             await interaction.reply({
-                content: data.joinghostping_add_already_set
+                content: lang.joinghostping_add_already_set
                     .replace('${channel}', channel.toString())
             });
             return;
@@ -55,22 +55,22 @@ export default {
 
         await client.db.push(`${interaction.guildId}.GUILD.GUILD_CONFIG.GHOST_PING.channels`, channel.id);
 
-        (channel as BaseGuildTextChannel).send({ content: data.joinghostping_add_sent_to_channel });
+        (channel as BaseGuildTextChannel).send({ content: lang.joinghostping_add_sent_to_channel });
 
         all_channels?.push(channel.id);
 
         let embed = new EmbedBuilder()
-            .setTitle(data.joinghostping_add_ok_embed_title)
+            .setTitle(lang.joinghostping_add_ok_embed_title)
             .setColor(await client.db.get(`${interaction.guild?.id}.GUILD.GUILD_CONFIG.embed_color.all`) || "#475387")
-            .setDescription(data.joinghostping_add_ok_embed_desc)
+            .setDescription(lang.joinghostping_add_ok_embed_desc)
             .addFields({
-                name: data.joinghostping_add_ok_embed_fields_name,
+                name: lang.joinghostping_add_ok_embed_fields_name,
                 value: all_channels ? Array.from(new Set(all_channels.map(x => `<#${x}>`))).join('\n') : `<#${channel.id}>`
             });
 
         await client.method.iHorizonLogs.send(interaction, {
-            title: data.joinghostping_add_logs_embed_title,
-            description: data.joinghostping_add_logs_embed_desc
+            title: lang.joinghostping_add_logs_embed_title,
+            description: lang.joinghostping_add_logs_embed_desc
                 .replace('${interaction.user}', interaction.user.toString())
                 .replace('${channel}', channel.toString())
         });

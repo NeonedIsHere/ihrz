@@ -31,11 +31,10 @@ import {
 import { LanguageData } from '../../../../types/languageData';
 
 import backup from "discord-rebackup";
-import { SubCommandArgumentValue } from '../../../core/functions/method';
+import { Command } from '../../../../types/command';
+import { Option } from '../../../../types/option';
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, data: LanguageData, command: SubCommandArgumentValue, execTimestamp?: number, args?: string[]) => {
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, data, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, command: Option | Command | undefined, neededPerm: number, args?: string[]) => {
 
         // Guard's Typing
         if (!interaction.member || !client.user || !interaction.guild || !interaction.channel) return;
@@ -44,48 +43,48 @@ export default {
         if (interaction instanceof ChatInputCommandInteraction) {
             var backupID = interaction.options.getString('backup-id') as string;
         } else {
-            var _ = await client.method.checkCommandArgs(interaction, command, args!, data); if (!_) return;
+            
             var backupID = client.method.string(args!, 0) as string;
         };
 
         if (backupID && !await client.db.get(`BACKUPS.${interaction.member.user.id}.${backupID}`)) {
             await client.method.interactionSend(interaction, {
-                content: data.backup_this_is_not_your_backup.replace("${client.iHorizon_Emojis.icon.No_Logo}", client.iHorizon_Emojis.icon.No_Logo)
+                content: lang.backup_this_is_not_your_backup.replace("${client.iHorizon_Emojis.icon.No_Logo}", client.iHorizon_Emojis.icon.No_Logo)
             });
             return;
         };
 
-        let data_2 = await client.db.get(`BACKUPS.${interaction.member.user.id}.${backupID}`);
+        let lang_2 = await client.db.get(`BACKUPS.${interaction.member.user.id}.${backupID}`);
 
-        if (!data_2) {
-            await client.method.interactionSend(interaction, { content: data.backup_backup_doesnt_exist });
+        if (!lang_2) {
+            await client.method.interactionSend(interaction, { content: lang.backup_backup_doesnt_exist });
             return;
         };
 
         let em = new EmbedBuilder()
-            .setTitle(data.backup_really_want
+            .setTitle(lang.backup_really_want
                 .replace("${client.iHorizon_Emojis.icon.Warning_Icon}", client.iHorizon_Emojis.icon.Warning_Icon)
             )
             .setColor(await client.db.get(`${interaction.guild?.id}.GUILD.GUILD_CONFIG.embed_color.all`) || "#ff1100")
             .setTimestamp()
             .addFields({
-                name: `${data_2.guildName} - (||${backupID}||)`,
-                value: data.backup_string_see_v
-                    .replace('${data.categoryCount}', data_2.categoryCount)
-                    .replace('${data.channelCount}', data_2.channelCount)
+                name: `${lang_2.guildName} - (||${backupID}||)`,
+                value: lang.backup_string_see_v
+                    .replace('${lang.categoryCount}', lang_2.categoryCount)
+                    .replace('${lang.channelCount}', lang_2.channelCount)
             });
 
         var delete_button = new ButtonBuilder()
             .setStyle(ButtonStyle.Danger)
             .setEmoji("🗑️")
             .setCustomId("backup-trash-button")
-            .setLabel(data.backup_confirm_button);
+            .setLabel(lang.backup_confirm_button);
 
         var cancel_button = new ButtonBuilder()
             .setStyle(ButtonStyle.Primary)
             .setEmoji(client.iHorizon_Emojis.icon.Warning_Icon)
             .setCustomId("backup-cancel-button")
-            .setLabel(data.backup_cancel_button);
+            .setLabel(lang.backup_cancel_button);
 
         var components = new ActionRowBuilder<ButtonBuilder>().addComponents(delete_button).addComponents(cancel_button);
         let messageEmbed = await client.method.interactionSend(interaction, { embeds: [em], components: [components] });
@@ -106,7 +105,7 @@ export default {
                 backup.remove(backupID);
                 await client.db.delete(`BACKUPS.${interaction.user.id}.${backupID}`);
 
-                em.setTitle(data.backup_embed_title_succefully_deleted
+                em.setTitle(lang.backup_embed_title_succefully_deleted
                     .replace("${client.iHorizon_Emojis.icon.Yes_Logo}", client.iHorizon_Emojis.icon.Yes_Logo)
                 );
                 em.setColor("#6aa84f");
@@ -114,7 +113,7 @@ export default {
             } else if (interaction.customId === 'backup-cancel-button') {
                 used = true
 
-                em.setTitle(data.backup_embed_title_cancel_deletion
+                em.setTitle(lang.backup_embed_title_cancel_deletion
                     .replace("${client.iHorizon_Emojis.icon.Yes_Logo}", client.iHorizon_Emojis.icon.Yes_Logo)
                 );
                 em.setColor("#0460a5");
@@ -125,7 +124,7 @@ export default {
         collector.on('end', () => {
             if (used) return;
 
-            em.setTitle(data.backup_embed_title_timesup_deletion
+            em.setTitle(lang.backup_embed_title_timesup_deletion
                 .replace("${client.iHorizon_Emojis.icon.No_Logo}", client.iHorizon_Emojis.icon.No_Logo)
             );
             em.setColor("#ce7e00");

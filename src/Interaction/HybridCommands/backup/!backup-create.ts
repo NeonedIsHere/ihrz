@@ -32,11 +32,10 @@ import {
 import logger from '../../../core/logger.js';
 import backup from 'discord-rebackup';
 import { LanguageData } from '../../../../types/languageData';
-import { SubCommandArgumentValue } from '../../../core/functions/method.js';
+import { Command } from '../../../../types/command.js';
+import { Option } from '../../../../types/option.js';
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, data: LanguageData, command: SubCommandArgumentValue, execTimestamp?: number, args?: string[]) => {
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, data, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, command: Option | Command | undefined, neededPerm: number, args?: string[]) => {
 
         // Guard's Typing
         if (!interaction.member || !client.user || !interaction.guild || !interaction.channel) return;
@@ -46,13 +45,13 @@ export default {
             interaction.memberPermissions?.has(permissionsArray)
             : interaction.member.permissions.has(permissionsArray);
 
-        if (!permissions && permCheck.neededPerm === 0) {
-            await client.method.interactionSend(interaction, { content: data.backup_not_admin });
+        if (!permissions && neededPerm === 0) {
+            await client.method.interactionSend(interaction, { content: lang.backup_not_admin });
             return;
         };
 
         if (!interaction.guild.members.me?.permissions.has(PermissionsBitField.Flags.Administrator)) {
-            await client.method.interactionSend(interaction, { content: data.backup_i_dont_have_permission });
+            await client.method.interactionSend(interaction, { content: lang.backup_i_dont_have_permission });
             return;
         };
 
@@ -62,7 +61,7 @@ export default {
         if (interaction instanceof ChatInputCommandInteraction) {
             var svMsg = interaction.options.getString('save-message')!;
         } else {
-            var _ = await client.method.checkCommandArgs(interaction, command, args!, data); if (!_) return;
+            
             var svMsg = client.method.string(args!, 0)!;
         };
 
@@ -70,29 +69,29 @@ export default {
         backup.create(interaction.guild, {
             maxMessagesPerChannel: svMsg === "yes" ? 10 : 0,
             jsonBeautify: true
-        }).then(async (backupData) => {
+        }).then(async (backuplang) => {
 
-            backupData.channels.categories.forEach(category => {
+            backuplang.channels.categories.forEach(category => {
                 i++;
                 category.children.forEach(() => {
                     j++;
                 });
             });
 
-            let elData = { guildName: backupData.name, categoryCount: i, channelCount: j };
+            let ellang = { guildName: backuplang.name, categoryCount: i, channelCount: j };
 
-            await client.db.set(`BACKUPS.${interaction.member?.user.id}.${backupData.id}`, elData);
+            await client.db.set(`BACKUPS.${interaction.member?.user.id}.${backuplang.id}`, ellang);
 
-            client.method.channelSend(interaction, { content: data.backup_command_work_on_creation });
+            client.method.channelSend(interaction, { content: lang.backup_command_work_on_creation });
 
             await client.method.interactionSend(interaction, {
-                content: data.backup_command_work_info_on_creation
-                    .replace("${backupData.id}", backupData.id)
+                content: lang.backup_command_work_info_on_creation
+                    .replace("${backuplang.id}", backuplang.id)
             });
 
             await client.method.iHorizonLogs.send(interaction, {
-                title: data.backup_logs_embed_title_on_creation,
-                description: data.backup_logs_embed_description_on_creation
+                title: lang.backup_logs_embed_title_on_creation,
+                description: lang.backup_logs_embed_description_on_creation
                     .replace('${interaction.user.id}', interaction.member?.user.id!)
             });
         });

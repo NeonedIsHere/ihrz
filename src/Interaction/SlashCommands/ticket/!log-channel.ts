@@ -27,26 +27,26 @@ import {
     PermissionsBitField,
 } from 'discord.js';
 import { LanguageData } from '../../../../types/languageData';
-import { SubCommandArgumentValue } from '../../../core/functions/method';
+import { Command } from '../../../../types/command';
+import { Option } from '../../../../types/option';
 
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached">, data: LanguageData, command: SubCommandArgumentValue) => {        
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, data, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached">, lang: LanguageData, command: Option | Command | undefined, neededPerm: number) => {
+
 
         // Guard's Typing
         if (!interaction.member || !client.user || !interaction.user || !interaction.guild || !interaction.channel) return;
 
-        
+
 
         if (await client.db.get(`${interaction.guildId}.GUILD.TICKET.disable`)) {
-            await interaction.editReply({ content: data.ticket_disabled_command });
+            await interaction.editReply({ content: lang.ticket_disabled_command });
             return;
         };
         let channel = interaction.options.getChannel('channel') as GuildChannel;
 
-        if ((!interaction.memberPermissions?.has(PermissionsBitField.Flags.Administrator) && permCheck.neededPerm === 0)) {
-            await interaction.editReply({ content: data.disableticket_not_admin });
+        if ((!interaction.memberPermissions?.has(PermissionsBitField.Flags.Administrator) && neededPerm === 0)) {
+            await interaction.editReply({ content: lang.disableticket_not_admin });
             return;
         };
 
@@ -54,8 +54,8 @@ export default {
 
         let embed = new EmbedBuilder()
             .setColor(await client.db.get(`${interaction.guild?.id}.GUILD.GUILD_CONFIG.embed_color.audits-logs`) || "#008000")
-            .setTitle(data.ticket_logchannel_embed_title)
-            .setDescription(data.ticket_logchannel_embed_desc
+            .setTitle(lang.ticket_logchannel_embed_title)
+            .setDescription(lang.ticket_logchannel_embed_desc
                 .replace('${interaction.user}', interaction.user.toString())
                 .replace('${channel}', channel.toString())
             )

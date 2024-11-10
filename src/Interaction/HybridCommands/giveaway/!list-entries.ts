@@ -28,12 +28,11 @@ import {
 } from 'discord.js';
 
 import { LanguageData } from '../../../../types/languageData';
-import { SubCommandArgumentValue } from '../../../core/functions/method';
+import { Command } from '../../../../types/command';
+import { Option } from '../../../../types/option';
 
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, data: LanguageData, command: SubCommandArgumentValue, execTimestamp?: number, args?: string[]) => {
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, data, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, command: Option | Command | undefined, neededPerm: number, args?: string[]) => {
 
         // Guard's Typing
         if (!interaction.member || !client.user || !interaction.guild || !interaction.channel) return;
@@ -43,33 +42,33 @@ export default {
             interaction.memberPermissions?.has(permissionsArray)
             : interaction.member.permissions.has(permissionsArray);
 
-        if (!permissions && permCheck.neededPerm === 0) {
-            await client.method.interactionSend(interaction, { content: data.end_not_admin });
+        if (!permissions && neededPerm === 0) {
+            await client.method.interactionSend(interaction, { content: lang.end_not_admin });
             return;
         };
 
         if (interaction instanceof ChatInputCommandInteraction) {
-            var inputData = interaction.options.getString("giveaway-id") as string;
+            var inputlang = interaction.options.getString("giveaway-id") as string;
         } else {
-            var _ = await client.method.checkCommandArgs(interaction, command, args!, data); if (!_) return;
-            var inputData = client.method.string(args!, 0) as string;
+            
+            var inputlang = client.method.string(args!, 0) as string;
         };
 
-        if (!await client.giveawaysManager.isValid(inputData)) {
+        if (!await client.giveawaysManager.isValid(inputlang)) {
             await client.method.interactionSend(interaction, {
-                content: data.end_not_find_giveaway
-                    .replace(/\${gw}/g, inputData)
+                content: lang.end_not_find_giveaway
+                    .replace(/\${gw}/g, inputlang)
             });
             return;
         };
 
-        if (await client.giveawaysManager.isEnded(inputData)) {
-            await client.method.interactionSend(interaction, { content: data.end_command_error });
+        if (await client.giveawaysManager.isEnded(inputlang)) {
+            await client.method.interactionSend(interaction, { content: lang.end_command_error });
             return;
         };
 
         // @ts-ignore
-        await client.giveawaysManager.listEntries(interaction, inputData)
+        await client.giveawaysManager.listEntries(interaction, inputlang)
         return;
     },
 };

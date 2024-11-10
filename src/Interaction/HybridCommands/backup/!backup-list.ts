@@ -33,14 +33,13 @@ import {
 } from 'discord.js';
 import { LanguageData } from '../../../../types/languageData';
 import { DatabaseStructure } from '../../../../types/database_structure';
-import { SubCommandArgumentValue } from '../../../core/functions/method';
+import { Command } from '../../../../types/command';
+import { Option } from '../../../../types/option';
 
 const itemsPerPage = 5;
 
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, data: LanguageData, command: SubCommandArgumentValue, execTimestamp?: number, args?: string[]) => {
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, data, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, command: Option | Command | undefined, neededPerm: number, args?: string[]) => {
 
         // Guard's Typing
         if (!interaction.member || !client.user || !interaction.guild || !interaction.channel) return;
@@ -48,24 +47,24 @@ export default {
         if (interaction instanceof ChatInputCommandInteraction) {
             var backupID = interaction.options.getString('backup-id');
         } else {
-            var _ = await client.method.checkCommandArgs(interaction, command, args!, data); if (!_) return;
+            
             var backupID = client.method.string(args!, 0);
         };
 
         if (backupID && !await client.db.get(`BACKUPS.${interaction.member.user.id}.${backupID}`)) {
             await client.method.interactionSend(interaction, {
-                content: data.backup_this_is_not_your_backup.replace("${client.iHorizon_Emojis.icon.No_Logo}", client.iHorizon_Emojis.icon.No_Logo)
+                content: lang.backup_this_is_not_your_backup.replace("${client.iHorizon_Emojis.icon.No_Logo}", client.iHorizon_Emojis.icon.No_Logo)
             });
             return;
         };
 
-        let data2 = await client.db.get(`BACKUPS.${interaction.member.user.id}`) as DatabaseStructure.DbBackupsUserObject;
+        let lang2 = await client.db.get(`BACKUPS.${interaction.member.user.id}`) as DatabaseStructure.DbBackupsUserObject;
         let backups = [];
 
-        for (let i in data2) {
-            let result = data2[i];
+        for (let i in lang2) {
+            let result = lang2[i];
 
-            let v = (data.backup_string_see_another_v
+            let v = (lang.backup_string_see_another_v
                 .replace('${result.categoryCount}', result.categoryCount.toString())
                 .replace('${result.channelCount}', result.channelCount.toString()));
 
@@ -77,7 +76,7 @@ export default {
 
         const generateEmbed = async (page: number) => {
             let embed = new EmbedBuilder()
-                .setDescription(backups.length > 0 ? data.backup_all_of_your_backup : data.backup_backup_doesnt_exist)
+                .setDescription(backups.length > 0 ? lang.backup_all_of_your_backup : lang.backup_backup_doesnt_exist)
                 .setAuthor({ name: interaction.member?.user.username || (interaction.member as GuildMember)?.displayName, iconURL: "attachment://user_icon.png" })
                 .setColor(await client.db.get(`${interaction.guild?.id}.GUILD.GUILD_CONFIG.embed_color.ihrz-logs`) || "#bf0bb9")
                 .setTimestamp();
@@ -92,10 +91,10 @@ export default {
 
             embed.setFooter({
                 text: backups.length > 0
-                    ? data.prevnames_embed_footer_text
+                    ? lang.prevnames_embed_footer_text
                         .replace("${currentPage + 1}", String(page + 1))
                         .replace("${pages.length}", String(totalPages))
-                    : data.prevnames_embed_footer_text.replace("${currentPage + 1}", "1").replace("${pages.length}", "1"),
+                    : lang.prevnames_embed_footer_text.replace("${currentPage + 1}", "1").replace("${pages.length}", "1"),
                 iconURL: "attachment://footer_icon.png"
             });
             return embed;

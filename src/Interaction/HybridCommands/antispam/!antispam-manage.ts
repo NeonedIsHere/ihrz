@@ -42,7 +42,8 @@ import { iHorizonModalResolve } from '../../../core/functions/modalHelper.js';
 
 import { LanguageData } from '../../../../types/languageData';
 import { AntiSpam } from '../../../../types/antispam';
-import { SubCommandArgumentValue } from '../../../core/functions/method.js';
+import { Command } from '../../../../types/command.js';
+import { Option } from '../../../../types/option.js';
 
 type AntiSpamOptionKey = keyof AntiSpam.AntiSpamOptions;
 type PresetKeys = "chill" | "guard" | "extreme";
@@ -81,9 +82,8 @@ const AntiSpamPreset: { [key in PresetKeys]: AntiSpam.AntiSpamOptions } = {
 }
 
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, command: SubCommandArgumentValue, execTimestamp?: number, args?: string[]) => {
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, lang, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, command: Option | Command | undefined, neededPerm: number, args?: string[]) => {
+
 
         // Guard's Typing
         if (!interaction.member || !client.user || !interaction.guild || !interaction.channel) return;
@@ -93,12 +93,12 @@ export default {
             interaction.memberPermissions?.has(permissionsArray)
             : interaction.member.permissions.has(permissionsArray);
 
-        if (!permissions && permCheck.neededPerm === 0) {
+        if (!permissions && neededPerm === 0) {
             await client.method.interactionSend(interaction, { content: lang.addmoney_not_admin });
             return;
         };
 
-        let baseData: AntiSpam.AntiSpamOptions = await client.db.get(`${interaction.guildId}.GUILD.ANTISPAM`) || {
+        let baselang: AntiSpam.AntiSpamOptions = await client.db.get(`${interaction.guildId}.GUILD.ANTISPAM`) || {
             ignoreBots: false,
             maxInterval: 1900,
             Enabled: true,
@@ -185,7 +185,7 @@ export default {
 
         choices.forEach((content, x) => {
             let value: string = '';
-            let inDb = baseData?.[content.value as AntiSpamOptionKey];
+            let inDb = baselang?.[content.value as AntiSpamOptionKey];
 
             switch (content.type) {
                 case 'boolean':
@@ -235,15 +235,15 @@ export default {
             }
         }
 
-        function updateEmbedFields(embed: EmbedBuilder, baseData: AntiSpam.AntiSpamOptions) {
+        function updateEmbedFields(embed: EmbedBuilder, baselang: AntiSpam.AntiSpamOptions) {
             embed.setFields([
-                { name: lang.antispam_manage_choices_1_label, value: beautifyValue('Enabled', baseData.Enabled, lang), inline: true },
-                { name: lang.antispam_manage_choices_2_label, value: beautifyValue('ignoreBots', baseData.ignoreBots, lang), inline: true },
-                { name: lang.antispam_manage_choices_3_label, value: beautifyValue('punishment_type', baseData.punishment_type, lang), inline: true },
-                { name: lang.antispam_manage_choices_4_label, value: beautifyValue('punishTime', baseData.punishTime, lang), inline: true },
-                { name: lang.antispam_manage_choices_6_label, value: beautifyValue('removeMessages', baseData.removeMessages, lang), inline: true },
-                { name: lang.antispam_manage_choices_7_label, value: beautifyValue('maxInterval', baseData.maxInterval, lang), inline: true },
-                { name: lang.antispam_manage_choices_12_label, value: beautifyValue('Threshold', baseData.Threshold, lang), inline: true },
+                { name: lang.antispam_manage_choices_1_label, value: beautifyValue('Enabled', baselang.Enabled, lang), inline: true },
+                { name: lang.antispam_manage_choices_2_label, value: beautifyValue('ignoreBots', baselang.ignoreBots, lang), inline: true },
+                { name: lang.antispam_manage_choices_3_label, value: beautifyValue('punishment_type', baselang.punishment_type, lang), inline: true },
+                { name: lang.antispam_manage_choices_4_label, value: beautifyValue('punishTime', baselang.punishTime, lang), inline: true },
+                { name: lang.antispam_manage_choices_6_label, value: beautifyValue('removeMessages', baselang.removeMessages, lang), inline: true },
+                { name: lang.antispam_manage_choices_7_label, value: beautifyValue('maxInterval', baselang.maxInterval, lang), inline: true },
+                { name: lang.antispam_manage_choices_12_label, value: beautifyValue('Threshold', baselang.Threshold, lang), inline: true },
             ]);
         }
 
@@ -289,7 +289,7 @@ export default {
             };
 
             if (i.customId === 'antispam-manage-save-button') {
-                await client.db.set(`${interaction.guildId}.GUILD.ANTISPAM`, baseData);
+                await client.db.set(`${interaction.guildId}.GUILD.ANTISPAM`, baselang);
                 await i.deferUpdate();
 
                 collector.stop();
@@ -325,17 +325,17 @@ export default {
 
                     switch (preset) {
                         case 'chill':
-                            baseData = AntiSpamPreset.chill;
+                            baselang = AntiSpamPreset.chill;
                             break;
                         case 'guard':
-                            baseData = AntiSpamPreset.guard;
+                            baselang = AntiSpamPreset.guard;
                             break;
                         case 'extreme':
-                            baseData = AntiSpamPreset.extreme;
+                            baselang = AntiSpamPreset.extreme;
                             break;
                     }
 
-                    updateEmbedFields(embed, baseData);
+                    updateEmbedFields(embed, baselang);
 
                     await originalResponse.edit({
                         content: null,
@@ -395,7 +395,7 @@ export default {
                     }
                     await originalResponse.edit({ embeds: [embed] });
 
-                    (baseData[choicesGet.value as AntiSpamOptionKey] as number) = formatedTime;
+                    (baselang[choicesGet.value as AntiSpamOptionKey] as number) = formatedTime;
                 } else if (choicesGet.wantedValueType === 'number') {
                     const fieldIndex = choices.findIndex(x => x.value === choicesGet.value);
                     const isNumber = parseInt(resultModal);
@@ -415,7 +415,7 @@ export default {
                     await originalResponse.edit({ embeds: [embed] });
                     await result.deferUpdate();
 
-                    (baseData[choicesGet.value as AntiSpamOptionKey] as number) = parseInt(resultModal);
+                    (baselang[choicesGet.value as AntiSpamOptionKey] as number) = parseInt(resultModal);
                 }
             } else if (choicesGet?.componentType === ComponentType.StringSelect && choicesGet.type === 'boolean') {
                 await i.deferUpdate();
@@ -466,7 +466,7 @@ export default {
                         ]
                     });
 
-                    ((baseData[choicesGet.value as AntiSpamOptionKey] as boolean) = true);
+                    ((baselang[choicesGet.value as AntiSpamOptionKey] as boolean) = true);
                 } else if (response.values[0] === 'antispam-manage-no') {
                     const fieldIndex = choices.findIndex(x => x.value === choicesGet.value);
 
@@ -482,7 +482,7 @@ export default {
                         ]
                     });
 
-                    ((baseData[choicesGet.value as AntiSpamOptionKey] as boolean) = false);
+                    ((baselang[choicesGet.value as AntiSpamOptionKey] as boolean) = false);
                 };
 
             } else if (choicesGet?.type === 'punish') {
@@ -543,7 +543,7 @@ export default {
                     };
                 };
                 await originalResponse.edit({ embeds: [embed] });
-                (baseData[choicesGet.value as AntiSpamOptionKey] as string) = collectedResponse.split('-')[2]!;
+                (baselang[choicesGet.value as AntiSpamOptionKey] as string) = collectedResponse.split('-')[2]!;
             }
         });
 

@@ -30,12 +30,11 @@ import {
 } from 'discord.js';
 
 import { LanguageData } from '../../../../types/languageData';
-import { SubCommandArgumentValue } from '../../../core/functions/method';
+import { Command } from '../../../../types/command';
+import { Option } from '../../../../types/option';
 
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, data: LanguageData, command: SubCommandArgumentValue, execTimestamp?: number, args?: string[]) => {
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, data, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, command: Option | Command | undefined, neededPerm: number, args?: string[]) => {
 
         // Guard's Typing
         if (!interaction.member || !client.user || !interaction.guild || !interaction.channel) return;
@@ -45,18 +44,18 @@ export default {
             interaction.memberPermissions?.has(permissionsArray)
             : interaction.member.permissions.has(permissionsArray);
 
-        if (!permissions && permCheck.neededPerm === 0) {
-            await client.method.interactionSend(interaction, { content: data.end_not_admin });
+        if (!permissions && neededPerm === 0) {
+            await client.method.interactionSend(interaction, { content: lang.end_not_admin });
             return;
         };
 
-        let giveawayData = client.giveawaysManager.getAllGiveawayData();
-        let filtered = giveawayData.filter((giveaway) => giveaway.giveawayData.guildId === interaction.guildId && !giveaway.giveawayData.ended);
+        let giveawaylang = client.giveawaysManager.getAllGiveawayData();
+        let filtered = giveawaylang.filter((giveaway) => giveaway.giveawayData.guildId === interaction.guildId && !giveaway.giveawayData.ended);
 
         let embed = new EmbedBuilder()
             .setColor(await client.db.get(`${interaction.guild?.id}.GUILD.GUILD_CONFIG.embed_color.gw`) || "#2986cc")
             .setTimestamp()
-            .setTitle(data.gw_getall_embed_title
+            .setTitle(lang.gw_getall_embed_title
                 .replace('${interaction.guild?.name}', interaction.guild.name as string)
             )
             .setAuthor(
@@ -75,7 +74,7 @@ export default {
             embed.addFields(
                 {
                     name: `\`${index.giveawayId}\``,
-                    value: data.gw_getall_embed_fields
+                    value: lang.gw_getall_embed_fields
                         .replace('${MessageURL}', MessageURL)
                         .replace('${ExpireIn}', ExpireIn)
                         .replace('${Channel}', Channel)

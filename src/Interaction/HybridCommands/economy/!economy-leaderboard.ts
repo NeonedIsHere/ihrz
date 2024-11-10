@@ -22,11 +22,11 @@
 import { ChatInputCommandInteraction, Client, EmbedBuilder, Message } from 'discord.js';
 import { LanguageData } from '../../../../types/languageData';
 import { DatabaseStructure } from '../../../../types/database_structure';
-import { SubCommandArgumentValue } from '../../../core/functions/method';
+import { Command } from '../../../../types/command';
+import { Option } from '../../../../types/option';
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, command: SubCommandArgumentValue, execTimestamp?: number, args?: string[]) => {
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, lang, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, command: Option | Command | undefined, neededPerm: number, args?: string[]) => {
+
 
         // Guard's Typing
         if (!interaction.member || !client.user || !interaction.guild || !interaction.channel) return;
@@ -41,7 +41,7 @@ export default {
 
         let toAnalyze = await client.db.get(`${interaction.guildId}.USER`) as DatabaseStructure.DbGuildUserObject;
 
-        // Convert the user data to an array for sorting
+        // Convert the user lang to an array for sorting
         let usersArray = Object.entries(toAnalyze);
 
         // Sort the users based on their total wealth
@@ -64,16 +64,16 @@ export default {
         // Display the sorted leaderboard
         usersArray.forEach((user, index) => {
             let userId = user[0];
-            let userData = user[1].ECONOMY;
+            let userlang = user[1].ECONOMY;
 
-            if (userId !== 'undefined' && userData) {
+            if (userId !== 'undefined' && userlang) {
                 embed.addFields({
                     name: `#${index + 1}`,
                     value: lang.economy_leaderboard_embed_fields_value
                         .replaceAll('${client.iHorizon_Emojis.icon.Coin}', client.iHorizon_Emojis.icon.Coin)
                         .replace('${userId}', userId)
-                        .replace('${userData.bank || 0}', String(userData.bank || 0))
-                        .replace('${userData.money || 0}', String(userData.money || 0))
+                        .replace('${userlang.bank || 0}', String(userlang.bank || 0))
+                        .replace('${userlang.money || 0}', String(userlang.money || 0))
                     ,
                     inline: false,
                 });

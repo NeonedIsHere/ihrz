@@ -37,13 +37,12 @@ import {
 
 import { LanguageData } from '../../../../types/languageData.js';
 import { axios } from '../../../core/functions/axios.js';
-import { SubCommandArgumentValue } from '../../../core/functions/method.js';
+import { Command } from '../../../../types/command.js';
+import { Option } from '../../../../types/option.js';
 import Jimp from 'jimp';
 
 export default {
-  run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, command: SubCommandArgumentValue, execTimestamp?: number, args?: string[]) => {
-    let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-    if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, lang, permCheck.neededPerm || 0);
+  run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, command: Option | Command | undefined, neededPerm: number, args?: string[]) => {
 
     let baseImg = (await axios.get('https://api.thecatapi.com/v1/images/search?mime_types=jpg,png')).data;
 
@@ -55,7 +54,7 @@ export default {
     if (interaction instanceof ChatInputCommandInteraction) {
       var text = interaction.options.getString('text')?.slice(0, 30);
     } else {
-      var _ = await client.method.checkCommandArgs(interaction, command, args!, lang); if (!_) return;
+      
       var text = client.method.longString(args!, 0) as string | undefined;
     }
 

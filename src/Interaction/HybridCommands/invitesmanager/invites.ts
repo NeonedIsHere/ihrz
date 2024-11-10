@@ -25,12 +25,13 @@ import {
     ChatInputCommandInteraction,
     ApplicationCommandType,
     Message,
-    EmbedBuilder,
 } from 'discord.js';
 
-import { Command } from '../../../../types/command';
 import { LanguageData } from '../../../../types/languageData';
-import { SubCommandArgumentValue } from '../../../core/functions/method'; export const command: Command = {
+import { Command } from '../../../../types/command';
+import { Option } from '../../../../types/option';
+
+export const command: Command = {
     name: "inv",
     description: "Subcommand for invites manager category!",
     description_localizations: {
@@ -110,7 +111,7 @@ import { SubCommandArgumentValue } from '../../../core/functions/method'; export
         {
             name: "inv-reset",
 
-            description: "Delete all data of InviteManager in the guild",
+            description: "Delete all lang of InviteManager in the guild",
             description_localizations: {
                 "fr": "Supprimer toute les données du module d'InviteManager"
             },
@@ -158,27 +159,5 @@ import { SubCommandArgumentValue } from '../../../core/functions/method'; export
     thinking: true,
     category: 'invitemanager',
     type: ApplicationCommandType.ChatInput,
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, runningCommand: SubCommandArgumentValue, execTimestamp?: number, options?: string[]) => {
-        let fetchedCommand: string;
-        let sub: SubCommandArgumentValue | undefined;
 
-        if (interaction instanceof ChatInputCommandInteraction) {
-            fetchedCommand = interaction.options.getSubcommand();
-            sub = { name: command.name, command: command.options?.find(x => fetchedCommand === x.name) }
-        } else {
-            if (!options?.[0]) {
-                await client.method.interactionSend(interaction, { embeds: [await client.method.createAwesomeEmbed(lang, command, client, interaction)] });
-                return;
-            }
-            const cmd = command.options?.find(x => options[0] === x.name || x.aliases?.includes(options[0]));
-            sub = { name: command.name, command: cmd };
-            if (!cmd) return;
-
-            fetchedCommand = cmd.name;
-            options.shift();
-        }
-
-        const commandModule = await import(`./!${fetchedCommand}.js`);
-        await commandModule.default.run(client, interaction, lang, sub, execTimestamp, options);
-    },
 };

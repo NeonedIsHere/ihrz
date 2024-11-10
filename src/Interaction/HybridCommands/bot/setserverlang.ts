@@ -109,9 +109,8 @@ export const command: Command = {
     thinking: false,
     category: 'bot',
     type: ApplicationCommandType.ChatInput,
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, runningCommand: any, execTimestamp?: number, args?: string[]) => {
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, lang, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, runningCommand: any, neededPerm?: number, args?: string[]) => {
+
 
         // Guard's Typing
         if (!client.user || !interaction.member || !interaction.guild || !interaction.channel) return;
@@ -121,7 +120,7 @@ export const command: Command = {
             interaction.memberPermissions?.has(permissionsArray)
             : interaction.member.permissions.has(permissionsArray);
 
-        if (!permissions && permCheck.neededPerm === 0) {
+        if (!permissions && neededPerm === 0) {
             await client.method.interactionSend(interaction, { content: lang.setserverlang_not_admin });
             return;
         };
@@ -129,7 +128,7 @@ export const command: Command = {
         if (interaction instanceof ChatInputCommandInteraction) {
             var type = interaction.options.getString("language");
         } else {
-            var _ = await client.method.checkCommandArgs(interaction, command, args!, lang); if (!_) return;
+            
             var type = args?.[0] as string | null;
         };
 
@@ -141,7 +140,7 @@ export const command: Command = {
         }
 
         await client.db.set(`${interaction.guildId}.GUILD.LANG`, { lang: type });
-        lang = await client.func.getLanguageData(interaction.guildId) as LanguageData;
+        lang = await client.func.getLanguagelang(interaction.guildId) as LanguageData;
 
         await client.method.iHorizonLogs.send(interaction, {
             title: lang.setserverlang_logs_embed_title_on_enable,
