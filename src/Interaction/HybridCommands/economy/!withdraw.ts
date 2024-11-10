@@ -29,37 +29,36 @@ import {
 
 import { LanguageData } from '../../../../types/languageData';
 import { DatabaseStructure } from '../../../../types/database_structure';
-import { SubCommandArgumentValue } from '../../../core/functions/method';
+import { Command } from '../../../../types/command';
+import { Option } from '../../../../types/option';
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, data: LanguageData, command: SubCommandArgumentValue, execTimestamp?: number, args?: string[]) => {
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, data, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, command: Option | Command | undefined, neededPerm: number, args?: string[]) => {
 
         // Guard's Typing
         if (!interaction.member || !client.user || !interaction.guild || !interaction.channel) return;
 
-        let dataAccount = await client.db.get(`${interaction.guildId}.USER.${interaction.member.user.id}.ECONOMY`) as DatabaseStructure.EconomyUserSchema;
+        let langAccount = await client.db.get(`${interaction.guildId}.USER.${interaction.member.user.id}.ECONOMY`) as DatabaseStructure.EconomyUserSchema;
 
         if (interaction instanceof ChatInputCommandInteraction) {
             var toWithdraw = interaction.options.getString('how-much') as string;
         } else {
-            var _ = await client.method.checkCommandArgs(interaction, command, args!, data); if (!_) return;
+            
             var toWithdraw = client.method.string(args!, 0) as string;
         };
 
         if (await client.db.get(`${interaction.guildId}.ECONOMY.disabled`) === true) {
             await client.method.interactionSend(interaction, {
-                content: data.economy_disable_msg
+                content: lang.economy_disable_msg
                     .replace('${interaction.user.id}', interaction.member.user.id)
             });
             return;
         };
 
-        if (toWithdraw === "all") toWithdraw = dataAccount.bank?.toString()!;
+        if (toWithdraw === "all") toWithdraw = langAccount.bank?.toString()!;
 
         if (isNaN(Number(toWithdraw))) {
             await client.method.interactionSend(interaction, {
-                content: data.temporary_voice_limit_button_not_integer
+                content: lang.temporary_voice_limit_button_not_integer
                     .replace("${interaction.client.iHorizon_Emojis.icon.No_Logo}", client.iHorizon_Emojis.icon.No_Logo)
             })
             return;
@@ -67,9 +66,9 @@ export default {
 
         var clean_to_withdraw = parseInt(toWithdraw)
 
-        if (toWithdraw && clean_to_withdraw > dataAccount?.bank!) {
+        if (toWithdraw && clean_to_withdraw > langAccount?.bank!) {
             await client.method.interactionSend(interaction, {
-                content: data.withdraw_cannot_abuse.replace("${client.iHorizon_Emojis.icon.No_Logo}", client.iHorizon_Emojis.icon.No_Logo)
+                content: lang.withdraw_cannot_abuse.replace("${client.iHorizon_Emojis.icon.No_Logo}", client.iHorizon_Emojis.icon.No_Logo)
             });
             return;
         };
@@ -78,15 +77,15 @@ export default {
         await client.db.add(`${interaction.guildId}.USER.${interaction.member.user.id}.ECONOMY.money`, parseInt(toWithdraw));
 
         let embed = new EmbedBuilder()
-            .setAuthor({ name: data.daily_embed_title, iconURL: (interaction.member.user as User).displayAvatarURL() })
+            .setAuthor({ name: lang.daily_embed_title, iconURL: (interaction.member.user as User).displayAvatarURL() })
             .setColor("#a4cb80")
-            .setTitle(data.withdraw_embed_title)
-            .setDescription(data.withdraw_embed_desc
+            .setTitle(lang.withdraw_embed_title)
+            .setDescription(lang.withdraw_embed_desc
                 .replace('${client.iHorizon_Emojis.icon.Coin}', client.iHorizon_Emojis.icon.Coin)
                 .replace('${interaction.user}', interaction.member.user.toString())
                 .replace('${toWithdraw}', toWithdraw.toString())
             )
-            .addFields({ name: data.withdraw_embed_fields1_name, value: `${await client.db.get(`${interaction.guildId}.USER.${interaction.member.user.id}.ECONOMY.bank`)}${client.iHorizon_Emojis.icon.Coin}` })
+            .addFields({ name: lang.withdraw_embed_fields1_name, value: `${await client.db.get(`${interaction.guildId}.USER.${interaction.member.user.id}.ECONOMY.bank`)}${client.iHorizon_Emojis.icon.Coin}` })
             .setFooter(await client.method.bot.footerBuilder(interaction))
             .setTimestamp();
 

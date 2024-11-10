@@ -30,12 +30,12 @@ import {
 import { axios, AxiosResponse } from '../../../core/functions/axios.js';
 import * as apiUrlParser from '../../../core/functions/apiUrlParser.js';
 import { LanguageData } from '../../../../types/languageData';
-import { SubCommandArgumentValue } from '../../../core/functions/method.js';
+import { Command } from '../../../../types/command.js';
+import { Option } from '../../../../types/option.js';
 
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, command: SubCommandArgumentValue, execTimestamp?: number, args?: string[]) => {
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, lang, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, command: Option | Command | undefined, neededPerm: number, args?: string[]) => {
+
 
         if (await client.db.get(`${interaction.guildId}.GUILD.FUN.states`) === "off") {
             await client.method.interactionSend(interaction, { content: lang.fun_category_disable });
@@ -45,7 +45,7 @@ export default {
             var slap = interaction.options.getUser("user") as User;
             var user = interaction.user;
         } else {
-            var _ = await client.method.checkCommandArgs(interaction, command, args!, lang); if (!_) return;
+            
             var slap = await client.method.user(interaction, args!, 0) as User;
             var user = interaction.author;
         };

@@ -34,7 +34,8 @@ import { AxiosResponse, axios } from '../../../core/functions/axios.js';
 import logger from '../../../core/logger.js';
 
 import { LanguageData } from '../../../../types/languageData';
-import { SubCommandArgumentValue } from '../../../core/functions/method.js';
+import { Command } from '../../../../types/command.js';
+import { Option } from '../../../../types/option.js';
 
 async function isImageUrl(url: string): Promise<boolean> {
     try {
@@ -46,9 +47,7 @@ async function isImageUrl(url: string): Promise<boolean> {
     }
 };
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, data: LanguageData, command: SubCommandArgumentValue, execTimestamp?: number, args?: string[]) => {
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, data, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, command: Option | Command | undefined, neededPerm: number, args?: string[]) => {
 
         // Guard's Typing
         if (!interaction.member || !client.user || !interaction.guild || !interaction.channel) return;
@@ -58,8 +57,8 @@ export default {
             interaction.memberPermissions?.has(permissionsArray)
             : interaction.member.permissions.has(permissionsArray);
 
-        if (!permissions && permCheck.neededPerm === 0) {
-            await client.method.interactionSend(interaction, { content: data.start_not_perm });
+        if (!permissions && neededPerm === 0) {
+            await client.method.interactionSend(interaction, { content: lang.start_not_perm });
             return;
         };
 
@@ -73,7 +72,7 @@ export default {
             var imageUrl = interaction.options.getString('image') as string;
             var giveawayPrize = interaction.options.getString("prize");
         } else {
-            var _ = await client.method.checkCommandArgs(interaction, command, args!, data); if (!_) return;
+            
             var giveawayNumberWinners = client.method.number(args!, 0);
             var giveawayDuration = client.method.string(args!, 1);
             var giveawayRequirement = client.method.string(args!, 2);
@@ -83,7 +82,7 @@ export default {
         };
 
         if (isNaN(giveawayNumberWinners as number) || (parseInt(giveawayNumberWinners.toString()) <= 0)) {
-            await client.method.interactionSend(interaction, { content: data.start_is_not_valid });
+            await client.method.interactionSend(interaction, { content: lang.start_is_not_valid });
             return;
         };
 
@@ -91,7 +90,7 @@ export default {
 
         if (!giveawayDurationFormated) {
             await client.method.interactionSend(interaction, {
-                content: data.start_time_not_valid
+                content: lang.start_time_not_valid
                     .replace('${interaction.user}', interaction.member.user.toString())
             });
             return;
@@ -107,14 +106,14 @@ export default {
         });
 
         await client.method.iHorizonLogs.send(interaction, {
-            title: data.reroll_logs_embed_title,
-            description: data.start_logs_embed_description
+            title: lang.reroll_logs_embed_title,
+            description: lang.start_logs_embed_description
                 .replace('${interaction.user.id}', interaction.member.user.id)
                 .replace(/\${giveawayChannel}/g, giveawayChannel.toString()!)
         });
 
         await client.method.interactionSend(interaction, {
-            content: data.start_confirmation_command
+            content: lang.start_confirmation_command
                 .replace(/\${giveawayChannel}/g, giveawayChannel.toString())
         });
 

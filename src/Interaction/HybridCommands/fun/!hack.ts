@@ -29,12 +29,12 @@ import {
 } from 'discord.js';
 import { LanguageData } from '../../../../types/languageData';
 import crypto from 'crypto';
-import { SubCommandArgumentValue } from '../../../core/functions/method';
+import { Command } from '../../../../types/command';
+import { Option } from '../../../../types/option';
 
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, command: SubCommandArgumentValue, execTimestamp?: number, args?: string[]) => {
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, lang, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, command: Option | Command | undefined, neededPerm: number, args?: string[]) => {
+
 
         if (await client.db.get(`${interaction.guildId}.GUILD.FUN.states`) === "off") {
             await client.method.interactionSend(interaction, { content: lang.fun_category_disable });
@@ -45,7 +45,7 @@ export default {
             var victim = interaction.options.getUser("user") as User;
             var user = interaction.user;
         } else {
-            var _ = await client.method.checkCommandArgs(interaction, command, args!, lang); if (!_) return;
+            
             var victim = await client.method.user(interaction, args!, 0) || interaction.author;
             var user = interaction.author;
         }

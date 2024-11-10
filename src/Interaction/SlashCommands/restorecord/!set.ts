@@ -30,19 +30,19 @@ import {
     PermissionsBitField
 } from 'discord.js';
 import { LanguageData } from '../../../../types/languageData';
-import { SubCommandArgumentValue } from '../../../core/functions/method';
+import { Command } from '../../../../types/command';
+import { Option } from '../../../../types/option';
 import { createRestoreCord, createRestoreCordLink } from '../../../core/functions/restoreCordHelper.js';
 
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached">, lang: LanguageData, command: SubCommandArgumentValue) => {
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, lang, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached">, lang: LanguageData, command: Option | Command | undefined, neededPerm: number) => {
+
 
         // Guard's Typing
         if (!interaction.member || !client.user || !interaction.user || !interaction.guild || !interaction.channel) return;
 
-        if ((!interaction.memberPermissions?.has(PermissionsBitField.Flags.Administrator) && permCheck.neededPerm === 0)) {
-            await interaction.reply({ content: lang.security_disable_not_admin });
+        if ((!interaction.memberPermissions?.has(PermissionsBitField.Flags.Administrator) && neededPerm === 0)) {
+            await client.method.interactionSend(interaction, { content: lang.security_disable_not_admin });
             return;
         };
 
@@ -91,7 +91,7 @@ export default {
 
                         await interaction.user.send(lang.rc_command_ok_dm.replace("${interaction.guild.name}", interaction.guild.name).replace("${res.secretCode}", res.secretCode!))
                             .catch(() => interaction.followUp({ content: lang.rc_command_dm_failed, ephemeral: true }))
-                            .then(() => interaction.followUp({ content: "", ephemeral: true }))
+                            .then(() => interaction.followUp({ content: lang.rc_command_dm_ok, ephemeral: true }))
                             ;
 
                         await client.db.set(`${interaction.guildId}.GUILD.RESTORECORD`, {
@@ -107,7 +107,6 @@ export default {
 
             })
             .catch(async (err) => {
-                console.error(err)
                 await client.method.interactionSend(interaction, { content: lang.reactionroles_cant_fetched_reaction_remove })
                 return;
             });

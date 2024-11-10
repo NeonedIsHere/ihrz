@@ -47,11 +47,11 @@ import {
 import { generatePassword } from '../../../core/functions/random.js';
 import { LanguageData } from '../../../../types/languageData';
 
-import { SubCommandArgumentValue } from '../../../core/functions/method';
+import { Command } from '../../../../types/command';
+import { Option } from '../../../../types/option';
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, command: SubCommandArgumentValue, execTimestamp?: number, args?: string[]) => {
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, lang, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, command: Option | Command | undefined, neededPerm: number, args?: string[]) => {
+
 
         // Guard's Typing
         if (!client.user || !interaction.member || !interaction.guild || !interaction.channel) return;
@@ -59,7 +59,7 @@ export default {
         if (interaction instanceof ChatInputCommandInteraction) {
             var arg = interaction.options.getString("id");
         } else {
-            var _ = await client.method.checkCommandArgs(interaction, command, args!, lang); if (!_) return;
+            
             var arg = client.method.string(args!, 0);
         };
 
@@ -71,7 +71,7 @@ export default {
             interaction.memberPermissions?.has(permissionsArray)
             : interaction.member.permissions.has(permissionsArray);
 
-        if (!permissions && permCheck.neededPerm === 0) {
+        if (!permissions && neededPerm === 0) {
             await client.method.interactionSend(interaction, { content: lang.punishpub_not_admin });
             return;
         };
@@ -142,7 +142,7 @@ export default {
             await response.edit({ components: [] });
         });
 
-        type LanguageDataKeys = keyof LanguageData;
+        type LanguagelangKeys = keyof LanguageData;
 
         async function chooseAction(i: StringSelectMenuInteraction<"cached">) {
             switch (i.values[0]) {
@@ -304,7 +304,7 @@ export default {
             }
         }
 
-        async function handleCollector(i: StringSelectMenuInteraction<"cached">, replyContent: LanguageDataKeys, onCollect: (message: Message) => void) {
+        async function handleCollector(i: StringSelectMenuInteraction<"cached">, replyContent: LanguagelangKeys, onCollect: (message: Message) => void) {
             const replyMessage = Array.isArray(lang[replyContent]) ? (lang[replyContent] as string[]).join(' ') : lang[replyContent];
             let reply = await i.reply({ content: replyMessage.toString(), ephemeral: true });
             let messageCollector = (interaction.channel as BaseGuildTextChannel)?.createMessageCollector({ filter: (m) => m.author.id === interaction.member?.user.id!, max: 1, time: 300_000 });

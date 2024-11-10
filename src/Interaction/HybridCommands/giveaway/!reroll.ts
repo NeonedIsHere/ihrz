@@ -30,12 +30,11 @@ import {
 
 import { LanguageData } from '../../../../types/languageData';
 import logger from '../../../core/logger.js';
-import { SubCommandArgumentValue } from '../../../core/functions/method';
+import { Command } from '../../../../types/command';
+import { Option } from '../../../../types/option';
 
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, data: LanguageData, command: SubCommandArgumentValue, execTimestamp?: number, args?: string[]) => {
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, data, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, command: Option | Command | undefined, neededPerm: number, args?: string[]) => {
 
         // Guard's Typing
         if (!interaction.member || !client.user || !interaction.guild || !interaction.channel) return;
@@ -45,41 +44,41 @@ export default {
             interaction.memberPermissions?.has(permissionsArray)
             : interaction.member.permissions.has(permissionsArray);
 
-        if (!permissions && permCheck.neededPerm === 0) {
-            await client.method.interactionSend(interaction, { content: data.reroll_not_perm });
+        if (!permissions && neededPerm === 0) {
+            await client.method.interactionSend(interaction, { content: lang.reroll_not_perm });
             return;
         };
 
         if (interaction instanceof ChatInputCommandInteraction) {
-            var inputData = interaction.options.getString("giveaway-id");
+            var inputlang = interaction.options.getString("giveaway-id");
         } else {
-            var _ = await client.method.checkCommandArgs(interaction, command, args!, data); if (!_) return;
-            var inputData = client.method.string(args!, 0);
+            
+            var inputlang = client.method.string(args!, 0);
         };
 
-        if (!await client.giveawaysManager.isValid(inputData as string)) {
+        if (!await client.giveawaysManager.isValid(inputlang as string)) {
             await client.method.interactionSend(interaction, {
-                content: data.reroll_dont_find_giveaway
-                    .replace("{args}", inputData as string)
+                content: lang.reroll_dont_find_giveaway
+                    .replace("{args}", inputlang as string)
             });
             return;
         };
 
-        if (!await client.giveawaysManager.isEnded(inputData as string)) {
-            await client.method.interactionSend(interaction, { content: data.reroll_giveaway_not_over });
+        if (!await client.giveawaysManager.isEnded(inputlang as string)) {
+            await client.method.interactionSend(interaction, { content: lang.reroll_giveaway_not_over });
             return;
         };
 
         // @ts-ignore
-        await client.giveawaysManager.reroll(client, inputData as string);
+        await client.giveawaysManager.reroll(client, inputlang as string);
 
-        await client.method.interactionSend(interaction, { content: data.reroll_command_work });
+        await client.method.interactionSend(interaction, { content: lang.reroll_command_work });
 
         await client.method.iHorizonLogs.send(interaction, {
-            title: data.reroll_logs_embed_title,
-            description: data.reroll_logs_embed_description
+            title: lang.reroll_logs_embed_title,
+            description: lang.reroll_logs_embed_description
                 .replace(/\${interaction\.user\.id}/g, interaction.member.user.id)
-                .replace(/\${giveaway\.messageID}/g, inputData as string)
+                .replace(/\${giveaway\.messageID}/g, inputlang as string)
         });
 
         return;

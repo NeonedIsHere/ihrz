@@ -30,19 +30,19 @@ import {
 } from 'discord.js';
 
 import { LanguageData } from '../../../../types/languageData';
-import { SubCommandArgumentValue } from '../../../core/functions/method.js';
+import { Command } from '../../../../types/command.js';
+import { Option } from '../../../../types/option.js';
 
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, command: SubCommandArgumentValue, execTimestamp?: number, args?: string[]) => {
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, lang, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, command: Option | Command | undefined, neededPerm: number, args?: string[]) => {
+
 
         const permissionsArray = [PermissionsBitField.Flags.Administrator]
         const permissions = interaction instanceof ChatInputCommandInteraction ?
             interaction.memberPermissions?.has(permissionsArray)
             : interaction.member?.permissions.has(permissionsArray);
 
-        if (!permissions && permCheck.neededPerm === 0) {
+        if (!permissions && neededPerm === 0) {
             await client.method.interactionSend(interaction, { content: lang.poll_not_admin });
             return;
         };
@@ -50,7 +50,7 @@ export default {
         if (interaction instanceof ChatInputCommandInteraction) {
             var action = interaction.options.getString("action");
         } else {
-            var _ = await client.method.checkCommandArgs(interaction, command, args!, lang); if (!_) return;
+            
             var action = client.method.string(args!, 1);
         }
 

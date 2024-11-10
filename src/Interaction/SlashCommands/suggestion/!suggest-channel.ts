@@ -27,20 +27,20 @@ import {
     PermissionsBitField
 } from 'discord.js';
 import { LanguageData } from '../../../../types/languageData';
-import { SubCommandArgumentValue } from '../../../core/functions/method';
+import { Command } from '../../../../types/command';
+import { Option } from '../../../../types/option';
 
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached">, data: LanguageData, command: SubCommandArgumentValue) => {        
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, data, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached">, lang: LanguageData, command: Option | Command | undefined, neededPerm: number) => {        
+
 
         // Guard's Typing
         if (!interaction.member || !client.user || !interaction.user || !interaction.guild || !interaction.channel) return;
 
         let channel = interaction.options.getChannel("channel") as BaseGuildTextChannel;
 
-        if ((!interaction.memberPermissions?.has(PermissionsBitField.Flags.Administrator) && permCheck.neededPerm === 0)) {
-            await interaction.reply({ content: data.setsuggest_channel_not_admin });
+        if ((!interaction.memberPermissions?.has(PermissionsBitField.Flags.Administrator) && neededPerm === 0)) {
+            await interaction.reply({ content: lang.setsuggest_channel_not_admin });
             return;
         };
 
@@ -48,7 +48,7 @@ export default {
 
         if (fetchOldChannel === channel?.id) {
             await interaction.reply({
-                content: data.setsuggest_channel_already_set_with_that
+                content: lang.setsuggest_channel_already_set_with_that
                     .replace('${interaction.user}', interaction.user.toString())
                     .replace('${channel}', channel.toString())
             });
@@ -57,13 +57,13 @@ export default {
 
         let setupEmbed = new EmbedBuilder()
             .setColor('#000000')
-            .setTitle(data.setsuggest_channel_embed_title)
+            .setTitle(lang.setsuggest_channel_embed_title)
             .setFooter(await client.method.bot.footerBuilder(interaction))
-            .setDescription(data.setsuggest_channel_embed_desc);
+            .setDescription(lang.setsuggest_channel_embed_desc);
 
         await client.db.set(`${interaction.guild.id}.SUGGEST.channel`, channel?.id);
         await interaction.reply({
-            content: data.setsuggest_channel_command_work
+            content: lang.setsuggest_channel_command_work
                 .replace('${interaction.user}', interaction.user.toString())
                 .replace('${channel}', channel.toString()),
         });

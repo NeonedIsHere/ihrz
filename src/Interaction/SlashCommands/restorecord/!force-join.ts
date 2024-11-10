@@ -31,18 +31,18 @@ import {
 } from 'discord.js';
 import WebSocket from 'ws';
 import { forceJoinRestoreCord, getGuildDataPerSecretCode } from '../../../core/functions/restoreCordHelper.js';
-import { SubCommandArgumentValue } from '../../../core/functions/method.js';
+import { Command } from '../../../../types/command.js';
+import { Option } from '../../../../types/option.js';
 import { LanguageData } from '../../../../types/languageData.js';
 
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached">, lang: LanguageData, command: SubCommandArgumentValue) => {
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, lang, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached">, lang: LanguageData, command: Option | Command | undefined, neededPerm: number) => {
+
 
         if (!interaction.member || !client.user || !interaction.user || !interaction.guild || !interaction.channel) return;
 
-        if (!interaction.memberPermissions?.has(PermissionsBitField.Flags.Administrator) && permCheck.neededPerm === 0) {
-            await interaction.reply({ content: lang.security_disable_not_admin });
+        if (!interaction.memberPermissions?.has(PermissionsBitField.Flags.Administrator) && neededPerm === 0) {
+            await client.method.interactionSend(interaction, { content: lang.security_disable_not_admin });
             return;
         }
 
@@ -140,8 +140,8 @@ export default {
                         ws.send("forceJoin%" + data[1]);
                     });
 
-                    ws.on('message', async function message(messageData) {
-                        const messageParts = messageData.toString().split(":");
+                    ws.on('message', async function message(messagelang) {
+                        const messageParts = messagelang.toString().split(":");
                         const value = messageParts[1];
                         const value2 = messageParts[2] || "";
 

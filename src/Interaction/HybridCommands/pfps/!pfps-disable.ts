@@ -27,11 +27,10 @@ import {
     PermissionsBitField
 } from 'discord.js';
 import { LanguageData } from '../../../../types/languageData';
-import { SubCommandArgumentValue } from '../../../core/functions/method';
+import { Command } from '../../../../types/command';
+import { Option } from '../../../../types/option';
 export default {
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, data: LanguageData, command: SubCommandArgumentValue, execTimestamp?: number, args?: string[]) => {
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, data, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, command: Option | Command | undefined, neededPerm: number, args?: string[]) => {
 
         // Guard's Typing
         if (!client.user || !interaction.member || !interaction.guild || !interaction.channel) return;
@@ -41,22 +40,22 @@ export default {
             interaction.memberPermissions?.has(permissionsArray)
             : interaction.member.permissions.has(permissionsArray);
 
-        if (!permissions && permCheck.neededPerm === 0) {
-            await client.method.interactionSend(interaction, { content: data.pfps_disable_not_admin });
+        if (!permissions && neededPerm === 0) {
+            await client.method.interactionSend(interaction, { content: lang.pfps_disable_not_admin });
             return;
         };
 
         if (interaction instanceof ChatInputCommandInteraction) {
             var action = interaction.options.getString('action');
         } else {
-            var _ = await client.method.checkCommandArgs(interaction, command, args!, data); if (!_) return;
+            
             var action = client.method.string(args!, 0);
         }
 
         if (action === 'on') {
             await client.db.set(`${interaction.guildId}.PFPS.disable`, false);
             await client.method.interactionSend(interaction, {
-                content: data.pfps_disable_command_action_on
+                content: lang.pfps_disable_command_action_on
                     .replace('${interaction.user}', interaction.member.user.toString())
             });
 
@@ -64,7 +63,7 @@ export default {
         } else if (action === 'off') {
             await client.db.set(`${interaction.guildId}.PFPS.disable`, true);
             await client.method.interactionSend(interaction, {
-                content: data.pfps_disable_command_action_off
+                content: lang.pfps_disable_command_action_off
                     .replace('${interaction.user}', interaction.member.user.toString())
             });
 

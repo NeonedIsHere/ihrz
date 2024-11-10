@@ -27,7 +27,8 @@ import {
     Message,
 } from 'discord.js';
 import { LanguageData } from '../../../../types/languageData';
-import { SubCommandArgumentValue } from '../../../core/functions/method';
+import { Command } from '../../../../types/command';
+import { Option } from '../../../../types/option';
 import { DatabaseStructure } from '../../../../types/database_structure';
 import { readFileSync } from 'fs';
 import path from 'path';
@@ -46,13 +47,12 @@ export default {
     run: async (
         client: Client,
         interaction: ChatInputCommandInteraction<"cached"> | Message,
-        data: LanguageData,
-        command: SubCommandArgumentValue,
+        lang: LanguageData,
+        command: Option | Command | undefined,
         execTimestamp?: number,
         args?: string[]
     ) => {
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command.command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, data, permCheck.neededPerm || 0);
+
 
         // Guard's Typing
         if (
@@ -70,8 +70,6 @@ export default {
             member = (interaction.options.getMember('member') || interaction.member) as GuildMember;
             user = interaction.user;
         } else {
-            let _ = await client.method.checkCommandArgs(interaction, command, args!, data);
-            if (!_) return;
             member = (client.method.member(interaction, args!, 0) || interaction.member) as GuildMember;
             user = interaction.author;
         }
@@ -79,7 +77,7 @@ export default {
         let res = (await client.db.get(`${interaction.guildId}.STATS.USER.${member.user.id}`)) as DatabaseStructure.UserStats | null;
 
         if (!res) {
-            return await client.method.interactionSend(interaction, { content: data.unblacklist_user_is_not_exist })
+            return await client.method.interactionSend(interaction, { content: lang.unblacklist_user_is_not_exist })
         }
 
         let monthlyVoiceActivity = 0
@@ -152,21 +150,21 @@ export default {
             'utf-8'
         );
 
-        const messageDataArray = Array(30).fill(0);
-        const voiceDataArray = Array(30).fill(0);
+        const messagelangArray = Array(30).fill(0);
+        const voicelangArray = Array(30).fill(0);
 
 
         monthlyMessages.forEach(msg => {
             const dayIndex = Math.floor((nowTimestamp - msg.sentTimestamp) / 86400000);
             if (dayIndex >= 0 && dayIndex < 30) {
-                messageDataArray[29 - dayIndex] += 1;
+                messagelangArray[29 - dayIndex] += 1;
             }
         });
 
         monthlyMessages.forEach(msg => {
             const dayIndex = Math.floor((nowTimestamp - msg.sentTimestamp) / 86400000);
             if (dayIndex >= 0 && dayIndex < 30) {
-                messageDataArray[29 - dayIndex] += 1;
+                messagelangArray[29 - dayIndex] += 1;
             }
         });
 
@@ -174,17 +172,17 @@ export default {
             const dayIndex = Math.floor((nowTimestamp - voice.startTimestamp) / 86400000);
             if (dayIndex >= 0 && dayIndex < 30) {
                 const sessionDuration = (voice.endTimestamp - voice.startTimestamp) / 1000 / 60;
-                voiceDataArray[29 - dayIndex] += sessionDuration;
+                voicelangArray[29 - dayIndex] += sessionDuration;
             }
         })
 
         htmlContent = htmlContent
-            .replaceAll('{header_h1_value}', data.header_h1_value)
-            .replaceAll('{messages_word}', data.messages_word)
-            .replaceAll('{voice_activity}', data.voice_activity)
-            .replaceAll('{minutes_word}', data.minutes_word)
-            .replaceAll('{top_voice}', data.top_voice)
-            .replaceAll('{top_message}', data.top_message)
+            .replaceAll('{header_h1_value}', lang.header_h1_value)
+            .replaceAll('{messages_word}', lang.messages_word)
+            .replaceAll('{voice_activity}', lang.voice_activity)
+            .replaceAll('{minutes_word}', lang.minutes_word)
+            .replaceAll('{top_voice}', lang.top_voice)
+            .replaceAll('{top_message}', lang.top_message)
             .replaceAll('{author_username}', member.user.globalName || member.user.displayName)
             .replaceAll('{author_pfp}', member.user.displayAvatarURL({ size: 512 }))
             .replaceAll('{guild_name}', interaction.guild.name)
@@ -208,8 +206,8 @@ export default {
             .replaceAll('{voice_top2_2}', String(getChannelMinutesCount(secondActiveVoiceChannel, res.voices || [])))
             .replaceAll('{voice_top3_2}', String(getChannelMinutesCount(thirdActiveVoiceChannel, res.voices || [])))
             .replace('{message_voice_diag}', 'Votre contenu ici')
-            .replace('{messageData}', JSON.stringify(messageDataArray))
-            .replace('{voiceData}', JSON.stringify(voiceDataArray));
+            .replace('{messagelang}', JSON.stringify(messagelangArray))
+            .replace('{voicelang}', JSON.stringify(voicelangArray));
 
         const image = await client.method.imageManipulation.html2Png(htmlContent, {
             elementSelector: '.container',
