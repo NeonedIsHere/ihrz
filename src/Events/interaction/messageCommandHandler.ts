@@ -106,7 +106,7 @@ async function executeCommand(
         return;
     }
 
-    await command.run(client, message, lang, command, execTimestamp, args);
+    await command.run(client, message, lang, command, permCheck.neededPerm, args);
 }
 
 export const event: BotEvent = {
