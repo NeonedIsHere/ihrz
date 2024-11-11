@@ -367,6 +367,7 @@ export const command: Command = {
                 },
             ],
 
+            thinking: true,
             type: ApplicationCommandOptionType.Subcommand
         },
         {
@@ -413,6 +414,8 @@ export const command: Command = {
                     required: true
                 }
             ],
+
+            thinking: true,
             type: ApplicationCommandOptionType.Subcommand,
         },
         {
