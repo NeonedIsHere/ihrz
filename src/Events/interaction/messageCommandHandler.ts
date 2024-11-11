@@ -92,12 +92,11 @@ async function executeCommand(
     command: Command,
     args: string[],
     lang: LanguageData,
-    execTimestamp: number
 ) {
     let permCheck = await client.method.permission.checkCommandPermission(message, command!);
     if (!permCheck.allowed) return client.method.permission.sendErrorMessage(message, lang, permCheck.neededPerm || 0);
 
-    var _ = await client.method.checkCommandArgs(message, command, args!, lang); if (!_) return;
+    var _ = await client.method.checkCommandArgs(message, command, Array.from(args), lang); if (!_) return;
 
     if (!command?.run) {
         await client.method.interactionSend(message, {
@@ -127,13 +126,12 @@ export const event: BotEvent = {
 
         try {
             const lang = await client.func.getLanguageData(message.guildId) as LanguageData;
-            const execTimestamp = Date.now();
 
             if (result.subCommand) {
-                await executeCommand(client, message, result.subCommand as Command, result.args || [], lang, execTimestamp);
+                await executeCommand(client, message, result.subCommand as Command, result.args || [], lang);
             }
             else if (result.command) {
-                await executeCommand(client, message, result.command, result.args || [], lang, execTimestamp);
+                await executeCommand(client, message, result.command, result.args || [], lang);
             }
         } catch (error) {
         }
