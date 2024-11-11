@@ -155,8 +155,7 @@ export const event: BotEvent = {
             const lang = await client.func.getLanguageData(interaction.guildId) as LanguageData;
             await handleCommandExecution(client, (interaction as ChatInputCommandInteraction<"cached">), command, lang, thinking);
         } catch (error) {
-            console.error(error)
-            // await handleCommandError(client, interaction, command, error);
+            await handleCommandError(client, interaction, command, error);
         }
     },
 };
