@@ -49,8 +49,8 @@ export default {
             return;
         };
 
-        let giveawaylang = client.giveawaysManager.getAllGiveawayData();
-        let filtered = giveawaylang.filter((giveaway) => giveaway.giveawayData.guildId === interaction.guildId && !giveaway.giveawayData.ended);
+        let giveawayData = client.giveawaysManager.getAllGiveawayData();
+        let filtered = giveawayData.filter((giveaway) => giveaway.giveawayData.guildId === interaction.guildId && !giveaway.giveawayData.ended);
 
         let embed = new EmbedBuilder()
             .setColor(await client.db.get(`${interaction.guild?.id}.GUILD.GUILD_CONFIG.embed_color.gw`) || "#2986cc")
