@@ -1813,6 +1813,7 @@ ticket_module_button_addmember: "Add Member"
 ticket_module_button_removemember: "Remove Member"
 ticket_module_add_question: "Who do you want to add to your ticket? (Specify them User ID)!"
 ticket_module_remove_question: "Who is the user you want to remove from your ticket? (Specify them User ID)!"
+ticket_transcript_failed_to_send: "I tried to send you the file in a private message, but you have blocked your DMs :/"
 
 # Server Logs
 event_srvLogs_banAdd_description: "<@${firstEntry.executor.id}> **banned** <@${firstEntry.target.id}>"
@@ -1832,6 +1833,10 @@ event_srvLogs_voiceStateUpdate_3_description: "<@${targetUser.id}> muted their h
 event_srvLogs_voiceStateUpdate_4_description: "<@${targetUser.id}> unmuted their headset in the <#${channelID}> channel"
 event_srvLogs_voiceStateUpdate_5_description: "<@${targetUser.id}> muted themselves in the <#${channelID}> channel"
 event_srvLogs_voiceStateUpdate_6_description: "<@${targetUser.id}> unmuted themselves in the <#${channelID}> channel"
+event_srvLogs_channelUpdate_disabled_for: "-    ❌ ${perm} disabled for ${target}\n"
+event_srvLogs_channelUpdate_enabled_for: "-    ✅ ${perm} enabled for ${target}\n"
+event_srvLogs_channelUpdate_allowed_for: "-    ✅ ${perm} allowed for ${target}\n"
+event_srvLogs_channelUpdate_unallowed_for: "-    ❌ ${perm} not allowed for ${target}\n"
 
 # RankUp event
 event_rank_role: "<@${message.author.id}>, you now have the role <@&${fetch.id}>"

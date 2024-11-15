@@ -1307,6 +1307,7 @@ export interface LanguageData {
   ticket_module_button_removemember: string;
   ticket_module_add_question: string;
   ticket_module_remove_question: string;
+  ticket_transcript_failed_to_send: string;
   event_srvLogs_banAdd_description: string;
   event_srvLogs_banAdd_fields_name: string;
   event_srvLogs_banAdd_fields_value: string;
@@ -1324,6 +1325,10 @@ export interface LanguageData {
   event_srvLogs_voiceStateUpdate_4_description: string;
   event_srvLogs_voiceStateUpdate_5_description: string;
   event_srvLogs_voiceStateUpdate_6_description: string;
+  event_srvLogs_channelUpdate_disabled_for: string;
+  event_srvLogs_channelUpdate_enabled_for: string;
+  event_srvLogs_channelUpdate_allowed_for: string;
+  event_srvLogs_channelUpdate_unallowed_for: string;
   event_rank_role: string;
   event_suggestion_embed_author: string;
   event_security: string;
