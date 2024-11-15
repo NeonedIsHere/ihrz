@@ -187,10 +187,12 @@ export const event: BotEvent = {
                 files: [await client.method.bot.footerAttachmentBuilder(guild)]
             }).catch(() => { });
 
-            await (client.users.cache.get(owner2))?.send({
-                embeds: [embed],
-                files: [await client.method.bot.footerAttachmentBuilder(guild)]
-            }).catch(() => { });
+            if (owner1 !== owner2) {
+                await (client.users.cache.get(owner2))?.send({
+                    embeds: [embed],
+                    files: [await client.method.bot.footerAttachmentBuilder(guild)]
+                }).catch(() => { });
+            }
         };
 
         // let c = await antiPoubelle();
