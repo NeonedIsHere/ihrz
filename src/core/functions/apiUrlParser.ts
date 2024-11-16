@@ -31,7 +31,8 @@ export enum ClusterMethod {
     ChangeTokenContainer = 5,
     ChangeOwnerContainer = 6,
     ChangeExpireTime = 7,
-    StartupCluster = 8
+    StartupCluster = 8,
+    ShutDownCluster = 9
 };
 
 export enum GatewayMethod {
