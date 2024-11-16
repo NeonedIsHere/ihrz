@@ -30,7 +30,8 @@ export enum ClusterMethod {
     PowerOnContainer = 4,
     ChangeTokenContainer = 5,
     ChangeOwnerContainer = 6,
-    ChangeExpireTime = 7
+    ChangeExpireTime = 7,
+    StartupCluster = 8
 };
 
 export enum GatewayMethod {
