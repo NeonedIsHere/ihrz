@@ -29,6 +29,7 @@ import {
 
 import { Command } from '../../../../types/command';
 import { LanguageData } from '../../../../types/languageData';
+import { Option } from '../../../../types/option';
 
 export const command: Command = {
     name: 'botinfo',
@@ -43,9 +44,8 @@ export const command: Command = {
     category: 'bot',
     thinking: false,
     type: ApplicationCommandType.ChatInput,
-    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, runningCommand: any, execTimestamp?: number, options?: string[]) => {
-        let permCheck = await client.method.permission.checkCommandPermission(interaction, command!);
-        if (!permCheck.allowed) return client.method.permission.sendErrorMessage(interaction, lang, permCheck.neededPerm || 0);
+    run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, command: Command | Option | undefined, neededPerm: number, options?: string[]) => {
+
 
         // Guard's Typing
         if (!client.user || !interaction.member || !interaction.guild || !interaction.channel) return;

@@ -172,6 +172,8 @@ level_embed_fields1_value: "`${currentxp}/${xpNeeded}`"
 level_embed_fields2_name: ":money_with_wings:・__Esperienza:__"
 level_embed_fields2_value: "`${level}`"
 level_embed_description: "`${expNeededForLevelUp}` **punti esperienza necessari per il prossimo livello!**"
+level_xp_needed_for_new_level: "XP per il prossimo livello:"
+level_xp_total: "XP totale:"
 
 # /ranks leaderboard
 ranks_leaderboard_embed_title: "Classifica dei Livelli di ${interaction.guild?.name}"
@@ -301,6 +303,9 @@ invite_embed_description: "Ti voglio bene, mostrami il tuo amore per me a tua vo
 # /kisakay
 kisakay_message: "${client.iHorizon_Emojis.icon.Sparkles} Kisakay è sia la mia creatrice che la mia sviluppatrice. È grazie a lei e alla sua tastiera che sono nata. Le sono profondamente grata!✨ ❤️❤️"
 
+# /andru
+andru_message: "Andru è un collaboratore e sviluppatore. \"Il tuttofare\", gestisce il marketing, la comunità..."
+
 # /nayaweb
 nayaweb_message: "😼NayaWeb è il mio secondo sviluppatore/contribuente , NayaWeb x Kisakay ❤️"
 
@@ -373,6 +378,8 @@ help_ownihrz_dsc: "Ospita e gestisci il tuo bot personalizzato di iHorizon! (OWN
 help_ownihrz_fields: "OWNIHRZ"
 help_notifier_dsc: "Ricevi una notifica quando un Youtuber o Streamer pubblica un video!"
 help_notifier_fields: "Notificatore"
+help_restorecord_fields: "RestoreCord"
+help_restorecord_dsc: "Verifica del server con oAuth2. Se il tuo server viene attaccato o terminato, puoi recuperare i tuoi vecchi membri con oAuth2!"
 
 # /say
 say_footer_msg: "\n\nInviato da `/say` da ${interaction.user}"
@@ -1082,6 +1089,9 @@ start_confirmation_command: "Il giveaway è stato avviato in ${giveawayChannel}!
 start_logs_embed_title: "Registri Giveaway"
 start_logs_embed_description: "<@${interaction.user.id}> ha avviato un giveaway in: ${giveawayChannel}"
 start_time_not_valid: "${interaction.user}, la durata del giveaway che hai specificato non è valida, riprova!"
+start_invalid_invites_req_value: "${client.iHorizon_Emojis.icon.No_Logo} | Il valore per 'inviti' non è valido! Devi specificare un numero di inviti per partecipare al giveaway!"
+start_invalid_messages_req_value: "${client.iHorizon_Emojis.icon.No_Logo} | Il valore per 'messaggi' non è valido! Devi specificare un numero di messaggi per partecipare al giveaway!"
+start_invalid_roles_req_value: "${client.iHorizon_Emojis.icon.No_Logo} | Il ruolo per 'ruoli' non è trovato! Devi fornire un ID di ruolo per partecipare al giveaway!"
 
 # /reroll
 reroll_not_perm: "Devi avere i permessi per gestire i messaggi per eseguire nuovamente questo giveaway."
@@ -1701,6 +1711,55 @@ notifier_config_message_embed_fields_notifyMessage: "Messaggio di Notifica"
 notifier_config_message_awaiting_response: "Scrivi il messaggio di notifica."
 notifier_config_message_command_work_on_enable: "Abilitazione del lavoro sul messaggio di notifica."
 
+
+# Module RestoreCord
+# role, set, delete, get, force-join
+
+rc_key_doesnt_exist: "${client.iHorizon_Emojis.icon.No_Logo} Il modulo RestoreCord con la chiave: **${secretCode}** non esiste!"
+rc_verify: "Verifica"
+
+# /restorecord role
+rc_role_embed_title: "Nuova Modifica RestoreCord"
+rc_role_embed_field1_name: "Nuovo ruolo assegnato dopo la verifica"
+
+# /restorecord set
+rc_command_ok: "${interaction.user.toString()}, hai appena configurato il modulo \"RestoreCord\". Ora, quando un membro del server Discord clicca sul pulsante e accede tramite OAuth2, verrà aggiunto al database. Potranno eventualmente unirsi automaticamente al server con OAuth2.\n# LEGGI ATTENTAMENTE\nIl messaggio ${msgLink} ora ha un pulsante che servirà per la verifica.\nECCO IL CODICE PRIVATO CHE NON DEVE ESSERE RIVELATO A NESSUNO. UNA PERSONA CON QUESTO CODICE POTREBBE ELIMINARLO, AGGIUNGERE MEMBRI AL PROPRIO SERVER... CONSERVALO IN UN POSTO SICURO. iHorizon NON TE LO DARÀ MAI PIÙ:\n```${res.secretCode}```"
+rc_command_ok_dm: "# Il codice RestoreCord per ${interaction.guild.name}\n```${res.secretCode}```"
+rc_command_dm_failed: "Ho provato a inviarti il codice in un messaggio privato, ma hai i DM bloccati :/"
+rc_command_dm_ok: "Nel caso te lo fossi perso, ti ho inviato il codice in un messaggio privato!"
+rc_command_horizongw_down: "Errore: HorizonGateway potrebbe essere offline"
+
+# /restorecord delete
+rc_delete_config_not_found: "La configurazione del modulo su questo server non è stata trovata!"
+rc_delete_command_ok: "${interaction.user.toString()}, hai appena eliminato la configurazione del modulo \"RestoreCord\". Per motivi di sicurezza (dati), eliminerò solo il pulsante, ma i dati oauth2 e il codice segreto verranno eliminati tra 48 ore!"
+
+# /restorecord get
+rc_get_mainEmbed_title: "Informazioni Generali RestoreCord"
+rc_get_mainEmbed_field1_name: "ID Server"
+rc_get_mainEmbed_field2_name: "Ruolo assegnato dopo la verifica"
+rc_get_mainEmbed_field3_name: "Creato il"
+rc_get_mainEmbed_field3_value: "*la data è nel formato MM/GG/AAAA HH:mm*"
+rc_get_mainEmbed_field4_name: "Contatore utilizzo chiave"
+rc_get_mainEmbed_field5_name: "Autore della configurazione"
+rc_get_secondEmbed_title: "Utente/i memorizzato/i"
+rc_get_secondEmbed_footer: "Pagina ${from} / ${to}"
+rc_get_locale: "Lingua"
+rc_get_username: "Nome utente"
+rc_get_unkwnon_user: "Utente sconosciuto (${Data.data.config.author.id})"
+
+# /restorecord force-join
+rc_forceJoin_embed_title: "RestoreCord - Unione Forzata"
+rc_forceJoin_embed_desc: "## Sei sicuro di voler forzare l'unione dei membri in questo server?\n### LEGGI ATTENTAMENTE:\nSE CONFERMI QUESTA AZIONE, LA CHIAVE PRIVATA ATTUALE VERRÀ DISTRUTTA. TI VERRÀ FORNITA UNA NUOVA CHIAVE.\n\n\n"
+rc_forceJoin_embed_field1: "Membri trovati"
+rc_forceJoin_embed_field2: "Membri già presenti"
+rc_forceJoin_embed_field3: "Possibili unioni"
+rc_forceJoin_embed_2_field1: "Possibili unioni"
+rc_forceJoin_embed_2_field2: "Uniti"
+rc_forceJoin_ws_size: "# Preparazione all'aggiunta di **${value2}** membri al server."
+rc_forceJoin_ws_start: "# Processo di unione forzata in corso..."
+rc_forceJoin_ws_end: "# Processo di unione forzata completato."
+rc_forceJoin_ws_end_renew_msg: "# LEGGI ATTENTAMENTE\nECCO IL CODICE PRIVATO CHE NON DEVE ESSERE RIVELATO A NESSUNO. UNA PERSONA CON QUESTO CODICE POTREBBE ELIMINARLO, AGGIUNGERE MEMBRI AL PROPRIO SERVER... CONSERVALO IN UN POSTO SICURO. iHorizon NON TE LO DARÀ MAI PIÙ:\n```${value2}```"
+
 # -----------------------------/ \-----------------------------
 # Eventi del Modulo Confessioni
 confession_module_modal_title: "Invia una confessione"
@@ -1758,6 +1817,7 @@ ticket_module_button_addmember: "Aggiungi Membro"
 ticket_module_button_removemember: "Rimuovi Membro"
 ticket_module_add_question: "Chi vuoi aggiungere al tuo ticket? (Specificare l'ID utente)!"
 ticket_module_remove_question: "Chi è l'utente che desideri rimuovere dal tuo ticket? (Specificare l'ID utente)!"
+ticket_transcript_failed_to_send: "Ho provato a inviarti il file in un messaggio privato, ma hai bloccato i tuoi DM :/"
 
 # Registri del Server
 event_srvLogs_banAdd_description: "<@${firstEntry.executor.id}> **ha bannato** <@${firstEntry.target.id}>"
@@ -1777,6 +1837,10 @@ event_srvLogs_voiceStateUpdate_3_description: "<@${targetUser.id}> ha messo in m
 event_srvLogs_voiceStateUpdate_4_description: "<@${targetUser.id}> ha tolto il muto alle cuffie nel canale <#${channelID}>"
 event_srvLogs_voiceStateUpdate_5_description: "<@${targetUser.id}> si è messo in muto nel canale <#${channelID}>"
 event_srvLogs_voiceStateUpdate_6_description: "<@${targetUser.id}> si è tolto il muto nel canale <#${channelID}>"
+event_srvLogs_channelUpdate_disabled_for: "-    ❌ ${perm} disabilitata per ${target}\n"
+event_srvLogs_channelUpdate_enabled_for: "-    ✅ ${perm} abilitata per ${target}\n"
+event_srvLogs_channelUpdate_allowed_for: "-    ✅ ${perm} consentita per ${target}\n"
+event_srvLogs_channelUpdate_unallowed_for: "-    ❌ ${perm} non consentita per ${target}\n"
 
 # Evento di Promozione di Livello
 event_rank_role: "<@${message.author.id}>, ora hai il ruolo <@&${fetch.id}>"
@@ -1928,5 +1992,15 @@ buttonreaction_role_doesnt_exit: "Il ruolo nel mio database non esiste più nel 
 buttonreaction_role_too_high: "Il ruolo è troppo alto, non posso dare/rimuovere il ruolo. Devo cambiare i miei permessi!"
 buttonreaction_role_add: "Non hai più il ruolo ${fetched_role.toString()} ✅"
 buttonreaction_role_remove: "Hai ora il ruolo ${fetched_role.toString()} :tada:"
+
+# RestoreCord HTML
+rc_created_by: "Creato da:"
+rc_created_on: "Creato il:"
+rc_total_membres: "Membri Totali"
+rc_total_verification: "Verifiche Totali"
+rc_total_key_used_count: "Conteggio Usato Chiave"
+rc_recent_locales_distribution: "Distribuzione delle Località dei Membri"
+rc_recent_verifications: "Verifiche Recenti"
+rc_registration_over_time: "Registrazioni nel Tempo"
 
 # -----------------------------\ /-----------------------------

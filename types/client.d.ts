@@ -43,6 +43,7 @@ import { ConfigData } from "./configDatad.js";
 import { BashCommands } from "./bashCommands.js";
 import { SteganoDB } from "stegano.db";
 import { StreamNotifier } from "../src/core/StreamNotifier.js";
+import { OwnIHRZ } from "../src/core/modules/ownihrzManager.js";
 
 declare module "pwss" {
   export interface Client {

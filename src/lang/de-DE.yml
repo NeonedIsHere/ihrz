@@ -172,6 +172,8 @@ level_embed_fields1_value: "`${currentxp}/${xpNeeded}`"
 level_embed_fields2_name: ":money_with_wings:・__Erfahrung:__"
 level_embed_fields2_value: "`${level}`"
 level_embed_description: "`${expNeededForLevelUp}` **Erfahrungspunkte benötigt für das nächste Level!**"
+level_xp_needed_for_new_level: "XP bis zum nächsten Level:"
+level_xp_total: "Gesamt-XP:"
 
 # /ranks leaderboard
 ranks_leaderboard_embed_title: "Level-Bestenliste von ${interaction.guild?.name}"
@@ -301,6 +303,9 @@ invite_embed_description: "Ich liebe dich, zeig mir deine Liebe zu mir zurück! 
 # /kisakay
 kisakay_message: "${client.iHorizon_Emojis.icon.Sparkles} Kisakay ist sowohl meine Schöpferin als auch meine Entwicklerin. Dank ihr und ihrer Tastatur bin ich entstanden. Ich bin ihr zutiefst dankbar!✨ ❤️❤️"
 
+# /andru
+andru_message: "Andru ist ein Mitarbeiter und Entwickler. \"Das Mädchen für alles\", er kümmert sich um Marketing, Community..."
+
 # /nayaweb
 nayaweb_message: "😼NayaWeb ist meine zweite Entwicklerin/Zuträgerin , NayaWeb x Kisakay ❤️"
 
@@ -373,6 +378,8 @@ help_ownihrz_dsc: "Hoste und verwalte deinen eigenen benutzerdefinierten iHorizo
 help_ownihrz_fields: "OWNIHRZ"
 help_notifier_dsc: "Werde benachrichtigt, wenn ein YouTuber oder Streamer ein Video veröffentlicht!"
 help_notifier_fields: "Benachrichtigung"
+help_restorecord_fields: "RestoreCord"
+help_restorecord_dsc: "Verifizierung des Servers mit oAuth2. Wenn Ihr Server angegriffen oder gelöscht wurde, können Sie Ihre alten Mitglieder über oAuth2 zurückholen!"
 
 # /say
 say_footer_msg: "\n\nGesendet von `/sagen` von ${interaction.user}"
@@ -1082,6 +1089,9 @@ start_confirmation_command: "Giveaway gestartet in ${giveawayChannel}!"
 start_logs_embed_title: "Giveaway-Logs"
 start_logs_embed_description: "<@${interaction.user.id}> hat ein Giveaway gestartet in: ${giveawayChannel}"
 start_time_not_valid: "${interaction.user}, die von Ihnen angegebene Dauer des Giveaways ist ungültig, bitte versuchen Sie es erneut!"
+start_invalid_invites_req_value: "${client.iHorizon_Emojis.icon.No_Logo} | Der Wert für 'Einladungen' ist ungültig! Es muss eine Anzahl angegeben werden, z.B. X Einladungen, um am Giveaway teilzunehmen!"
+start_invalid_messages_req_value: "${client.iHorizon_Emojis.icon.No_Logo} | Der Wert für 'Nachrichten' ist ungültig! Es muss eine Anzahl angegeben werden, z.B. X Nachrichten, um am Giveaway teilzunehmen!"
+start_invalid_roles_req_value: "${client.iHorizon_Emojis.icon.No_Logo} | Die Rolle für den Wert 'Rollen' wurde nicht gefunden! Eine Rollen-ID muss angegeben werden, um am Giveaway teilzunehmen!"
 
 # /reroll
 reroll_not_perm: "Sie müssen die Berechtigung haben, Nachrichten zu verwalten, um dieses Giveaway erneut auszulosen."
@@ -1701,6 +1711,55 @@ notifier_config_message_embed_fields_notifyMessage: "Benachrichtigungsnachricht"
 notifier_config_message_awaiting_response: "Schreibe die Benachrichtigungsnachricht."
 notifier_config_message_command_work_on_enable: "Arbeite an der Aktivierung der Benachrichtigungsnachricht."
 
+
+# Module RestoreCord
+# role, set, delete, get, force-join
+
+rc_key_doesnt_exist: "${client.iHorizon_Emojis.icon.No_Logo} Das RestoreCord-Modul mit dem Schlüssel: **${secretCode}** existiert nicht!"
+rc_verify: "Verifizieren"
+
+# /restorecord role
+rc_role_embed_title: "RestoreCord Neue Änderung"
+rc_role_embed_field1_name: "Neue Rolle nach der Verifizierung"
+
+# /restorecord set
+rc_command_ok: "${interaction.user.toString()}, Sie haben gerade das \"RestoreCord\"-Modul eingerichtet. Wenn ein Discord-Server-Mitglied auf die Schaltfläche klickt und sich über OAuth2 anmeldet, wird es zur Datenbank hinzugefügt. Sie können dem Server schließlich automatisch über OAuth2 beitreten.\n# SORGFÄLTIG LESEN\nDie Nachricht ${msgLink} hat jetzt eine Schaltfläche zur Verifizierung.\nHIER IST DER PRIVATE CODE, DER AN NIEMANDEN WEITERGEGEBEN WERDEN DARF. EINE PERSON MIT DIESEM CODE KÖNNTE IHN LÖSCHEN, MITGLIEDER ZU IHREM SERVER HINZUFÜGEN... BEWAHREN SIE IHN SICHER AUF. iHorizon WIRD IHN IHNEN NIE WIEDER GEBEN:\n```${res.secretCode}```"
+rc_command_ok_dm: "# Der RestoreCord-Code für ${interaction.guild.name}\n```${res.secretCode}```"
+rc_command_dm_failed: "Ich habe versucht, Ihnen den Code als private Nachricht zu senden, aber Ihre DMs sind blockiert :/"
+rc_command_dm_ok: "Falls Sie es verpasst haben, habe ich Ihnen den Code als private Nachricht gesendet!"
+rc_command_horizongw_down: "Fehler: HorizonGateway ist möglicherweise nicht verfügbar"
+
+# /restorecord delete
+rc_delete_config_not_found: "Die Modulkonfiguration auf diesem Server konnte nicht gefunden werden!"
+rc_delete_command_ok: "${interaction.user.toString()}, Sie haben gerade die Konfiguration des \"RestoreCord\"-Moduls gelöscht. Aus Sicherheitsgründen (Daten) werde ich nur die Schaltfläche löschen, aber die OAuth2-Daten und der geheime Code werden in 48 Stunden gelöscht!"
+
+# /restorecord get
+rc_get_mainEmbed_title: "RestoreCord Allgemeine Informationen"
+rc_get_mainEmbed_field1_name: "Server-ID"
+rc_get_mainEmbed_field2_name: "Zugewiesene Rolle nach Verifizierung"
+rc_get_mainEmbed_field3_name: "Erstellt am"
+rc_get_mainEmbed_field3_value: "*das Datum ist im Format MM/TT/JJJJ HH:mm*"
+rc_get_mainEmbed_field4_name: "Schlüssel-Nutzungszähler"
+rc_get_mainEmbed_field5_name: "Konfigurationsautor"
+rc_get_secondEmbed_title: "Gespeicherte Benutzer"
+rc_get_secondEmbed_footer: "Seite ${from} / ${to}"
+rc_get_locale: "Sprache"
+rc_get_username: "Benutzername"
+rc_get_unkwnon_user: "Unbekannter Benutzer (${Data.data.config.author.id})"
+
+# /restorecord force-join
+rc_forceJoin_embed_title: "RestoreCord - Erzwungener Beitritt"
+rc_forceJoin_embed_desc: "## Sind Sie sicher, dass Sie den Beitritt von Mitgliedern in dieser Gilde erzwingen möchten?\n### SORGFÄLTIG LESEN:\nWENN SIE DIESE AKTION BESTÄTIGEN, WIRD DER AKTUELLE PRIVATE SCHLÜSSEL ZERSTÖRT. EIN NEUER SCHLÜSSEL WIRD IHNEN ZUR VERFÜGUNG GESTELLT.\n\n\n"
+rc_forceJoin_embed_field1: "Gefundene Mitglieder"
+rc_forceJoin_embed_field2: "Bereits vorhandene Mitglieder"
+rc_forceJoin_embed_field3: "Mögliche Beitritte"
+rc_forceJoin_embed_2_field1: "Mögliche Beitritte"
+rc_forceJoin_embed_2_field2: "Beigetreten"
+rc_forceJoin_ws_size: "# Vorbereitung zum Hinzufügen von **${value2}** Mitgliedern zur Gilde."
+rc_forceJoin_ws_start: "# Erzwungener Beitritt läuft..."
+rc_forceJoin_ws_end: "# Erzwungener Beitrittsprozess abgeschlossen."
+rc_forceJoin_ws_end_renew_msg: "# SORGFÄLTIG LESEN\nHIER IST DER PRIVATE CODE, DER AN NIEMANDEN WEITERGEGEBEN WERDEN DARF. EINE PERSON MIT DIESEM CODE KÖNNTE IHN LÖSCHEN, MITGLIEDER ZU IHREM SERVER HINZUFÜGEN... BEWAHREN SIE IHN SICHER AUF. iHorizon WIRD IHN IHNEN NIE WIEDER GEBEN:\n```${value2}```"
+
 # -----------------------------/ \-----------------------------
 # Bekenntnismodul Ereignisse
 confession_module_modal_title: "Ein Geständnis ablegen"
@@ -1758,6 +1817,7 @@ ticket_module_button_addmember: "Mitglied hinzufügen"
 ticket_module_button_removemember: "Mitglied entfernen"
 ticket_module_add_question: "Wen möchtest du zu deinem Ticket hinzufügen? (Gib ihre Benutzer-ID an)!"
 ticket_module_remove_question: "Wer ist der Benutzer, den du aus deinem Ticket entfernen möchtest? (Gib ihre Benutzer-ID an)!"
+ticket_transcript_failed_to_send: "Ich habe versucht, dir die Datei in einer privaten Nachricht zu senden, aber du hast deine DMs blockiert :/"
 
 # Server-Protokolle
 event_srvLogs_banAdd_description: "<@${firstEntry.executor.id}> **hat <@${firstEntry.target.id}> gebannt**"
@@ -1777,6 +1837,10 @@ event_srvLogs_voiceStateUpdate_3_description: "<@${targetUser.id}> **hat das Hea
 event_srvLogs_voiceStateUpdate_4_description: "<@${targetUser.id}> **hat das Headset im Kanal <#${channelID}> stummschalten aufgehoben**"
 event_srvLogs_voiceStateUpdate_5_description: "<@${targetUser.id}> **hat sich im Kanal <#${channelID}> stummgeschaltet**"
 event_srvLogs_voiceStateUpdate_6_description: "<@${targetUser.id}> **hat sich im Kanal <#${channelID}> stummschalten aufgehoben**"
+event_srvLogs_channelUpdate_disabled_for: "-    ❌ ${perm} deaktiviert für ${target}\n"
+event_srvLogs_channelUpdate_enabled_for: "-    ✅ ${perm} aktiviert für ${target}\n"
+event_srvLogs_channelUpdate_allowed_for: "-    ✅ ${perm} erlaubt für ${target}\n"
+event_srvLogs_channelUpdate_unallowed_for: "-    ❌ ${perm} nicht erlaubt für ${target}\n"
 
 # Rang-Erhöhung Ereignis
 event_rank_role: "<@${message.author.id}>, du hast jetzt die Rolle <@&${fetch.id}>"
@@ -1928,5 +1992,15 @@ buttonreaction_role_doesnt_exit: "Die Rolle in meiner Datenbank existiert nicht 
 buttonreaction_role_too_high: "Die Rolle ist zu hoch, ich kann die Rolle nicht vergeben/entfernen. Ich muss meine Berechtigungen ändern!"
 buttonreaction_role_add: "Du hast die Rolle ${fetched_role.toString()} nicht mehr ✅"
 buttonreaction_role_remove: "Du hast jetzt die Rolle ${fetched_role.toString()} :tada:"
+
+# RestoreCord HTML
+rc_created_by: "Erstellt von:"
+rc_created_on: "Erstellt am:"
+rc_total_membres: "Gesamtanzahl Mitglieder"
+rc_total_verification: "Gesamtanzahl Verifizierungen"
+rc_total_key_used_count: "Anzahl der Schlüsselverwendungen"
+rc_recent_locales_distribution: "Mitglieder-Lokalisierung"
+rc_recent_verifications: "Letzte Verifizierungen"
+rc_registration_over_time: "Registrierungen im Laufe der Zeit"
 
 # -----------------------------\ /-----------------------------

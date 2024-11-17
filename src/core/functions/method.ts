@@ -29,6 +29,10 @@ import * as  h from './helper.js';
 import * as c from '../core.js';
 import * as l from './ihorizon-logs.js';
 
+export function isNumber(str: string): boolean {
+    return !isNaN(Number(str)) && str.trim() !== "";
+}
+
 export async function user(interaction: Message, args: string[], argsNumber: number): Promise<User | null> {
     return interaction.content.startsWith(`<@${interaction.client.user.id}`)
         ?
@@ -122,9 +126,8 @@ export async function createAwesomeEmbed(lang: LanguageData, command: Command, c
 
     if (hasSubCommand(command.options)) {
         command.options?.map(x => {
-            var pathString = '';
-            var fullNameCommand = command.name + " " + x.name;
             var shortCommandName = x.name;
+            var pathString = '';
 
             x.options?.forEach((value) => {
                 pathString += value.required ? "**`[" : "**`<";
@@ -132,10 +135,10 @@ export async function createAwesomeEmbed(lang: LanguageData, command: Command, c
                 pathString += value.required ? "]`**" + " " : ">`**" + " ";
             });
             var aliases = x.aliases?.map(x => `\`${x}\``).join(", ") || lang.setjoinroles_var_none;
-            var use = `${cleanBotPrefix}${fullNameCommand} ${pathString}`;
+            var use = `${cleanBotPrefix}${shortCommandName} ${pathString}`;
 
             embed.addFields({
-                name: `${cleanBotPrefix}${fullNameCommand} / ${cleanBotPrefix}${shortCommandName}`,
+                name: `${cleanBotPrefix}${shortCommandName}`,
                 value: lang.hybridcommands_embed_help_fields_value
                     .replace("${aliases}", aliases)
                     .replace("${use}", use)
@@ -167,7 +170,9 @@ const isSubCommandArgumentValue = (command: any): command is SubCommandArgumentV
     return command && (command as SubCommandArgumentValue).command !== undefined || command.name !== command?.command
 };
 
-export async function checkCommandArgs(message: Message, command: SubCommandArgumentValue | Command, args: string[], lang: LanguageData): Promise<boolean> {
+export async function checkCommandArgs(message: Message, command: Command, args: string[], lang: LanguageData): Promise<boolean> {
+    if (!command) return false;
+
     const botPrefix = await message.client.func.prefix.guildPrefix(message.client, message.guildId);
     let cleanBotPrefix = botPrefix.string;
 
@@ -202,7 +207,8 @@ export async function checkCommandArgs(message: Message, command: SubCommandArgu
     const isLastArgLongString = expectedArgs.length > 0 && expectedArgs[expectedArgs.length - 1].longString;
 
     if (!Array.isArray(args) || args.length < minArgsCount || (args.length === 1 && args[0] === "")) {
-        await sendErrorMessage(lang, message, cleanBotPrefix, "command" in command ? command : { name: command.name, command: command }, expectedArgs, 0);
+        const missingIndex = args.length;
+        await sendErrorMessage(lang, message, cleanBotPrefix, command, expectedArgs, missingIndex);
         return false;
     }
 
@@ -217,8 +223,11 @@ export async function checkCommandArgs(message: Message, command: SubCommandArgu
     for (let i = 0; i < expectedArgs.length; i++) {
         if (i >= args.length && !expectedArgs[i].required) {
             continue;
+        } else if (i >= args.length && expectedArgs[i].required) {
+            await sendErrorMessage(lang, message, cleanBotPrefix, command, expectedArgs, i);
+            return false;
         } else if (i < args.length && !isValidArgument(args[i], expectedArgs[i].type)) {
-            await sendErrorMessage(lang, message, cleanBotPrefix, "command" in command ? command : { name: command.name, command: command }, expectedArgs, i);
+            await sendErrorMessage(lang, message, cleanBotPrefix, command, expectedArgs, i);
             return false;
         }
     }
@@ -247,7 +256,7 @@ function isValidArgument(arg: string, type: string): boolean {
     }
 }
 
-async function sendErrorMessage(lang: LanguageData, message: Message, botPrefix: string, command: SubCommandArgumentValue, expectedArgs: ArgumentBrief[], errorIndex: number) {
+async function sendErrorMessage(lang: LanguageData, message: Message, botPrefix: string, command: Command, expectedArgs: ArgumentBrief[], errorIndex: number) {
     let argument: string[] = [];
     let fullNameCommand: string;
 
@@ -257,13 +266,8 @@ async function sendErrorMessage(lang: LanguageData, message: Message, botPrefix:
     let wrongArgumentName: string = "";
     let errorPosition = "";
 
-    if (command.name !== command.command?.name) {
-        currentCommand = command.command!;
-        fullNameCommand = `${command.name} ${command.command?.name}`;
-    } else {
-        fullNameCommand = command.name!;
-        currentCommand = command as any;
-    }
+    fullNameCommand = command.name!;
+    currentCommand = command as any;
 
     errorPosition += " ".padStart(botPrefix.length + fullNameCommand.length);
 
@@ -360,7 +364,16 @@ export function hasSubCommand(options: Option[] | undefined): boolean {
     return options.some(option => option.type === ApplicationCommandOptionType.Subcommand);
 }
 
-export async function punish(data: any, user: GuildMember | undefined) {
+export function hasSubCommandGroup(options: Option[] | undefined): boolean {
+    if (!options) return false;
+    return options.some(option => option.type === ApplicationCommandOptionType.SubcommandGroup);
+}
+
+export function isSubCommand(option: Option | Command): boolean {
+    return option.type === ApplicationCommandOptionType.Subcommand;
+}
+
+export async function punish(data: any, user: GuildMember | undefined, reason?: string) {
     async function derank() {
         let user_roles = Array.from(user?.roles.cache.values()!);
         let role_app = user_roles.find(x => x.managed);
@@ -371,7 +384,7 @@ export async function punish(data: any, user: GuildMember | undefined) {
         user_roles
             .filter(x => !x.managed && x.position < x.guild.members.me?.roles.highest.position! && x.id !== x.guild.roles.everyone.id)
             .forEach(async role => {
-                await user?.roles.remove(role.id, "Protection").catch(() => { })
+                await user?.roles.remove(role.id, reason || "Protection").catch(() => { })
             });
     }
     switch (data?.['SANCTION']) {
@@ -381,7 +394,7 @@ export async function punish(data: any, user: GuildMember | undefined) {
             await derank();
             break;
         case 'simply+ban':
-            user?.ban({ reason: 'Protect!' }).catch(async () => await derank().catch(() => false));
+            user?.ban({ reason: reason || 'Protect!' }).catch(async () => await derank().catch(() => false));
             break;
         default:
             return;
@@ -445,7 +458,7 @@ export const findOptionRecursively = (options: Option[], subcommandName: string)
     return undefined;
 };
 
-export const buttonReact = async (msg: Message, button: ButtonBuilder): Promise<Message> => {
+export async function buttonReact(msg: Message, button: ButtonBuilder): Promise<Message> {
     let comp = msg.components;
     let isAdd = false;
 
@@ -476,7 +489,7 @@ export const buttonReact = async (msg: Message, button: ButtonBuilder): Promise<
     return msg;
 }
 
-export const buttonUnreact = async (msg: Message, buttonEmoji: string): Promise<Message> => {
+export async function buttonUnreact(msg: Message, buttonEmoji: string): Promise<Message> {
     let comp = msg.components;
     let isRemoved = false;
 
@@ -485,7 +498,7 @@ export const buttonUnreact = async (msg: Message, buttonEmoji: string): Promise<
     for (let i = 0; i < comp.length; i++) {
         const actionRow = comp[i];
         const newComponents = actionRow.components.filter(component => {
-            if (component.type === ComponentType.Button && component.emoji?.name === buttonEmoji) {
+            if (component.type === ComponentType.Button && component.emoji?.id === buttonEmoji) {
                 isRemoved = true;
                 return false;
             }
@@ -501,6 +514,11 @@ export const buttonUnreact = async (msg: Message, buttonEmoji: string): Promise<
 
     await msg.edit({ components: newComp });
     return msg;
+}
+
+export function isAnimated(attachmentUrl: string): boolean {
+    const fileName = attachmentUrl.split('/').pop() || '';
+    return fileName.startsWith('a_');
 }
 
 export const permission = perm;

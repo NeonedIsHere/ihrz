@@ -171,6 +171,8 @@ level_embed_fields1_value: "`${currentxp}/${xpNeeded}`"
 level_embed_fields2_name: ":money_with_wings:・__الخبرة:__"
 level_embed_fields2_value: "`${level}`"
 level_embed_description: "`${expNeededForLevelUp}` **نقاط الخبرة المطلوبة للمستوى التالي!**"
+level_xp_needed_for_new_level: "نقاط الخبرة المطلوبة للمستوى التالي:"
+level_xp_total: "مجموع نقاط الخبرة:"
 
 # /ranks leaderboard
 ranks_leaderboard_embed_title: "لوحة المتصدرين لمستويات ${interaction.guild?.name}"
@@ -298,6 +300,9 @@ invite_embed_description: "أحبك، أظهر لي محبتك بالمقابل!
 # /kisakay
 kisakay_message: "${client.iHorizon_Emojis.icon.Sparkles} Kisakay هي المبدعة والمطورة الخاصة بي. بفضلها وبفضل لوحة مفاتيحها، جئت إلى الحياة. أنا ممتن لها بشدة!✨ ❤️❤️"
 
+# /andru
+andru_message: "أندرو هو متعاون ومطور. \"الرجل المتعدد المهام\"، يدير التسويق والمجتمع..."
+
 # /nayaweb
 nayaweb_message: "😼 NayaWeb هو مطور/مساهم الثاني لي، NayaWeb x Kisakay ❤️"
 
@@ -370,6 +375,8 @@ help_ownihrz_dsc: "استضيف وادير بوت iHorizon المخصص بتاع
 help_ownihrz_fields: "OWNIHRZ"
 help_notifier_dsc: "خليك متبلغ لما يوتيوبر أو ستريمر ينشر فيديو!"
 help_notifier_fields: "المُبلغ"
+help_restorecord_fields: "استعادة كورد"
+help_restorecord_dsc: "التحقق من الخادم باستخدام oAuth2. عندما يتعرض خادمك لهجوم أو يُلغى، يمكنك استعادة الأعضاء القدامى باستخدام oAuth2!"
 
 # /say
 say_footer_msg: "\n\nأُرسل من `/say` بواسطة ${interaction.user}"
@@ -1080,6 +1087,9 @@ start_confirmation_command: "تم بدء المسابقة في ${giveawayChannel
 start_logs_embed_title: "سجلات المسابقات"
 start_logs_embed_description: "<@${interaction.user.id}> بدأ مسابقة في: ${giveawayChannel}"
 start_time_not_valid: "${interaction.user}, مدة المسابقة التي حددتها غير صحيحة، يرجى المحاولة مرة أخرى!"
+start_invalid_invites_req_value: "${client.iHorizon_Emojis.icon.No_Logo} | القيمة لـ 'دعوات' غير صالحة! يجب أن يكون عدد الدعوات للانضمام إلى الهدية!"
+start_invalid_messages_req_value: "${client.iHorizon_Emojis.icon.No_Logo} | القيمة لـ 'رسائل' غير صالحة! يجب أن يكون عدد الرسائل للانضمام إلى الهدية!"
+start_invalid_roles_req_value: "${client.iHorizon_Emojis.icon.No_Logo} | الدور لقيمة 'الأدوار' غير موجود! يجب إدخال معرف الدور للانضمام إلى الهدية!"
 
 # /reroll
 reroll_not_perm: "يجب أن تكون لديك أذونات إدارة الرسائل لإنهاء هذه المسابقة."
@@ -1694,6 +1704,55 @@ notifier_config_message_embed_fields_notifyMessage: "رسالة التنبيه"
 notifier_config_message_awaiting_response: "اكتب رسالة التنبيه."
 notifier_config_message_command_work_on_enable: "تمكين العمل على رسالة التنبيه."
 
+
+# وحدة RestoreCord
+# دور، إعداد، حذف، الحصول على، الانضمام القسري
+
+rc_key_doesnt_exist: "${client.iHorizon_Emojis.icon.No_Logo} وحدة RestoreCord بمفتاح: **${secretCode}** مش موجودة!"
+rc_verify: "تحقق"
+
+# /restorecord دور
+rc_role_embed_title: "تعديل جديد في RestoreCord"
+rc_role_embed_field1_name: "الدور الجديد المعطى بعد التحقق"
+
+# /restorecord إعداد
+rc_command_ok: "${interaction.user.toString()}، تم إعداد وحدة \"RestoreCord\". دلوقتي، لما عضو في السيرفر يضغط على الزر ويسجل الدخول عن طريق OAuth2، هيضاف لقاعدة البيانات. بعدين هيقدر يدخل السيرفر أوتوماتيكياً باستخدام OAuth2.\n# اقرأ بعناية\nالرسالة ${msgLink} دلوقتي فيها زر بيستخدم كتحقق.\nده الكود الخاص اللي لازم تحتفظ بيه. أي شخص معاه الكود ده ممكن يحذف الوحدة أو يضيف أعضاء لسيرفره... احتفظ بيه في مكان آمن. iHorizon مش هيقدمه ليك تاني:\n```${res.secretCode}```"
+rc_command_ok_dm: "# كود RestoreCord للسيرفر ${interaction.guild.name}\n```${res.secretCode}```"
+rc_command_dm_failed: "حاولت أبعتهولك في رسالة خاصة، بس انت مقفل الرسائل :/"
+rc_command_dm_ok: "لو ما أخدتش بالك، بعتلك الكود في رسالة خاصة!"
+rc_command_horizongw_down: "خطأ: ممكن HorizonGateway تكون مش شغالة"
+
+# /restorecord حذف
+rc_delete_config_not_found: "إعداد الوحدة في السيرفر ده مش موجود!"
+rc_delete_command_ok: "${interaction.user.toString()}، لقد قمت بحذف إعداد وحدة \"RestoreCord\". لأسباب أمنية (البيانات)، هحذف الزر فقط، بس بيانات oauth2 والكود السري هيتم حذفهم بعد 48 ساعة!"
+
+# /restorecord الحصول على
+rc_get_mainEmbed_title: "معلومات عامة عن RestoreCord"
+rc_get_mainEmbed_field1_name: "رقم السيرفر"
+rc_get_mainEmbed_field2_name: "الدور المعطى بعد التحقق"
+rc_get_mainEmbed_field3_name: "تاريخ الإنشاء"
+rc_get_mainEmbed_field3_value: "*التاريخ بصيغة MM/DD/YYYY HH:mm*"
+rc_get_mainEmbed_field4_name: "عدد استخدامات المفتاح"
+rc_get_mainEmbed_field5_name: "مؤلف التهيئة"
+rc_get_secondEmbed_title: "المستخدمين المخزنين"
+rc_get_secondEmbed_footer: "صفحة ${from} / ${to)}"
+rc_get_locale: "الإعدادات المحلية"
+rc_get_username: "اسم المستخدم"
+rc_get_unkwnon_user: "مستخدم غير معروف (${Data.data.config.author.id})"
+
+# /restorecord انضمام قسري
+rc_forceJoin_embed_title: "RestoreCord - انضمام قسري"
+rc_forceJoin_embed_desc: "## هل أنت متأكد من ضم الأعضاء إلى السيرفر؟\n### اقرأ بعناية:\nإذا أكدت هذا، الكود الحالي سيتم تدميره، وهيتم تزويدك بكود جديد.\n\n\n"
+rc_forceJoin_embed_field1: "الأعضاء الموجودين"
+rc_forceJoin_embed_field2: "الأعضاء الحاليين"
+rc_forceJoin_embed_field3: "الانضمام الممكن"
+rc_forceJoin_embed_2_field1: "الانضمام الممكن"
+rc_forceJoin_embed_2_field2: "المنضمين"
+rc_forceJoin_ws_size: "# جاهزين لإضافة **${value2}** عضو للسيرفر."
+rc_forceJoin_ws_start: "# عملية الانضمام القسري بدأت..."
+rc_forceJoin_ws_end: "# عملية الانضمام القسري انتهت."
+rc_forceJoin_ws_end_renew_msg: "# اقرأ بعناية\nده الكود الخاص اللي لازم تحتفظ بيه. أي شخص معاه الكود ده ممكن يحذف الوحدة أو يضيف أعضاء لسيرفره... احتفظ بيه في مكان آمن. iHorizon مش هيقدمه ليك تاني:\n```${value2}```"
+
 # -----------------------------/ \-----------------------------
 # Confession Module Events
 confession_module_modal_title: "أرسل اعترافاً"
@@ -1751,6 +1810,7 @@ ticket_module_button_addmember: "إضافة عضو"
 ticket_module_button_removemember: "إزالة عضو"
 ticket_module_add_question: "من تريد إضافته إلى تذكرتك؟ (حدد معرف المستخدم)!"
 ticket_module_remove_question: "من هو المستخدم الذي تريد إزالته من تذكرتك؟ (حدد معرف المستخدم)!"
+ticket_transcript_failed_to_send: "لقد حاولت إرسال الملف لك في رسالة خاصة، لكن لقد قمت بحظر الرسائل الخاصة بك :/"
 
 # سجلات الخادم
 event_srvLogs_banAdd_description: "<@${firstEntry.executor.id}> **حظر** <@${firstEntry.target.id}>"
@@ -1770,6 +1830,10 @@ event_srvLogs_voiceStateUpdate_3_description: "<@${targetUser.id}> كتم سما
 event_srvLogs_voiceStateUpdate_4_description: "<@${targetUser.id}> ألغى كتم سماعات الرأس الخاصة به في القناة <#${channelID}>"
 event_srvLogs_voiceStateUpdate_5_description: "<@${targetUser.id}> كتم نفسه في القناة <#${channelID}>"
 event_srvLogs_voiceStateUpdate_6_description: "<@${targetUser.id}> ألغى كتم نفسه في القناة <#${channelID}>"
+event_srvLogs_channelUpdate_disabled_for: "-    ❌ ${perm} تم إلغاء تفعيلها لـ ${target}\n"
+event_srvLogs_channelUpdate_enabled_for: "-    ✅ ${perm} تم تفعيلها لـ ${target}\n"
+event_srvLogs_channelUpdate_allowed_for: "-    ✅ ${perm} مسموح بها لـ ${target}\n"
+event_srvLogs_channelUpdate_unallowed_for: "-    ❌ ${perm} تم رفضها لـ ${target}\n"
 
 # حدث الترقية
 event_rank_role: "<@${message.author.id}>, لديك الآن الدور <@&${fetch.id}>"
@@ -1915,5 +1979,15 @@ buttonreaction_role_doesnt_exit: "الدور في قاعدة بياناتي لم
 buttonreaction_role_too_high: "الدور مرتفع جدًا، لا أستطيع إعطاء/إزالة الدور. تحتاج إلى تغيير أذوناتي!"
 buttonreaction_role_add: "لم تعد لديك دور ${fetched_role.toString()} ✅"
 buttonreaction_role_remove: "لديك الآن دور ${fetched_role.toString()} :tada:"
+
+# RestoreCord HTML
+rc_created_by: "تم الإنشاء بواسطة:"
+rc_created_on: "تاريخ الإنشاء:"
+rc_total_membres: "إجمالي الأعضاء"
+rc_total_verification: "إجمالي عمليات التحقق"
+rc_total_key_used_count: "عدد مرات استخدام المفتاح"
+rc_recent_locales_distribution: "توزيع مواقع الأعضاء"
+rc_recent_verifications: "عمليات التحقق الأخيرة"
+rc_registration_over_time: "التسجيلات عبر الزمن"
 
 # -----------------------------\ /-----------------------------

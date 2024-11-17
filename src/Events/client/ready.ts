@@ -20,8 +20,8 @@
 */
 
 import {
-  Client,
-  ActivityType,
+    Client,
+    ActivityType,
 } from "pwss";
 
 import logger from "../../core/logger.js";
@@ -29,42 +29,42 @@ import logger from "../../core/logger.js";
 import { BotEvent } from "../../../types/event.js";
 
 export const event: BotEvent = {
-  name: "ready",
-  run: async (client: Client) => {
-    async function refreshDatabaseModel() {
-      client.db.table(`TEMP`).deleteAll();
-      let table = client.db.table("OWNER");
-      let owners = [...client.owners, ...(await table.all()).map((x) => x.id)];
+    name: "ready",
+    run: async (client: Client) => {
+        async function refreshDatabaseModel() {
+            client.db.table(`TEMP`).deleteAll();
+            let table = client.db.table("OWNER");
+            let owners = [...client.owners, ...(await table.all()).map((x) => x.id)];
 
-      owners.forEach(async (ownerId) => {
-        try {
-          let _ = await client.users?.fetch(ownerId);
-          await table.set(_.id, { owner: true });
-        } catch {
-          table.delete(ownerId);
+            owners.forEach(async (ownerId) => {
+                try {
+                    let _ = await client.users?.fetch(ownerId);
+                    await table.set(_.id, { owner: true });
+                } catch {
+                    table.delete(ownerId);
+                }
+            });
         }
-      });
-    }
 
-    async function quotesPresence() {
-      client.user?.setPresence({
-        activities: [
-          {
-            name: `music on ${client.guilds.cache.size} guilds | Use ;help`,
-            type: ActivityType.Listening,
-          },
-        ],
-      });
-    }
+        async function quotesPresence() {
+            client.user?.setPresence({
+                activities: [
+                    {
+                        name: `music on ${client.guilds.cache.size} guilds | Use ;help`,
+                        type: ActivityType.Listening,
+                    },
+                ],
+            });
+        }
 
-    await client.player.init({
-      id: client.user?.id as string,
-      username: "bot_" + client.user?.id,
-    });
+        await client.player.init({
+            id: client.user?.id as string,
+            username: "bot_" + client.user?.id,
+        });
 
-    setInterval(quotesPresence, 120_000),
-      refreshDatabaseModel(),
-      quotesPresence(),
-      logger.log(`${client.config.console.emojis.HOST} >> Bot is ready`.white);
-  },
+        setInterval(quotesPresence, 120_000),
+            refreshDatabaseModel(),
+            quotesPresence(),
+            logger.log(`${client.config.console.emojis.HOST} >> Bot is ready`.white);
+    },
 };

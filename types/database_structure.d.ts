@@ -249,6 +249,7 @@ export namespace DatabaseStructure {
     }
 
     export interface NotifierLastNotifiedMedias {
+        timestamp: string | number | Date;
         userId: string;
         mediaId: string;
     }
@@ -258,6 +259,7 @@ export namespace DatabaseStructure {
         users?: NotifierUserSchema[];
         lastMediaNotified?: NotifierLastNotifiedMedias[];
         channelId: string;
+        timestamp: string;
     }
 
     export interface WarnSchema {
@@ -374,6 +376,11 @@ export namespace DatabaseStructure {
         bypassChannels?: string[]
     }
 
+    export interface RestoreCordSchema {
+        channelId: string;
+        messageId: string;
+    }
+
     export interface DbGuildObject {
         BOT?: DbGuildBotObject;
         LANG?: {
@@ -423,6 +430,7 @@ export namespace DatabaseStructure {
         };
         BLOCK_NEW_ACCOUNT?: BlockNewAccountSchema;
         ANTISPAM?: AntiSpam.AntiSpamOptions;
+        RESTORECORD?: RestoreCordSchema
     }
 
     export interface DbTicketConfigurationObject {

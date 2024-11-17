@@ -25,18 +25,18 @@ import path from "path";
 let dbInstance: SteganoDB;
 
 export const initializeDatabase = async (): Promise<SteganoDB> => {
-  dbInstance = new SteganoDB({
-    driver: "json",
-    filePath: path.join(process.cwd(), "db.json"),
-  });
-  return dbInstance;
+    dbInstance = new SteganoDB({
+        driver: "json",
+        filePath: path.join(process.cwd(), "db.json"),
+    });
+    return dbInstance;
 };
 
 export const getDatabaseInstance = (): SteganoDB => {
-  if (!dbInstance) {
-    throw new Error(
-      "Database has not been initialized. Call initializeDatabase first.",
-    );
-  }
-  return dbInstance;
+    if (!dbInstance) {
+        throw new Error(
+            "Database has not been initialized. Call initializeDatabase first.",
+        );
+    }
+    return dbInstance;
 };

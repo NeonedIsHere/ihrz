@@ -1,6 +1,6 @@
 {
   "name": "ihrz",
-  "version": "2024.10.2",
+  "version": "2024.11.0",
   "description": "iHrz in ts!",
   "main": "./dist/src/index.js",
   "scripts": {
@@ -34,9 +34,9 @@
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",
-    "@types/node": "^20.16.1",
+    "@types/node": "^20.17.6",
     "@types/ping": "^0.4.4",
-    "tslib": "^2.7.0",
+    "tslib": "^2.8.1",
     "typescript": "5.4.5"
   }
 }

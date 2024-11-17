@@ -172,6 +172,8 @@ level_embed_fields1_value: "`${currentxp}/${xpNeeded}`"
 level_embed_fields2_name: ":money_with_wings:・__Experience:__"
 level_embed_fields2_value: "`${level}`"
 level_embed_description: "`${expNeededForLevelUp}` **experience points needed for the next level!**"
+level_xp_needed_for_new_level: "XP until next level:"
+level_xp_total: "Total XP:"
 
 # /ranks leaderboard
 ranks_leaderboard_embed_title: "${interaction.guild?.name}'s Levels Leaderboard"
@@ -301,6 +303,9 @@ invite_embed_description: "I love you, show me your love for me back! Invite me!
 # /kisakay
 kisakay_message: "${client.iHorizon_Emojis.icon.Sparkles} Kisakay is both my creator and my developer. It is thanks to her and her keyboard that I came into existence. I am deeply grateful to her!✨ ❤️❤️"
 
+# /andru
+andru_message: "Andru is a Collaborator and developer. \"L'homme à tout faire\", he manage the marketing, the community..."
+
 # /nayaweb
 nayaweb_message: "😼NayaWeb is my second developer/contributor , NayaWeb x Kisakay ❤️"
 
@@ -373,6 +378,8 @@ help_ownihrz_dsc: "Host and manage your custom iHorizon bot ! (OWNIHRZ)"
 help_ownihrz_fields: "OWNIHRZ"
 help_notifier_dsc: "Be notified when a Youtuber, Streamer publish a video!"
 help_notifier_fields: "Notifier"
+help_restorecord_fields: "RestoreCord"
+help_restorecord_dsc: "Made server verification with oAuth2. When you server got raided/termed, with this oAuth2, you can recover your old members !"
 
 # /say
 say_footer_msg: "\n\nSent from `/say` by ${interaction.user}"
@@ -1080,6 +1087,9 @@ start_confirmation_command: "Giveaway started in ${giveawayChannel}!"
 start_logs_embed_title: "Giveaway Logs"
 start_logs_embed_description: "<@${interaction.user.id}> started a giveways in: ${giveawayChannel}"
 start_time_not_valid: "${interaction.user}, the giveaway Duration you specified are invalid, please try again!"
+start_invalid_invites_req_value: "${client.iHorizon_Emojis.icon.No_Logo} | The value for 'invites' is invalid! You must specify a number of invites to enter the giveaway!"
+start_invalid_messages_req_value: "${client.iHorizon_Emojis.icon.No_Logo} | The value for 'messages' is invalid! You must specify a number of messages to enter the giveaway!"
+start_invalid_roles_req_value: "${client.iHorizon_Emojis.icon.No_Logo} | The role for 'roles' is not found! You must provide a role ID to enter the giveaway!"
 
 # /reroll
 reroll_not_perm: "You must have permissions to manage messages to end this giveaway."
@@ -1699,6 +1709,55 @@ notifier_config_message_embed_fields_notifyMessage: "Notify Message"
 notifier_config_message_awaiting_response: "Wrote the notify message."
 notifier_config_message_command_work_on_enable: "${client.iHorizon_Emojis.icon.Green_Tick_Logo} | Successfully set notify message."
 
+
+# RestoreCord Module
+# role, set, delete, get, force-join
+
+rc_key_doesnt_exist: "${client.iHorizon_Emojis.icon.No_Logo} The RestoreCord module with key: **${secretCode}** doesn't exist!"
+rc_verify: "Verify"
+
+# /restorecord role
+rc_role_embed_title: "RestoreCord New Modifiication"
+rc_role_embed_field1_name: "New Given role after verify"
+
+# /restorecord set
+rc_command_ok: "${interaction.user.toString()}, you have just set up the \"RestoreCord\" module. Now, when a member of the Discord server clicks on the button and logs in via OAuth2, they will be added to the database. They will eventually be able to automatically join the server with OAuth2.\n# READ CAREFULLY\nThe message ${msgLink} now has a button that will serve as a verification.\nHERE IS THE PRIVATE CODE THAT MUST NOT BE DISCLOSED TO ANYONE. A PERSON WITH THIS CODE COULD DELETE IT, ADD MEMBERS TO THEIR SERVER... KEEP IT SOMEWHERE SAFE. iHorizon WILL NEVER GIVE IT TO YOU AGAIN:\n```${res.secretCode}```"
+rc_command_ok_dm: "# The RestoreCord code for ${interaction.guild.name}\n```${res.secretCode}```"
+rc_command_dm_failed: "I tried to send you the code in a private message, but you have blocked your DMs :/"
+rc_command_dm_ok: "In case you missed it, I sent you the code in a private message!"
+rc_command_horizongw_down: "Error: HorizonGateway maybe down"
+
+# /restorecord delete
+rc_delete_config_not_found: "The module configuration on this server could not be found!"
+rc_delete_command_ok: "${interaction.user.toString()}, you have just deleted the configuration of the \"RestoreCord\" module. For security (data) reasons, I will only delete the button, but the oauth2 data and the secret code will be deleted in 48 hours!"
+
+# /restorecord get
+rc_get_mainEmbed_title: "RestoreCord General Infos"
+rc_get_mainEmbed_field1_name: "Server Id"
+rc_get_mainEmbed_field2_name: "Given role after verify"
+rc_get_mainEmbed_field3_name: "Create at"
+rc_get_mainEmbed_field3_value: "*the date is in MM/DD/YYYY HH:mm format*"
+rc_get_mainEmbed_field4_name: "Key Used Count"
+rc_get_mainEmbed_field5_name: "Configuration Author"
+rc_get_secondEmbed_title: "Stocked user(s)"
+rc_get_secondEmbed_footer: "Page ${from} / ${to)}"
+rc_get_locale: "Locale"
+rc_get_username: "Username"
+rc_get_unkwnon_user: "Unknown user (${Data.data.config.author.id})"
+
+# /restorecord force-join
+rc_forceJoin_embed_title: "RestoreCord - Force Join"
+rc_forceJoin_embed_desc: "## Are you sure to force-join member in this guild ?\n### READ CAREFULLY:\nIF YOU CONFIRM THIS ACTION, THE CURRENT PRIVATE KEY WILL BE DESTROYED. A NEW KEY WILL BE PROVIDED TO YOU.\n\n\n"
+rc_forceJoin_embed_field1: "Members found"
+rc_forceJoin_embed_field2: "Members already here"
+rc_forceJoin_embed_field3: "Possible join"
+rc_forceJoin_embed_2_field1: "Possible join"
+rc_forceJoin_embed_2_field2: "Joined"
+rc_forceJoin_ws_size: "# Preparing to add **${value2}** members to the guild."
+rc_forceJoin_ws_start: "# Force-joining in progress..."
+rc_forceJoin_ws_end: "# Force-joining process completed."
+rc_forceJoin_ws_end_renew_msg: "# READ CAREFULLY\nTHERE IS THE PRIVATE CODE THAT MUST NOT BE DISCLOSED TO ANYONE. A PERSON WITH THIS CODE COULD DELETE IT, ADD MEMBERS TO THEIR SERVER... KEEP IT SOMEWHERE SAFE. iHorizon WILL NEVER GIVE IT TO YOU AGAIN:\n```${value2}```"
+
 # -----------------------------/ \-----------------------------
 # Confession Module Events
 confession_module_modal_title: "Send a confession"
@@ -1756,6 +1815,7 @@ ticket_module_button_addmember: "Add Member"
 ticket_module_button_removemember: "Remove Member"
 ticket_module_add_question: "Who do you want to add to your ticket? (Specify them User ID)!"
 ticket_module_remove_question: "Who is the user you want to remove from your ticket? (Specify them User ID)!"
+ticket_transcript_failed_to_send: "I tried to send you the file in a private message, but you have blocked your DMs :/"
 
 # Server Logs
 event_srvLogs_banAdd_description: "<@${firstEntry.executor.id}> **banned** <@${firstEntry.target.id}>"
@@ -1775,6 +1835,10 @@ event_srvLogs_voiceStateUpdate_3_description: "<@${targetUser.id}> muted their h
 event_srvLogs_voiceStateUpdate_4_description: "<@${targetUser.id}> unmuted their headset in the <#${channelID}> channel"
 event_srvLogs_voiceStateUpdate_5_description: "<@${targetUser.id}> muted themselves in the <#${channelID}> channel"
 event_srvLogs_voiceStateUpdate_6_description: "<@${targetUser.id}> unmuted themselves in the <#${channelID}> channel"
+event_srvLogs_channelUpdate_disabled_for: "-    ❌ ${perm} disabled for ${target}\n"
+event_srvLogs_channelUpdate_enabled_for: "-    ✅ ${perm} enabled for ${target}\n"
+event_srvLogs_channelUpdate_allowed_for: "-    ✅ ${perm} allowed for ${target}\n"
+event_srvLogs_channelUpdate_unallowed_for: "-    ❌ ${perm} not allowed for ${target}\n"
 
 # RankUp event
 event_rank_role: "<@${message.author.id}>, you now have the role <@&${fetch.id}>"
@@ -1926,5 +1990,15 @@ buttonreaction_role_doesnt_exit: "The role in my database doesn't exist anymore 
 buttonreaction_role_too_high: "The role is too high, i can't give/remove the role. Need to change my permission!"
 buttonreaction_role_add: "You don't have anymore the ${fetched_role.toString()} role ✅"
 buttonreaction_role_remove: "You now have the ${fetched_role.toString()} role :tada:"
+
+# RestoreCord HTML
+rc_created_by: "Created by:"
+rc_created_on: "Created on:"
+rc_total_membres: "Total Members"
+rc_total_verification: "Total Verifications"
+rc_total_key_used_count: "Key Used Count"
+rc_recent_locales_distribution: "Member Locales Distribution"
+rc_recent_verifications: "Recent Verifications"
+rc_registration_over_time: "Registrations Over Time"
 
 # -----------------------------\ /-----------------------------

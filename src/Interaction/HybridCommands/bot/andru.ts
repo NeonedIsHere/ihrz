@@ -20,32 +20,21 @@
 */
 
 import {
-    Client,
-    EmbedBuilder,
-    ButtonBuilder,
-    ActionRowBuilder,
-    ButtonStyle,
-    ChatInputCommandInteraction,
-    ApplicationCommandType,
+    Client, ChatInputCommandInteraction, ApplicationCommandType,
     Message,
     CommandInteractionOptionResolver,
-} from 'pwss'
+} from 'discord.js'
 
 import { Command } from '../../../../types/command';
 import { LanguageData } from '../../../../types/languageData';
 
 export const command: Command = {
-    name: 'invite',
+    name: 'andru',
 
-    description: 'Get the bot invite link!',
+    description: 'Get unnecessary information about my contributor',
     description_localizations: {
-        "fr": "Obtenir le lien d'invitations du bot iHorizon"
+        "fr": "Obtenir des informations non nécessaires sur mon contributeur Andru!"
     },
-
-    aliases: ["inviteme", "oauth"],
-
-    integration_types: [0, 1],
-    contexts: [0, 1, 2],
 
     category: 'bot',
     thinking: false,
@@ -53,25 +42,11 @@ export const command: Command = {
     run: async (client: Client, interaction: ChatInputCommandInteraction<"cached"> | Message, lang: LanguageData, runningCommand: any, neededPerm?: number, args?: string[]) => {
 
 
-        let button_add_me = new ButtonBuilder()
-            .setStyle(ButtonStyle.Link)
-            .setLabel(lang.invite_embed_title)
-            .setURL(`https://discord.com/api/oauth2/authorize?client_id=${client.user?.id}&permissions=8&scope=bot`)
-
-        let invites = new EmbedBuilder()
-            .setColor("#416fec")
-            .setTitle(lang.invite_embed_title)
-            .setDescription(lang.invite_embed_description)
-            .setURL('https://discord.com/api/oauth2/authorize?client_id=' + client.user?.id + '&permissions=8&scope=bot')
-            .setFooter(await client.method.bot.footerBuilder(interaction))
-            .setThumbnail("attachment://footer_icon.png");
-
-        let components = new ActionRowBuilder<ButtonBuilder>().addComponents(button_add_me);
+        // Guard's Typing
+        if (!client.user || !interaction.member || !interaction.guild || !interaction.channel) return;
 
         await client.method.interactionSend(interaction, {
-            embeds: [invites],
-            components: [components],
-            files: [await client.method.bot.footerAttachmentBuilder(interaction)]
+            content: lang.andru_message
         });
         return;
     },
