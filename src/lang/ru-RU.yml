@@ -689,6 +689,10 @@ utils_wlRoles_logsEmbed_desc: "${interaction.member?.user.toString()} измен
 utils_dm: "${client.iHorizon_Emojis.icon.Yes_Logo} Сообщение было успешно отправлено ${targetMember.toString()}."
 utils_dm_cant: "${client.iHorizon_Emojis.icon.No_Logo} Не удалось отправить сообщение пользователю ${targetMember.toString()}. Возможно, он заблокировал личные сообщения или заблокировал меня!"
 
+# /utils pic-only
+utils_pic_only_embed_title: "Каналы Только для Изображений"
+utils_pic_only_emnbed_desc: "Канал, где разрешены только фотографии/изображения. Другой контент блокируется ботом"
+
 
 # Guild Config commands
 # /blockpub, /guildprofil, /setchannels, /setjoindm, /setjoinmessage, /setjoinroles, /setleavemessage, /setup
@@ -2002,5 +2006,10 @@ rc_total_key_used_count: "Количество использований клю
 rc_recent_locales_distribution: "Распределение локалей участников"
 rc_recent_verifications: "Недавние проверки"
 rc_registration_over_time: "Регистрации с течением времени"
+
+# Модуль ТолькоКартинки
+piconly_module_punish_msg: "${message.author}, вы получили тайм-аут на 10 минут за отправку слишком большого количества сообщений без изображений в канале, предназначенном только для изображений."
+piconly_module_warn_msg: "${message.author}, этот канал принимает только сообщения, содержащие изображения (допустимые форматы: JPG, PNG, GIF, WEBP, BMP, TIFF). Предупреждение ${userWarnings.length}/3"
+piconly_module_timeout_reason: "Спам сообщениями без изображений в канале только для изображений"
 
 # -----------------------------/ \-----------------------------

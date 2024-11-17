@@ -493,6 +493,8 @@ export interface LanguageData {
   utils_wlRoles_logsEmbed_desc: string;
   utils_dm: string;
   utils_dm_cant: string;
+  utils_pic_only_embed_title: string;
+  utils_pic_only_emnbed_desc: string;
   blockpub_not_admin: string;
   blockpub_now_enable: string;
   blockpub_now_disable: string;
@@ -1435,4 +1437,7 @@ export interface LanguageData {
   rc_recent_locales_distribution: string;
   rc_recent_verifications: string;
   rc_registration_over_time: string;
+  piconly_module_punish_msg: string;
+  piconly_module_warn_msg: string;
+  piconly_module_timeout_reason: string;
 }
