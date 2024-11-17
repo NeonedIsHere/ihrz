@@ -22,7 +22,7 @@
 import {
     Client,
     ActivityType,
-} from "pwss";
+} from "discord.js";
 
 import logger from "../../core/logger.js";
 

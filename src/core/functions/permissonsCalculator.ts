@@ -19,7 +19,7 @@
 ・ Copyright © 2020-2024 iHorizon
 */
 
-import { ChatInputCommandInteraction, GuildMember, Message } from "pwss";
+import { ChatInputCommandInteraction, GuildMember, Message } from "discord.js";
 import { DatabaseStructure } from "../../../types/database_structure";
 import { Command } from "../../../types/command";
 import { Option } from "../../../types/option";

@@ -19,7 +19,7 @@
 ・ Copyright © 2020-2024 iHorizon
 */
 
-import { BaseGuildTextChannel, ChatInputCommandInteraction, EmbedBuilder, GuildMember, Message } from "pwss";
+import { BaseGuildTextChannel, ChatInputCommandInteraction, EmbedBuilder, GuildMember, Message } from "discord.js";
 
 export async function send(
     interaction: ChatInputCommandInteraction<"cached"> | Message,

@@ -33,7 +33,9 @@ import {
     Message,
     CommandInteractionOptionResolver,
     ApplicationCommandOptionType,
-} from 'pwss'
+    ButtonStyle,
+    ButtonBuilder,
+} from 'discord.js'
 
 import { LanguageData } from '../../../../types/languageData';
 import { CategoryData } from '../../../../types/category';
@@ -309,35 +311,46 @@ export const command: Command = {
 
             categories.sort((a, b) => a.name.localeCompare(b.name));
 
+            const selectMenus = [];
+            const categoriesPerMenu = Math.ceil(categories.length / 2);
             const Commands = await client.db.get(`${interaction.guildId}.UTILS.PERMS`) as DatabaseStructure.UtilsPermsData | undefined;
             let index = 0;
 
-            const selectMenu = new StringSelectMenuBuilder()
-                .setCustomId(`help-menu-1`)
-                .setPlaceholder(lang.help_select_menu);
+            for (let i = 0; i < 2; i++) {
+                const selectMenu = new StringSelectMenuBuilder()
+                    .setCustomId(`help-menu-${i + 1}`)
+                    .setPlaceholder(lang.help_select_menu);
 
-            selectMenu.addOptions(
-                new StringSelectMenuOptionBuilder()
-                    .setLabel(lang.help_back_to_menu)
-                    .setDescription(lang.help_back_to_menu_desc)
-                    .setValue("back")
-                    .setEmoji("⬅️")
-            );
-
-            categories.forEach((category, idx) => {
                 selectMenu.addOptions(
                     new StringSelectMenuOptionBuilder()
-                        .setLabel(category.name)
-                        .setDescription(
-                            lang.help_select_menu_fields_desc.replace(
-                                "${categories[index].value.length}",
-                                category.value.length.toString()
-                            )
-                        )
-                        .setValue(idx.toString())
-                        .setEmoji(category.emoji)
+                        .setLabel(lang.help_back_to_menu)
+                        .setDescription(lang.help_back_to_menu_desc)
+                        .setValue("back")
+                        .setEmoji("⬅️")
                 );
-                index++;
+
+                const categoriesCalc = categories.slice(i * categoriesPerMenu, (i + 1) * categoriesPerMenu);
+                categoriesCalc.forEach((category) => {
+                    selectMenu.addOptions(
+                        new StringSelectMenuOptionBuilder()
+                            .setLabel(category.name)
+                            .setDescription(
+                                lang.help_select_menu_fields_desc.replace(
+                                    "${categories[index].value.length}",
+                                    category.value.length.toString()
+                                )
+                            )
+                            .setValue(index.toString())
+                            .setEmoji(category.emoji)
+                    );
+                    index++;
+                });
+
+                selectMenus.push(selectMenu);
+            }
+
+            const rows = selectMenus.map((selectMenu, index) => {
+                return new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(selectMenu);
             });
 
             let og_embed = new EmbedBuilder()
@@ -355,12 +368,13 @@ export const command: Command = {
                     .replaceAll('${client.iHorizon_Emojis.badge.Slash_Bot}', client.iHorizon_Emojis.badge.Slash_Bot)
                 )
                 .setFooter(await client.method.bot.footerBuilder(interaction))
+                .setImage(`https://ihorizon.me/assets/img/banner/ihrz_${await client.db.get(`${interaction.guildId}.GUILD.LANG.lang`) || 'en-US'}.png`)
                 .setThumbnail("attachment://footer_icon.png")
                 .setTimestamp();
 
             let response = await client.method.interactionSend(interaction, {
                 embeds: [og_embed],
-                components: [new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(selectMenu)],
+                components: rows,
                 files: [await client.method.bot.footerAttachmentBuilder(interaction)]
             });
 
@@ -388,11 +402,13 @@ export const command: Command = {
             });
 
             collector.on('end', async i => {
-                new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(selectMenu).components.forEach((component) => {
-                    component.setDisabled(true);
+                rows.forEach((comp, i) => {
+                    comp.components.forEach((component) => {
+                        component.setDisabled(true);
+                    });
                 });
 
-                await response.edit({ components: [new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(selectMenu)] });
+                await response.edit({ components: rows });
                 return;
             });
         } else {

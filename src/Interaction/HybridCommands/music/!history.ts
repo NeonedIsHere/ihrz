@@ -32,7 +32,7 @@ import {
     MessagePayload,
     MessageReplyOptions,
     PermissionsBitField,
-} from 'pwss';
+} from 'discord.js';
 import { LanguageData } from '../../../../types/languageData';
 import { Command } from '../../../../types/command';
 import { Option } from '../../../../types/option';

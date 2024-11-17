@@ -23,7 +23,7 @@ import { format } from '../functions/date-and-time.js';
 import logger from '../logger.js';
 
 import fs from 'node:fs';
-import { Client } from 'pwss'; 
+import { Client } from 'discord.js'; 
 
 export const uncaughtExceptionHandler = (client: Client) => {
     process.on('uncaughtException', function (err) {

@@ -21,16 +21,16 @@
 
 import { LyricsManager } from "../src/core/functions/lyrics-fetcher.js";
 import { iHorizonTimeCalculator } from "../src/core/functions/ms.js";
-import * as argsHelper from "../src/core/functions/method.js";
+import * as argsHelper from '../src/core/functions/method.js'
 
 import { GiveawayManager } from "../src/core/modules/giveawaysManager.js";
-import { Collection, Snowflake } from "pwss";
+import { Collection, Snowflake } from 'discord.js';
 import { LavalinkManager } from "lavalink-client";
 import { QuickDB } from "quick.db";
 
 import { clientFunction } from "./clientFunction";
 import { AnotherCommand } from "./anotherCommand";
-import { BotContent } from "./botContent";
+import { BotContent } from './botContent'
 import { Category } from "./category";
 
 import { VanityInviteData } from "./vanityUrlData";
@@ -45,31 +45,33 @@ import { SteganoDB } from "stegano.db";
 import { StreamNotifier } from "../src/core/StreamNotifier.js";
 import { OwnIHRZ } from "../src/core/modules/ownihrzManager.js";
 
-declare module "pwss" {
-  export interface Client {
-    func: clientFunction;
-    commands: Collection<string, Command>;
-    category: Category[];
-    message_commands: Collection<string, Command>;
-    player: LavalinkManager;
-    invites: Collection<string, Collection<string, number | null>>;
-    vanityInvites: Collection<Snowflake, VanityInviteData>;
-    buttons: Collection<string, Function>;
-    selectmenu: Collection<string, Function>;
-    db: SteganoDB;
-    applicationsCommands: Collection<string, AnotherCommand>;
-    iHorizon_Emojis: Emojis;
-    giveawaysManager: GiveawayManager;
-    content: BotContent[];
-    timeCalculator: iHorizonTimeCalculator;
-    lyricsSearcher: LyricsManager;
-    version: typeof ClientVersion;
-    assets: Assets;
-    config: ConfigData;
-    isModuled?: boolean;
-    owners: string[];
-    method: typeof argsHelper;
-    bash: Collection<string, BashCommands>;
-    notifier: StreamNotifier;
-  }
-}
+declare module 'discord.js' {
+    export interface Client {
+        func: clientFunction,
+        commands: Collection<string, Command>,
+        subCommands: Collection<string, Command>,
+        category: Category[]
+        message_commands: Collection<string, Command>,
+        player: LavalinkManager,
+        invites: Collection<string, Collection<string, number | null>>,
+        vanityInvites: Collection<Snowflake, VanityInviteData>,
+        buttons: Collection<string, Function>,
+        selectmenu: Collection<string, Function>,
+        db: QuickDB | SteganoDB,
+        applicationsCommands: Collection<string, AnotherCommand>,
+        iHorizon_Emojis: Emojis,
+        giveawaysManager: GiveawayManager,
+        content: BotContent[],
+        timeCalculator: iHorizonTimeCalculator,
+        lyricsSearcher: LyricsManager,
+        version: typeof ClientVersion,
+        assets: Assets,
+        config: ConfigData,
+        isModuled?: boolean,
+        owners: string[],
+        method: typeof argsHelper,
+        bash: Collection<string, BashCommands>,
+        notifier: StreamNotifiern,
+        ownihrz: OwnIHRZ
+    }
+};

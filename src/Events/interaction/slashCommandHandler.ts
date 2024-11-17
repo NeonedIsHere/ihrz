@@ -19,7 +19,7 @@
 ・ Copyright © 2020-2024 iHorizon
 */
 
-import { ActionRowBuilder, BaseGuildTextChannel, ButtonBuilder, ButtonStyle, ChannelType, Client, CommandInteractionOptionResolver, EmbedBuilder, Guild, GuildChannel, GuildMember, Interaction, PermissionFlagsBits } from 'pwss';
+import { ActionRowBuilder, BaseGuildTextChannel, ButtonBuilder, ButtonStyle, ChannelType, ChatInputCommandInteraction, Client, CommandInteractionOptionResolver, EmbedBuilder, Guild, GuildChannel, GuildMember, Interaction, PermissionFlagsBits } from 'discord.js';
 import logger from '../../core/logger.js';
 import { LanguageData } from '../../../types/languageData';
 import { BotEvent } from '../../../types/event';
