@@ -689,6 +689,10 @@ utils_wlRoles_logsEmbed_desc: "${interaction.member?.user.toString()} ha editado
 utils_dm: "${client.iHorizon_Emojis.icon.Yes_Logo} El mensaje fue enviado con éxito a ${targetMember.toString()}."
 utils_dm_cant: "${client.iHorizon_Emojis.icon.No_Logo} No pude enviar un mensaje a ${targetMember.toString()}. Puede que haya bloqueado los mensajes privados o me haya bloqueado a mí."
 
+# /utils pic-only
+utils_pic_only_embed_title: "Canales Solo Imágenes"
+utils_pic_only_emnbed_desc: "Canal donde solo se permiten fotos/imágenes. Cualquier otro contenido es bloqueado por el bot"
+
 
 # Guild Config commands
 # /blockpub, /guildprofil, /setchannels, /setjoindm, /setjoinmessage, /setjoinroles, /setleavemessage, /setup
@@ -2002,5 +2006,10 @@ rc_total_key_used_count: "Número de Uso de la Clave"
 rc_recent_locales_distribution: "Distribución de Idiomas de Miembros"
 rc_recent_verifications: "Verificaciones Recientes"
 rc_registration_over_time: "Registros a lo Largo del Tiempo"
+
+# Módulo SoloImágenes
+piconly_module_punish_msg: "${message.author}, has sido silenciado durante 10 minutos por enviar demasiados mensajes sin imágenes en un canal exclusivo para imágenes."
+piconly_module_warn_msg: "${message.author}, este canal solo acepta mensajes que contengan imágenes (formatos aceptados: JPG, PNG, GIF, WEBP, BMP, TIFF). Advertencia ${userWarnings.length}/3"
+piconly_module_timeout_reason: "Spam de mensajes sin imágenes en un canal exclusivo para imágenes"
 
 # -----------------------------\ /-----------------------------

@@ -688,6 +688,10 @@ utils_wlRoles_logsEmbed_desc: "${interaction.member?.user.toString()} have edite
 utils_dm: "${client.iHorizon_Emojis.icon.Yes_Logo} The message was successfully sent to ${targetMember.toString()}."
 utils_dm_cant: "${client.iHorizon_Emojis.icon.No_Logo} I couldn't send a message to ${targetMember.toString()}. They may have blocked private messages, or they may have blocked me!"
 
+# /utils pic-only
+utils_pic_only_embed_title: "Pic Only Channels"
+utils_pic_only_emnbed_desc: "Channel where picture/image are the only one things allowed. Another content are blocked by the bot"
+
 
 # Guild Config commands
 # /blockpub, /guildprofil, /setchannels, /setjoindm, /setjoinmessage, /setjoinroles, /setleavemessage, /setup
@@ -2000,5 +2004,10 @@ rc_total_key_used_count: "Key Used Count"
 rc_recent_locales_distribution: "Member Locales Distribution"
 rc_recent_verifications: "Recent Verifications"
 rc_registration_over_time: "Registrations Over Time"
+
+# PicOnly Module
+piconly_module_punish_msg: "${message.author}, you have been timed out for 10 minutes for sending too many messages without pictures in a pictures-only channel."
+piconly_module_warn_msg: "${message.author}, this channel only accepts messages containing pictures (accepted formats: JPG, PNG, GIF, WEBP, BMP, TIFF). Warning ${userWarnings.length}/3"
+piconly_module_timeout_reason: "Spamming messages without pictures in a pictures-only channel"
 
 # -----------------------------\ /-----------------------------

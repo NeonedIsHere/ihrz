@@ -686,6 +686,10 @@ utils_wlRoles_logsEmbed_desc: "${interaction.member?.user.toString()} قام ب�
 utils_dm: "${client.iHorizon_Emojis.icon.Yes_Logo} الرسالة اتبعتت بنجاح لـ ${targetMember.toString()}"
 utils_dm_cant: "${client.iHorizon_Emojis.icon.No_Logo} معرفتش أبعت الرسالة لـ ${targetMember.toString()}. يمكن يكون قافل الرسائل الخاصة أو يكون حظرني!"
 
+# /utils pic-only
+utils_pic_only_embed_title: "قنوات الصور فقط"
+utils_pic_only_emnbed_desc: "قناة حيث الصور هي الشيء الوحيد المسموح به. المحتوى الآخر محظور من قبل البوت"
+
 
 # Guild Config commands
 # /blockpub, /guildprofil, /setchannels, /setjoindm, /setjoinmessage, /setjoinroles, /setleavemessage, /setup
@@ -1989,5 +1993,10 @@ rc_total_key_used_count: "عدد مرات استخدام المفتاح"
 rc_recent_locales_distribution: "توزيع مواقع الأعضاء"
 rc_recent_verifications: "عمليات التحقق الأخيرة"
 rc_registration_over_time: "التسجيلات عبر الزمن"
+
+# وحدة الصور فقط 
+piconly_module_punish_msg: "${message.author}, تم إيقافك مؤقتًا لمدة 10 دقائق لإرسال الكثير من الرسائل بدون صور في قناة مخصصة للصور."
+piconly_module_warn_msg: "${message.author}, هذه القناة تقبل فقط الرسائل التي تحتوي على صور (التنسيقات المقبولة: JPG, PNG, GIF, WEBP, BMP, TIFF). تحذير ${userWarnings.length}/3"
+piconly_module_timeout_reason: "إرسال رسائل متكررة بدون صور في قناة مخصصة للصور فقط"
 
 # -----------------------------\ /-----------------------------
