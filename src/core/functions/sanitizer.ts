@@ -19,24 +19,15 @@
 ・ Copyright © 2020-2024 iHorizon
 */
 
-import { Client, GuildMember, Role } from 'discord.js';
+import { escape } from "querystring"
 
-import { BotEvent } from '../../../types/event';
-
-export const event: BotEvent = {
-    name: "guildMemberAdd",
-    run: async (client: Client, member: GuildMember) => {
-
-        if (await client.db.get(`${member.guild.id}.GUILD.GUILD_CONFIG.rolesaver.enable`)) {
-
-            let array: string[] | null = await client.db.get(`${member.guild.id}.ROLE_SAVER.${member.user.id}`);
-
-            if (!array || array.length === 0) return;
-
-            await member.roles.set(array).catch(() => false);
-
-            await client.db.delete(`${member.guild.id}.ROLE_SAVER.${member.user.id}`);
-            return;
+export const sanitizing = (text: string): string => {
+    return text.split('').filter(char => {
+        try {
+            decodeURIComponent(escape(char));
+            return true;
+        } catch {
+            return false;
         }
-    },
-};
+    }).join('')
+}

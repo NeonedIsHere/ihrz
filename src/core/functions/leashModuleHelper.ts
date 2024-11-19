@@ -19,24 +19,12 @@
 ・ Copyright © 2020-2024 iHorizon
 */
 
-import { Client, GuildMember, Role } from 'discord.js';
+import { GuildMember, VoiceBasedChannel } from "discord.js";
 
-import { BotEvent } from '../../../types/event';
+export function isInVoiceChannel(member: GuildMember) {
+    return member.voice.channel ? true : false;
+}
 
-export const event: BotEvent = {
-    name: "guildMemberAdd",
-    run: async (client: Client, member: GuildMember) => {
-
-        if (await client.db.get(`${member.guild.id}.GUILD.GUILD_CONFIG.rolesaver.enable`)) {
-
-            let array: string[] | null = await client.db.get(`${member.guild.id}.ROLE_SAVER.${member.user.id}`);
-
-            if (!array || array.length === 0) return;
-
-            await member.roles.set(array).catch(() => false);
-
-            await client.db.delete(`${member.guild.id}.ROLE_SAVER.${member.user.id}`);
-            return;
-        }
-    },
-};
+export function getDomSubVoiceChannel(member: GuildMember): VoiceBasedChannel | null {
+    return member.voice.channel;
+}

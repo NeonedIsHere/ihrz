@@ -272,6 +272,10 @@ export namespace DatabaseStructure {
     export interface DbInId {
         USER?: DbGuildUserObject;
         GUILD?: DbGuildObject;
+        PFPS?: {
+            channel?: string;
+            disable?: boolean;
+        };
         TICKET_ALL?: TicketData;
         PROTECTION?: ProtectionData;
         ROLE_SAVER?: RoleSaverData;
@@ -306,7 +310,16 @@ export namespace DatabaseStructure {
         muteTime?: number;
     }
 
+    export interface LeashConfig {
+        maxLeashedByUsers?: number;
+        maxLeashTime?: number;
+    }
+
+    export type LeashData = { dom: string; sub: string; timestamp: number; };
+
     export interface UtilsData {
+        LEASH?: LeashData[]; // yeah, bdsm ref lmao
+        LEASH_CONFIFG?: LeashConfig;
         PERMS?: UtilsPermsData;
         USER_PERMS?: UtilsPermsUserData;
         unban_members?: string[];
@@ -419,10 +432,6 @@ export namespace DatabaseStructure {
             input?: string | null;
             rolesId?: string;
             state?: string;
-        };
-        PFPS?: {
-            channel?: string;
-            disable?: boolean;
         };
         XP_LEVELING?: DbGuildXpLeveling
         REACTION_ROLES?: ReactionRolesData;
